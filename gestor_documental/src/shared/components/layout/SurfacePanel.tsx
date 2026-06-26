@@ -1,0 +1,21 @@
+
+// Componente de panel reutilizable con estilos base para superficies elevadas o de fondo, con opciones de padding y centrado.
+export const SurfacePanel = ({
+  children,
+  className = '',
+  padding = 'p-4',
+  centered = false,
+  elevated = true,
+}) => {
+  return (
+    <div
+      className={`rounded-[var(--radius-card,0.5rem)] border shadow-[var(--shadow-card,0_1px_3px_rgba(0,0,0,0.08))] ${padding} ${centered ? 'text-center' : ''} ${className}`}
+      style={{
+        backgroundColor: elevated ? 'var(--bg-elevated, #ffffff)' : 'var(--bg-surface, #f3f4f6)',
+        borderColor: 'var(--border-default, #d1d5db)',
+      }}
+    >
+      {children}
+    </div>
+  );
+};

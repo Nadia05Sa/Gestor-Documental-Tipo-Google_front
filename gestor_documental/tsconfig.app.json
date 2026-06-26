@@ -27,7 +27,7 @@
     "paths": {
       "@shared/*": ["src/shared/*"],
       "@context/*": ["src/core/context/*"],
-      "@context/AuthContext": ["src/core/context/AuthContext.jsx"]
+      "@context/AuthContext": ["src/core/context/AuthContext"]
     }
   },
   "include": ["src"]
