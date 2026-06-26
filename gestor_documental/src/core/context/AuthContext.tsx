@@ -1,17 +1,56 @@
-import PropTypes from 'prop-types';
+import type { ReactNode } from 'react';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import {
   clearSessionUser,
   findAccount,
-  isPrivateRoute,
   readStoredUser,
-  saveRegisteredUser,
   saveSessionUser,
-} from '../../modules/auth/utils/authStorage';
+  shouldBlockForAuthBootstrap,
+} from '../../modules/auth/features/login/api/loginApi';
+import { saveRegisteredUser } from '../../modules/auth/features/register/api/registerApi';
 
-const AuthContext = createContext(null);
+type AuthRole = 'admin' | 'user' | string;
 
-const buildSessionUser = (account) => ({
+export type AuthUser = {
+  id: number | string;
+  email: string;
+  role: AuthRole;
+  name?: string;
+  surname?: string;
+  selected_university?: {
+    name?: string;
+    short_name?: string;
+  };
+};
+
+type AuthAccount = AuthUser & {
+  password: string;
+};
+
+type RegisterFormData = {
+  email?: string;
+  password: string;
+  name?: string;
+  surname?: string;
+};
+
+type AuthError = Error & {
+  code?: string;
+  fieldErrors?: Record<string, string>;
+};
+
+type AuthContextValue = {
+  user: AuthUser | null;
+  login: (email: string, password: string) => Promise<AuthUser>;
+  logout: () => Promise<void>;
+  register: (formData: RegisterFormData) => Promise<AuthUser>;
+  authLoading: boolean;
+  restoreSession: () => Promise<AuthUser | null>;
+};
+
+const AuthContext = createContext<AuthContextValue | null>(null);
+
+const buildSessionUser = (account: AuthAccount): AuthUser => ({
   id: account.id,
   email: account.email,
   role: account.role,
@@ -19,12 +58,14 @@ const buildSessionUser = (account) => ({
   surname: account.surname,
 });
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [authLoading, setAuthLoading] = useState(true);
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [authLoading, setAuthLoading] = useState(() =>
+    shouldBlockForAuthBootstrap(globalThis.location.pathname),
+  );
 
   const restoreSession = useCallback(async () => {
-    const storedUser = readStoredUser();
+    const storedUser = readStoredUser() as AuthUser | null;
     if (storedUser) {
       setUser(storedUser);
       return storedUser;
@@ -42,20 +83,19 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
-    if (isPrivateRoute(globalThis.location.pathname)) {
+    if (shouldBlockForAuthBootstrap(globalThis.location.pathname)) {
       bootstrap();
       return;
     }
 
-    setAuthLoading(false);
     restoreSession();
   }, [restoreSession]);
 
-  const login = useCallback(async (email, password) => {
-    const account = findAccount(email);
+  const login = useCallback(async (email: string, password: string) => {
+    const account = findAccount(email) as AuthAccount | null;
 
     if (!account || account.password !== password) {
-      const error = new Error('Credenciales invalidas. Verifica tu correo y contraseña.');
+      const error = new Error('Credenciales invalidas. Verifica tu correo y contraseña.') as AuthError;
       error.code = 'INVALID_CREDENTIALS';
       throw error;
     }
@@ -66,11 +106,11 @@ export const AuthProvider = ({ children }) => {
     return userData;
   }, []);
 
-  const register = useCallback(async (formData) => {
+  const register = useCallback(async (formData: RegisterFormData) => {
     const normalizedEmail = String(formData.email || '').trim().toLowerCase();
 
     if (findAccount(normalizedEmail)) {
-      const error = new Error('Este correo ya esta registrado.');
+      const error = new Error('Este correo ya esta registrado.') as AuthError;
       error.fieldErrors = { email: 'Este correo ya esta registrado.' };
       throw error;
     }
@@ -100,11 +140,6 @@ export const AuthProvider = ({ children }) => {
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 };
-
-AuthProvider.propTypes = {
-  children: PropTypes.node,
-};
-
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error('useAuth debe usarse dentro de AuthProvider');
