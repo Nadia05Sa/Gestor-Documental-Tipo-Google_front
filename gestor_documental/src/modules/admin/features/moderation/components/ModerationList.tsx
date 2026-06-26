@@ -1,0 +1,1 @@
+export const ModerationList = () => null;
