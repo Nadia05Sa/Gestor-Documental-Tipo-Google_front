@@ -1,216 +1,359 @@
-# Estructura del proyecto — Infinity Vault (`gestor_documental`)
+# Estructura del proyecto — Infinity Vault Frontend
 
-Frontend de **Infinity Vault**, gestor documental tipo Google Drive. Construido con **React 19**, **Vite 7**, **TypeScript/JavaScript**, **Tailwind CSS 4** y **React Router 7**.
+Documentación del estado actual del frontend y de las convenciones arquitectónicas del repositorio.
 
 ---
 
-## Árbol de directorios
+## 1. Contexto
 
-```
-gestor_documental/
-├── docs/                          # Documentación del proyecto
-├── public/                        # Archivos estáticos públicos
-├── src/
-│   ├── assets/                    # Imágenes y recursos estáticos
-│   ├── core/                      # Núcleo de la aplicación
-│   │   ├── context/
-│   │   │   └── AuthContext.jsx    # Estado global de autenticación
-│   │   └── routes/
-│   │       ├── AppRouter.jsx      # Router principal
-│   │       ├── AdminRouter.jsx    # Rutas del área admin
-│   │       └── UserRouter.jsx     # Rutas del área usuario
-│   ├── modules/                   # Módulos por dominio
-│   │   ├── admin/                 # Panel de administración
-│   │   │   ├── features/
-│   │   │   │   ├── moderation/pages/
-│   │   │   │   └── user-management/pages/
-│   │   │   └── layout/
-│   │   │       └── AdminLayout.jsx
-│   │   ├── auth/                  # Autenticación y páginas públicas
-│   │   │   ├── components/        # UI compartida de auth
-│   │   │   ├── constants/         # Contenido y estilos estáticos
-│   │   │   ├── features/
-│   │   │   │   ├── landing/       # Página de inicio pública
-│   │   │   │   ├── login/         # Inicio de sesión
-│   │   │   │   └── register/      # Registro de usuario
-│   │   │   ├── hooks/             # Lógica reutilizable de auth
-│   │   │   ├── routing/           # Guards de rutas
-│   │   │   ├── utils/             # Utilidades de auth
-│   │   │   └── validations/       # Validaciones de formularios
-│   │   └── user/                  # Área de usuario autenticado
-│   │       ├── feactures/         # Features del usuario (drive, favoritos, etc.)
-│   │       └── layout/
-│   │           └── UserLayout.jsx
-│   ├── shared/                    # Código compartido entre módulos
-│   │   ├── components/
-│   │   │   ├── inputs/            # Campos, botones, checkbox, etc.
-│   │   │   ├── layout/            # Header, sidebar, paneles
-│   │   │   └── tables/            # Listas, paginación, estados vacíos
-│   │   ├── hooks/
-│   │   ├── pages/                 # Pantallas globales (loading, 404)
-│   │   └── utils/
-│   ├── App.tsx                    # Componente raíz
-│   ├── main.tsx                   # Punto de entrada
-│   └── index.css                  # Estilos globales y variables CSS
-├── index.html
-├── package.json
-├── tsconfig.json
-├── tsconfig.app.json
-└── vite.config.ts
+**Infinity Vault** es un gestor documental tipo Google Drive. El frontend vive en la carpeta `gestor_documental/` como una **SPA** con:
+
+**React 19 + TypeScript + Vite 7 + React Router 7 + Tailwind CSS 4**
+
+La documentación original de Vault contemplaba Next.js 14 o un monorepo NX con microfrontends. Este repositorio adoptó la alternativa **React + Vite** como aplicación única, manteniendo la separación por módulos y features que facilitará escalar hacia microfrontends más adelante.
+
+---
+
+## 2. Stack actual
+
+| Área | Tecnología |
+|---|---|
+| Framework UI | React 19 |
+| Lenguaje | TypeScript |
+| Build tool | Vite 7 |
+| Routing | React Router DOM 7 |
+| Estilos | Tailwind CSS 4 (`@tailwindcss/vite`) |
+| Iconos | Lucide React |
+| Autenticación (dev) | Mock con `localStorage` |
+| Validaciones | Esquemas manuales en `validations/` (Zod/Yup pendiente) |
+| HTTP client | Pendiente (`apiClient.ts` no implementado aún) |
+| i18n | Pendiente (textos en `types/` y componentes por ahora) |
+
+---
+
+## 3. Raíz del repositorio
+
+```text
+Gestor-Documental-Tipo-Google_front/
+├── docs/                    # Documentación del proyecto
+│   ├── ESTRUCTURA_PROYECTO.md
+│   └── AUTH_LANDING_LOGIN_REGISTRO.md
+├── gestor_documental/       # Aplicación frontend (Vite)
+│   ├── src/
+│   ├── index.html
+│   ├── vite.config.ts
+│   ├── tsconfig.json
+│   └── package.json
+└── README.md
 ```
 
 ---
 
-## Capas y responsabilidades
+## 4. Estructura de `gestor_documental/src`
 
-| Capa | Ubicación | Responsabilidad |
-|------|-----------|-----------------|
-| **Entrada** | `main.tsx`, `App.tsx` | Montar React, envolver con `AuthProvider` y `AppRouter` |
-| **Core** | `src/core/` | Contexto global, definición de rutas |
-| **Módulos** | `src/modules/` | Lógica de negocio por dominio (auth, user, admin) |
-| **Shared** | `src/shared/` | Componentes y utilidades reutilizables en toda la app |
-| **Features** | `modules/*/features/` | Pantallas y componentes de una funcionalidad concreta |
+```text
+src/
+├── main.tsx                 # Punto de entrada
+├── App.tsx                  # AuthProvider + AppRouter
+│
+├── core/
+│   └── context/
+│       └── AuthContext.tsx  # Estado global de autenticación
+│
+├── router/
+│   ├── index.tsx            # BrowserRouter y rutas 404
+│   ├── AuthRoutes.tsx       # /, /login, /register
+│   ├── AppRoutes.tsx        # Rutas de usuario autenticado
+│   ├── AdminRoutes.tsx      # Rutas de administrador
+│   └── ProtectedRoute.tsx   # Guards de sesión y rol
+│
+├── modules/
+│   ├── auth/
+│   │   ├── layout/
+│   │   │   └── AuthLayout.tsx
+│   │   └── features/
+│   │       ├── landing/     # Página pública /
+│   │       ├── login/       # /login
+│   │       └── register/    # /register
+│   │
+│   ├── user/
+│   │   ├── layout/
+│   │   │   └── UserLayout.tsx
+│   │   └── features/
+│   │       ├── drive/       # /drive
+│   │       ├── favorites/   # /favorites
+│   │       ├── recents/     # /recents
+│   │       ├── trash/       # /trash
+│   │       └── settings/    # /settings
+│   │
+│   └── admin/
+│       ├── layout/
+│       │   └── AdminLayout.tsx
+│       └── features/
+│           ├── user-management/   # /admin/users
+│           ├── moderation/          # /admin/reports
+│           └── audit/               # (estructura preparada)
+│
+├── shared/
+│   ├── components/
+│   │   ├── auth/            # AuthTopBar, InfinityVaultLogo, etc.
+│   │   ├── inputs/          # InputText, Checkbox, ActionButton, etc.
+│   │   ├── layout/          # AuthenticatedLayout, Sidebar, Header, etc.
+│   │   ├── tables/          # Pagination, EntityListItem, etc.
+│   │   ├── ConfirmModal.tsx
+│   │   ├── VaultModal.tsx
+│   │   └── VaultCard.tsx
+│   ├── hooks/
+│   │   └── useRequestDeduper.js
+│   ├── pages/
+│   │   ├── AppLoadingScreen.tsx
+│   │   └── AppNotFoundScreen.tsx
+│   └── utils/
+│       └── authTheme.ts     # Tema, gradientes y setup de páginas auth
+│
+└── assets/
+```
 
 ---
 
-## Alias de importación (Vite)
+## 5. Alias de importación
 
-| Alias | Ruta |
-|-------|------|
-| `@shared` | `src/shared` |
-| `@context` | `src/core/context` |
+Configurados en `vite.config.ts` y `tsconfig.app.json`:
+
+| Alias | Resuelve a |
+|---|---|
+| `@shared/*` | `src/shared/*` |
+| `@context/*` | `src/core/context/*` |
+| `@context/AuthContext` | `src/core/context/AuthContext` |
 
 Ejemplo:
 
-```js
-import { ActionButton } from '@shared/components/inputs/ActionButton';
+```typescript
+import { AuthTopBar } from '@shared/components/auth/AuthTopBar';
 import { useAuth } from '@context/AuthContext';
 ```
 
 ---
 
-## Rutas de la aplicación
+## 6. Router y rutas
 
-| Ruta | Acceso | Descripción |
-|------|--------|-------------|
-| `/` | Público | Landing page |
-| `/login` | Invitado | Inicio de sesión |
-| `/registro` | Invitado | Registro de cuenta |
-| `/usuario` | Usuario | Área principal del usuario |
-| `/usuario/drive` | Usuario | Drive (placeholder) |
-| `/usuario/favoritos` | Usuario | Favoritos (placeholder) |
-| `/usuario/ajustes` | Usuario | Ajustes (placeholder) |
-| `/admin` | Admin | Panel de administración |
-| `*` | — | Página 404 |
+### Archivos del router
+
+```text
+src/router/
+├── index.tsx           # AppRouter: combina todas las rutas
+├── AuthRoutes.tsx      # Rutas públicas
+├── AppRoutes.tsx       # Rutas de usuario (rol user)
+├── AdminRoutes.tsx     # Rutas de admin (rol admin)
+└── ProtectedRoute.tsx  # Guard unificado
+```
+
+### Mapa de rutas
+
+| Ruta | Acceso | Página |
+|---|---|---|
+| `/` | Público | Landing |
+| `/login` | Solo invitado | Login |
+| `/register` | Solo invitado | Registro |
+| `/drive` | Usuario autenticado | Explorador principal |
+| `/favorites` | Usuario autenticado | Favoritos |
+| `/recents` | Usuario autenticado | Recientes |
+| `/trash` | Usuario autenticado | Papelera |
+| `/settings` | Usuario autenticado | Configuración |
+| `/admin` | Admin | Redirige a `/admin/users` |
+| `/admin/users` | Admin | Gestión de usuarios |
+| `/admin/reports` | Admin | Moderación / reportes |
+| `*` | Cualquiera | 404 |
+
+### Reglas de enrutamiento
+
+- Rutas públicas en `AuthRoutes.tsx`.
+- Rutas de usuario envueltas en `ProtectedRoute allowedRole="user"` + `UserLayout`.
+- Rutas admin envueltas en `ProtectedRoute allowedRole="admin"` + `AdminLayout`.
+- Login y registro usan `ProtectedRoute guestOnly` para redirigir si ya hay sesión.
+- Tras login, la redirección depende del rol:
+  - `user` → `/drive`
+  - `admin` → `/admin/users`
 
 ---
 
-## Módulo `auth` (detalle)
+## 7. Patrón de módulos (features)
 
-```
-modules/auth/
-├── components/
-│   ├── AuthTopBar.jsx             # Barra superior de la landing
-│   ├── AuthFormError.jsx          # Mensaje de error en formularios
-│   ├── AuthGradientButton.jsx     # Botón con gradiente de marca
-│   ├── InfinityVaultLogo.jsx      # Logo del producto
-│   ├── GoogleIcon.jsx             # Icono de Google (login social)
-│   ├── PasswordRequirementsChecklist.jsx
-│   └── index.js                   # Barrel export
-├── constants/
-│   ├── theme.js                   # Colores, gradientes, tipografías
-│   ├── landingContent.js          # Textos de la landing
-│   ├── loginContent.js            # Textos del panel promo del login
-│   └── credentials.js             # Usuarios de prueba hardcodeados
-├── features/
-│   ├── landing/
-│   │   ├── pages/Landing.jsx
-│   │   └── components/            # Hero, Features, Benefits, CTA, Footer
-│   ├── login/
-│   │   ├── pages/Login.jsx
-│   │   └── components/            # LoginForm, LoginPromoPanel
-│   └── register/
-│       ├── pages/Register.jsx
-│       └── components/            # RegisterForm, RegisterSuccess
+Cada feature sigue la misma estructura dentro de `modules/[rol]/features/[feature]/`:
+
+```text
+modules/[rol]/features/[feature]/
+├── api/
+│   └── [feature]Api.ts       # Llamadas HTTP o persistencia local
 ├── hooks/
-│   ├── useLogin.js
-│   ├── useRegister.js
-│   └── useLandingNavigation.js
-├── routing/
-│   └── AuthGuards.jsx             # RequireAuth, RequireGuest, RequireRole
-├── utils/
-│   ├── authRoutes.js              # getHomePathByRole()
-│   ├── authStorage.js             # localStorage y cuentas
-│   └── authTheme.js               # setupAuthPage()
-└── validations/
-    └── registerValidationSchema.js
-```
-
----
-
-## Módulo `shared` (detalle)
-
-```
-shared/
+│   └── use[Feature].ts       # Lógica de negocio y estado
 ├── components/
-│   ├── inputs/        # InputText, ActionButton, Checkbox, Select, Switch...
-│   ├── layout/        # Header, Sidebar, SideDrawer, SurfacePanel...
-│   ├── tables/        # EntityListItem, Pagination, EmptyStatePanel...
-│   ├── VaultCard.jsx  # Componentes de diseño "Vault"
-│   ├── VaultModal.jsx
-│   └── vault-utils.js # Iconos y helpers de renderizado
-├── hooks/
-│   └── useRequestDeduper.js
-├── pages/
-│   ├── AppLoadingScreen.jsx
-│   └── AppNotFoundScreen.jsx
-└── utils/
-    └── universityContext.js
+│   ├── [Feature]List.tsx
+│   ├── [Feature]Detail.tsx
+│   └── [Feature]Form.tsx
+├── validations/
+│   └── [feature]Schema.ts    # Validaciones de formulario
+├── types/
+│   └── [feature].types.ts    # Tipos y constantes de contenido
+└── pages/
+    └── page.tsx              # Página exportada al router
 ```
+
+### Responsabilidades
+
+| Carpeta | Responsabilidad |
+|---|---|
+| `api/` | Peticiones HTTP o acceso a almacenamiento (mock en auth) |
+| `hooks/` | Estado, efectos y orquestación de la feature |
+| `components/` | UI pura; recibe props y callbacks |
+| `validations/` | Reglas de validación de formularios |
+| `types/` | Tipos TypeScript y constantes de copy |
+| `pages/` | Composición de layout + hooks + componentes |
+
+### Features implementadas
+
+| Módulo | Feature | Estado |
+|---|---|---|
+| `auth` | landing, login, register | UI completa con mock |
+| `user` | drive, favorites, recents, trash, settings | Estructura base |
+| `admin` | user-management, moderation | Estructura base |
+| `admin` | audit | Estructura preparada |
 
 ---
 
-## Scripts disponibles
+## 8. Layouts
+
+### `AuthLayout`
+
+Usado en `/login` y `/register`. Layout limpio sin sidebar.
+
+### `UserLayout` / `AdminLayout`
+
+Ambos delegan en `AuthenticatedLayout` (`@shared/components/layout/AuthenticatedLayout.tsx`):
+
+- Header con email del usuario y botón de cerrar sesión.
+- `<Outlet />` para el contenido de cada feature.
+
+### Landing
+
+No usa `AuthLayout`; renderiza su propia estructura con `AuthTopBar` fijo.
+
+---
+
+## 9. Autenticación (mock de desarrollo)
+
+El flujo actual no llama a un backend. La lógica vive en:
+
+- `core/context/AuthContext.tsx` — estado global (`user`, `login`, `register`, `logout`)
+- `modules/auth/features/login/api/loginApi.ts` — usuarios hardcodeados y sesión en `localStorage`
+- `modules/auth/features/register/api/registerApi.ts` — registro en `localStorage`
+
+Claves de almacenamiento:
+
+| Clave | Contenido |
+|---|---|
+| `vault_auth_user` | Sesión activa (sin contraseña) |
+| `vault_registered_users` | Cuentas registradas desde `/register` |
+
+Ver [AUTH_LANDING_LOGIN_REGISTRO.md](./AUTH_LANDING_LOGIN_REGISTRO.md) para el flujo completo.
+
+---
+
+## 10. Componentes compartidos (`shared/`)
+
+### Auth
+
+`AuthTopBar`, `AuthGradientButton`, `AuthFormError`, `InfinityVaultLogo`, `GoogleIcon`, `PasswordRequirementsChecklist`
+
+### Inputs
+
+`InputText`, `Checkbox`, `Switch`, `Select`, `Textarea`, `ActionButton`, `ColorSwatchPicker`, `SelectableListField`, `CascadingSelectableListField`
+
+### Layout
+
+`AuthenticatedLayout`, `Sidebar`, `Header`, `SideDrawer`, `PageSectionHeader`, `SurfacePanel`, `LoadingStatePanel`, `InfoFieldCard`
+
+### Tablas y listas
+
+`EntityListItem`, `EntityListStateRenderer`, `Pagination`, `EmptyStatePanel`
+
+### Overlays
+
+`ConfirmModal`, `VaultModal`, `VaultSidePanel`, `VaultAlert`, `VaultBadge`, `VaultCard`, `Tooltip`
+
+---
+
+## 11. Estilos y tema
+
+Tailwind CSS 4 se integra vía plugin Vite (`@tailwindcss/vite`). No hay `tailwind.config.ts` separado; los tokens visuales de auth están centralizados en:
+
+```text
+src/shared/utils/authTheme.ts
+```
+
+Incluye gradientes de marca, variables CSS (`--bg-base`, `--text-primary`, etc.) y `setupAuthPage()` para fuentes y tema claro en pantallas de auth.
+
+---
+
+## 12. Scripts de desarrollo
 
 ```bash
-npm run dev       # Servidor de desarrollo (http://localhost:5173)
-npm run build     # Compilación de producción
-npm run preview   # Vista previa del build
-npm run lint      # ESLint
+cd gestor_documental
+npm install
+npm run dev      # Servidor local (http://localhost:5173)
+npm run build    # tsc -b && vite build
+npm run lint     # ESLint
+npm run preview  # Vista previa del build
 ```
 
 ---
 
-## Stack tecnológico
+## 13. Convenciones TypeScript
 
-| Tecnología | Uso |
-|------------|-----|
-| React 19 | UI y componentes |
-| Vite 7 | Bundler y dev server |
-| React Router 7 | Navegación y rutas protegidas |
-| Tailwind CSS 4 | Estilos utilitarios |
-| lucide-react | Iconos |
-| prop-types | Validación de props en componentes JS |
-| TypeScript | Tipado en archivos `.tsx` y configuración |
+- Componentes en `.tsx`; lógica, hooks, APIs y tipos en `.ts`.
+- Props tipadas explícitamente (migración en curso: algunos handlers aún sin tipo).
+- Exportaciones nombradas preferidas (`export const Login = ...`).
+- Páginas del router exportadas como `[Feature]Page` o `[Feature]` desde `pages/page.tsx`.
+- `allowJs: true` permite archivos `.js` legacy (`useRequestDeduper.js`, `vault-utils.js`).
 
 ---
 
-## Flujo de arranque
+## 14. Objetivo futuro (no implementado aún)
 
-```
-main.tsx
-  └── App.tsx
-        ├── AuthProvider          (contexto de sesión)
-        └── AppRouter             (rutas + guards)
-              ├── Landing         (público)
-              ├── Login/Register  (invitado)
-              └── User/Admin      (autenticado + rol)
-```
+Estas decisiones están documentadas como referencia arquitectónica para cuando el proyecto escale:
+
+| Área | Objetivo |
+|---|---|
+| Monorepo NX | Separar `mfe-main`, `mfe-word`, `mfe-excel` |
+| Module Federation | Cargar editores TipTap y FortuneSheet de forma lazy |
+| HTTP | Cliente centralizado `apiClient.ts` con cifrado selectivo |
+| i18n | `react-i18next` con archivos en `locales/es/` y `locales/en/` |
+| Colaboración | Yjs + WebSocket directo |
+| Variables de entorno | `VITE_API_BASE_URL`, `VITE_RSA_PUBLIC_KEY`, etc. |
+
+Reglas que aplicarán cuando exista backend:
+
+- Toda petición HTTP pasa por `apiClient.ts`.
+- Mutaciones protegidas con `useRequestDeduper`.
+- No llamar a MinIO desde el frontend.
+- No exponer IDs internos en URLs públicas.
+- Datos sensibles con `{ encrypt: true }`.
 
 ---
 
-## Notas
+## 15. Checklist al agregar una feature
 
-- La autenticación actual es **mock**: usuarios hardcodeados + registro en `localStorage` (sin backend).
-- Los layouts de usuario y admin son básicos; las features internas están en construcción.
-- El directorio `user/feactures` mantiene el nombre histórico con typo (`feactures` en lugar de `features`).
+- [ ] Crear carpeta en `modules/[rol]/features/[feature]/` con la estructura estándar.
+- [ ] Exportar la página desde `pages/page.tsx`.
+- [ ] Registrar la ruta en el router correspondiente (`AuthRoutes`, `AppRoutes` o `AdminRoutes`).
+- [ ] Envolver rutas privadas con `ProtectedRoute` y el layout adecuado.
+- [ ] Colocar componentes reutilizables en `shared/components/`.
+- [ ] Tipos y constantes en `types/`; validaciones en `validations/`.
+- [ ] Lógica de negocio en hooks, no en componentes.
+- [ ] Actualizar esta documentación si cambia la arquitectura o las rutas.
+
+---
+
+## 16. Documentación relacionada
+
+- [AUTH_LANDING_LOGIN_REGISTRO.md](./AUTH_LANDING_LOGIN_REGISTRO.md) — Landing, login, registro y flujo de autenticación mock.

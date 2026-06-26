@@ -8,9 +8,11 @@ Documentación de las tres pantallas públicas de **Infinity Vault** y cómo se 
 
 | Pantalla | Ruta | Archivo principal |
 |----------|------|-------------------|
-| Landing | `/` | `features/landing/pages/Landing.jsx` |
-| Login | `/login` | `features/login/pages/Login.jsx` |
-| Registro | `/registro` | `features/register/pages/Register.jsx` |
+| Landing | `/` | `modules/auth/features/landing/pages/page.tsx` |
+| Login | `/login` | `modules/auth/features/login/pages/page.tsx` |
+| Registro | `/register` | `modules/auth/features/register/pages/page.tsx` |
+
+> **Nota:** La ruta de registro es `/register` (no `/registro`).
 
 ---
 
@@ -27,7 +29,7 @@ Documentación de las tres pantallas públicas de **Infinity Vault** y cómo se 
            ▼               ▼
     ┌────────────┐  ┌────────────┐
     │  Registro  │  │   Login    │
-    │ /registro  │  │  /login    │
+    │ /register  │  │  /login    │
     └──────┬─────┘  └──────┬─────┘
            │               │
            │  éxito        │ credenciales OK
@@ -35,7 +37,7 @@ Documentación de las tres pantallas públicas de **Infinity Vault** y cómo se 
                            │
               ┌────────────┴────────────┐
               ▼                         ▼
-        /usuario (rol: user)      /admin (rol: admin)
+        /drive (rol: user)      /admin/users (rol: admin)
 ```
 
 ---
@@ -59,35 +61,38 @@ La landing se compone de **5 secciones** más la barra superior:
 
 ### Archivos involucrados
 
-```
-features/landing/
-├── pages/Landing.jsx              # Orquestador (~60 líneas)
+```text
+modules/auth/features/landing/
+├── pages/page.tsx                    # Orquestador (~60 líneas)
+├── hooks/useLanding.ts               # Navegación a login/registro
+├── types/landing.types.ts            # Textos, stats e iconos de cada sección
 └── components/
-    ├── LandingHeroSection.jsx
-    ├── LandingFeaturesSection.jsx
-    ├── LandingBenefitsSection.jsx
-    ├── LandingCtaSection.jsx
-    ├── LandingFooter.jsx
-    └── SectionHeading.jsx
+    ├── LandingHeroSection.tsx
+    ├── LandingFeaturesSection.tsx
+    ├── LandingBenefitsSection.tsx
+    ├── LandingCtaSection.tsx
+    ├── LandingFooter.tsx
+    └── SectionHeading.tsx
 
-hooks/useLandingNavigation.js      # Navegación a login/registro
-constants/landingContent.js        # Textos e iconos de cada sección
-components/AuthTopBar.jsx          # Barra fija superior
+shared/components/auth/AuthTopBar.tsx   # Barra fija superior
+shared/utils/authTheme.ts             # Tema, gradientes y setupAuthPage()
 ```
 
-### Lógica de navegación (`useLandingNavigation`)
+### Lógica de navegación (`useLanding`)
 
 | Acción | Comportamiento |
 |--------|----------------|
-| **Iniciar sesión** | Si hay sesión activa → redirige a `/usuario` o `/admin`. Si no → va a `/login` |
-| **Comenzar gratis / Comenzar ahora** | Navega a `/registro` |
-| **Estado `pendingAction`** | Evita doble clic mientras carga |
+| **Iniciar sesión** | Si hay sesión activa (en memoria o `localStorage`) → redirige a `/drive` o `/admin/users`. Si no → va a `/login` |
+| **Comenzar gratis / Comenzar ahora** | Navega a `/register` |
+| **Estado `pendingAction`** | Evita doble clic mientras carga (`isBusy`, `isLoginLoading`, `isRegisterLoading`) |
 
 ### Contenido editable
 
 Los textos, estadísticas y tarjetas de funciones viven en:
 
-`src/modules/auth/constants/landingContent.js`
+`gestor_documental/src/modules/auth/features/landing/types/landing.types.ts`
+
+Constantes exportadas: `LANDING_HERO`, `LANDING_FEATURES`, `LANDING_BENEFITS`, `LANDING_CTA`, `LANDING_FOOTER_LINKS`.
 
 Para cambiar copy o métricas sin tocar JSX, edita ese archivo.
 
@@ -112,17 +117,21 @@ Pantalla **split-screen** en escritorio:
 
 En móvil solo se muestra el formulario.
 
+La ruta está envuelta en `AuthLayout` + `ProtectedRoute guestOnly`.
+
 ### Archivos involucrados
 
-```
-features/login/
-├── pages/Login.jsx                # Estado del formulario
+```text
+modules/auth/features/login/
+├── pages/page.tsx                    # Estado del formulario
+├── hooks/useLogin.ts                 # Lógica de submit y redirección
+├── api/loginApi.ts                   # Credenciales mock y utilidades de sesión
+├── types/login.types.ts              # Tipos y textos del panel promo (LOGIN_PROMO)
 └── components/
-    ├── LoginForm.jsx              # UI del formulario
-    └── LoginPromoPanel.jsx        # Panel derecho promocional
+    ├── LoginForm.tsx                 # UI del formulario
+    └── LoginPromoPanel.tsx           # Panel derecho promocional
 
-hooks/useLogin.js                  # Lógica de submit y redirección
-constants/loginContent.js          # Textos del panel promo
+modules/auth/layout/AuthLayout.tsx    # Layout contenedor
 ```
 
 ### Componentes reutilizables usados
@@ -134,19 +143,21 @@ constants/loginContent.js          # Textos del panel promo
 - `GoogleIcon` — botón social (solo visual, sin OAuth real)
 - `InfinityVaultLogo`
 
+Todos en `@shared/components/`.
+
 ### Flujo de inicio de sesión
 
 ```
 1. Usuario envía email + contraseña
 2. useLogin → AuthContext.login()
-3. authStorage.findAccount() busca en:
-   - Usuarios hardcodeados (credentials.js)
-   - Usuarios registrados (localStorage)
+3. loginApi.findAccount() busca en:
+   - Usuarios hardcodeados (HARDCODED_USERS en loginApi.ts)
+   - Usuarios registrados (localStorage: vault_registered_users)
 4. Si coincide la contraseña:
    - Guarda sesión en localStorage (vault_auth_user)
    - Redirige según rol:
-     - admin → /admin
-     - user  → /usuario
+     - admin → /admin/users
+     - user  → /drive
 5. Si falla → muestra error en pantalla
 ```
 
@@ -154,21 +165,21 @@ constants/loginContent.js          # Textos del panel promo
 
 | Rol | Correo | Contraseña | Destino |
 |-----|--------|------------|---------|
-| Usuario | `usuario@gmail.com` | `User123` | `/usuario` |
-| Admin | `admin@gmail.com` | `Admin123` | `/admin` |
+| Usuario | `usuario@gmail.com` | `User123` | `/drive` |
+| Admin | `admin@gmail.com` | `Admin123` | `/admin/users` |
 
-También pueden iniciar sesión usuarios creados desde `/registro`.
+También pueden iniciar sesión usuarios creados desde `/register`.
 
 ### Guard de ruta
 
-`RequireGuest` envuelve la ruta `/login`:
+`ProtectedRoute guestOnly` envuelve la ruta `/login`:
 
-- Si ya hay sesión → redirige al home del rol
-- En rutas públicas no bloquea la UI esperando verificación de sesión
+- Si ya hay sesión → redirige al home del rol (`getHomePathByRole`)
+- En rutas públicas no bloquea la UI esperando verificación de sesión (salvo `/login` y `/register`, que sí esperan el bootstrap)
 
 ---
 
-## 3. Registro (`/registro`)
+## 3. Registro (`/register`)
 
 ### Propósito
 
@@ -187,15 +198,16 @@ Pantalla **centrada** con tarjeta blanca sobre fondo con gradiente suave:
 
 ### Archivos involucrados
 
-```
-features/register/
-├── pages/Register.jsx             # Estado y validación
+```text
+modules/auth/features/register/
+├── pages/page.tsx                    # Estado y validación
+├── hooks/useRegister.ts              # Llamada a AuthContext.register()
+├── api/registerApi.ts                # Persistencia en localStorage
+├── validations/registerSchema.ts     # Reglas de validación
+├── types/register.types.ts           # Tipos del formulario
 └── components/
-    ├── RegisterForm.jsx           # Formulario completo
-    └── RegisterSuccess.jsx        # Pantalla post-registro
-
-hooks/useRegister.js               # Llamada a AuthContext.register()
-validations/registerValidationSchema.js
+    ├── RegisterForm.tsx              # Formulario completo
+    └── RegisterSuccess.tsx           # Pantalla post-registro
 ```
 
 ### Campos del formulario
@@ -211,11 +223,13 @@ validations/registerValidationSchema.js
 
 ### Requisitos de contraseña
 
-Se validan en `registerValidationSchema.js` y se muestran con `PasswordRequirementsChecklist` al escribir:
+Se validan en `registerSchema.ts` y se muestran con `PasswordRequirementsChecklist` al escribir:
 
 - Mínimo 8 caracteres
 - Al menos una mayúscula
 - Al menos un carácter especial
+
+Funciones clave: `evaluatePasswordRequirements`, `arePasswordRequirementsMet`, `validateRegisterForm`.
 
 ### Flujo de registro
 
@@ -243,36 +257,47 @@ Se validan en `registerValidationSchema.js` y se muestran con `PasswordRequireme
 
 ## Autenticación compartida
 
-### AuthContext (`core/context/AuthContext.jsx`)
+### AuthContext (`core/context/AuthContext.tsx`)
 
 Expone el estado global:
 
 | Método / propiedad | Descripción |
 |--------------------|-------------|
 | `user` | Usuario autenticado o `null` |
-| `authLoading` | Cargando sesión (solo bloquea en rutas privadas) |
+| `authLoading` | Cargando sesión (bloquea en rutas privadas y guest auth) |
 | `login(email, password)` | Inicia sesión |
 | `register(formData)` | Crea cuenta nueva |
 | `logout()` | Cierra sesión |
 | `restoreSession()` | Lee sesión de localStorage |
 
-### Guards (`routing/AuthGuards.jsx`)
+Hook de consumo: `useAuth()` desde `@context/AuthContext`.
 
-| Guard | Uso |
-|-------|-----|
-| `RequireAuth` | Rutas `/usuario` y `/admin` — exige sesión |
-| `RequireGuest` | Rutas `/login` y `/registro` — redirige si ya hay sesión |
-| `RequireRole` | Separa admin de usuario normal |
-| `NotFoundRoute` | Página 404 con botón contextual |
+### Guards (`router/ProtectedRoute.tsx`)
+
+Un solo componente con props configurables:
+
+| Prop | Uso |
+|------|-----|
+| `guestOnly` | Rutas `/login` y `/register` — redirige si ya hay sesión |
+| `allowedRole="user"` | Rutas de usuario — exige sesión y rol user |
+| `allowedRole="admin"` | Rutas admin — exige sesión y rol admin |
+| (sin props + `<Outlet />`) | Solo exige sesión activa |
+
+Utilidades relacionadas en `loginApi.ts`:
+
+- `getHomePathByRole(role)` — devuelve `/admin/users` o `/drive`
+- `shouldBlockForAuthBootstrap(pathname)` — decide si mostrar loading al iniciar
+- `isPrivateRoute(pathname)` / `isGuestAuthRoute(pathname)`
 
 ### Utilidades compartidas entre las 3 pantallas
 
 | Archivo | Función |
 |---------|---------|
-| `utils/authTheme.js` | `setupAuthPage()` — carga fuentes y tema claro |
-| `constants/theme.js` | Gradientes, colores de marca, estilos de labels |
-| `components/InfinityVaultLogo.jsx` | Logo usado en login, registro y top bar |
-| `components/AuthGradientButton.jsx` | Botón primario con gradiente azul → morado |
+| `shared/utils/authTheme.ts` | `setupAuthPage()`, gradientes, colores de marca, estilos de labels |
+| `shared/components/auth/InfinityVaultLogo.tsx` | Logo usado en login, registro y top bar |
+| `shared/components/auth/AuthGradientButton.tsx` | Botón primario con gradiente azul → morado |
+| `shared/components/auth/AuthTopBar.tsx` | Barra superior de la landing |
+| `shared/components/auth/PasswordRequirementsChecklist.tsx` | Checklist de requisitos de contraseña |
 
 ---
 
@@ -284,10 +309,10 @@ npm run dev
 ```
 
 1. Abre **http://localhost:5173/** — explora la landing
-2. Pulsa **Comenzar gratis** → completa el registro
+2. Pulsa **Comenzar gratis** → completa el registro en `/register`
 3. Tras "Cuenta creada", ve al login con tu nuevo correo
-4. O usa `usuario@gmail.com` / `User123` para área usuario
-5. O usa `admin@gmail.com` / `Admin123` para panel admin
+4. O usa `usuario@gmail.com` / `User123` para área usuario (`/drive`)
+5. O usa `admin@gmail.com` / `Admin123` para panel admin (`/admin/users`)
 
 ---
 
@@ -295,8 +320,15 @@ npm run dev
 
 | Cambio | Dónde actuar |
 |--------|--------------|
-| Conectar API real | `AuthContext`, nuevos archivos en `auth/api/` |
-| OAuth con Google | `LoginForm.jsx` + endpoint backend |
+| Conectar API real | `AuthContext`, archivos en `auth/features/*/api/` |
+| OAuth con Google | `LoginForm.tsx` + endpoint backend |
 | Recuperar contraseña | Nueva feature `auth/features/forgot-password/` |
-| Verificación de email | Pantalla post-registro + hook similar a horarios |
-| Traducciones i18n | Mover textos de `constants/` a archivos de locale |
+| Verificación de email | Pantalla post-registro + hook dedicado |
+| Traducciones i18n | Mover textos de `types/` a archivos de locale |
+| Validación con Zod | Reemplazar funciones manuales en `validations/` |
+
+---
+
+## Documentación relacionada
+
+- [ESTRUCTURA_PROYECTO.md](./ESTRUCTURA_PROYECTO.md) — Estructura general, router, módulos y convenciones del repositorio.
