@@ -8,9 +8,9 @@ Documentación de las tres pantallas públicas de **Infinity Vault** y cómo se 
 
 | Pantalla | Ruta | Archivo principal |
 |----------|------|-------------------|
-| Landing | `/` | `modules/auth/features/landing/pages/page.tsx` |
-| Login | `/login` | `modules/auth/features/login/pages/page.tsx` |
-| Registro | `/register` | `modules/auth/features/register/pages/page.tsx` |
+| Landing | `/` | `modules/auth/landing/pages/page.tsx` |
+| Login | `/login` | `modules/auth/login/pages/page.tsx` |
+| Registro | `/register` | `modules/auth/register/pages/page.tsx` |
 
 > **Nota:** La ruta de registro es `/register` (no `/registro`).
 
@@ -62,7 +62,7 @@ La landing se compone de **5 secciones** más la barra superior:
 ### Archivos involucrados
 
 ```text
-modules/auth/features/landing/
+modules/auth/landing/
 ├── pages/page.tsx                    # Orquestador (~60 líneas)
 ├── hooks/useLanding.ts               # Navegación a login/registro
 ├── types/landing.types.ts            # Textos, stats e iconos de cada sección
@@ -90,7 +90,7 @@ shared/utils/authTheme.ts             # Tema, gradientes y setupAuthPage()
 
 Los textos, estadísticas y tarjetas de funciones viven en:
 
-`gestor_documental/src/modules/auth/features/landing/types/landing.types.ts`
+`gestor_documental/src/modules/auth/landing/types/landing.types.ts`
 
 Constantes exportadas: `LANDING_HERO`, `LANDING_FEATURES`, `LANDING_BENEFITS`, `LANDING_CTA`, `LANDING_FOOTER_LINKS`.
 
@@ -122,7 +122,7 @@ La ruta está envuelta en `AuthLayout` + `ProtectedRoute guestOnly`.
 ### Archivos involucrados
 
 ```text
-modules/auth/features/login/
+modules/auth/login/
 ├── pages/page.tsx                    # Estado del formulario
 ├── hooks/useLogin.ts                 # Lógica de submit y redirección
 ├── api/loginApi.ts                   # Credenciales mock y utilidades de sesión
@@ -199,7 +199,7 @@ Pantalla **centrada** con tarjeta blanca sobre fondo con gradiente suave:
 ### Archivos involucrados
 
 ```text
-modules/auth/features/register/
+modules/auth/register/
 ├── pages/page.tsx                    # Estado y validación
 ├── hooks/useRegister.ts              # Llamada a AuthContext.register()
 ├── api/registerApi.ts                # Persistencia en localStorage
@@ -320,9 +320,9 @@ npm run dev
 
 | Cambio | Dónde actuar |
 |--------|--------------|
-| Conectar API real | `AuthContext`, archivos en `auth/features/*/api/` |
+| Conectar API real | `AuthContext`, archivos en `auth/*/api/` |
 | OAuth con Google | `LoginForm.tsx` + endpoint backend |
-| Recuperar contraseña | Nueva feature `auth/features/forgot-password/` |
+| Recuperar contraseña | Nueva feature `auth/forgot-password/` |
 | Verificación de email | Pantalla post-registro + hook dedicado |
 | Traducciones i18n | Mover textos de `types/` a archivos de locale |
 | Validación con Zod | Reemplazar funciones manuales en `validations/` |

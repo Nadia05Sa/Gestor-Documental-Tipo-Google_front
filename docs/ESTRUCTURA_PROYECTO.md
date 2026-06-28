@@ -35,17 +35,30 @@ La documentación original de Vault contemplaba Next.js 14 o un monorepo NX con 
 
 ```text
 Gestor-Documental-Tipo-Google_front/
-├── docs/                    # Documentación del proyecto
+├── docs/                    # Documentación del frontend
 │   ├── ESTRUCTURA_PROYECTO.md
-│   └── AUTH_LANDING_LOGIN_REGISTRO.md
+│   ├── AUTH_LANDING_LOGIN_REGISTRO.md
+│   ├── pantallas/           # Documentación por pantalla (auth, admin)
+│   │   ├── auth/
+│   │   └── admin/
+│   └── flujos/              # Flujos de usuario (auth, admin)
+│       ├── auth/
+│       └── admin/
 ├── gestor_documental/       # Aplicación frontend (Vite)
 │   ├── src/
 │   ├── index.html
 │   ├── vite.config.ts
 │   ├── tsconfig.json
 │   └── package.json
+├── Gestor-Documental-Tipo-Google/  # Documentación maestra del producto (.docs)
 └── README.md
 ```
+
+> La carpeta `Gestor-Documental-Tipo-Google/.docs/` contiene la documentación
+> maestra del producto completo (monorepo NX + microservicios). Este frontend
+> es la implementación SPA de la capa de presentación; cuando una pantalla
+> necesite contexto funcional del backend, se referencia el módulo
+> correspondiente en `.docs/05-modules/`.
 
 ---
 
@@ -71,28 +84,25 @@ src/
 │   ├── auth/
 │   │   ├── layout/
 │   │   │   └── AuthLayout.tsx
-│   │   └── features/
-│   │       ├── landing/     # Página pública /
-│   │       ├── login/       # /login
-│   │       └── register/    # /register
+│   │   ├── landing/         # Página pública /
+│   │   ├── login/           # /login
+│   │   └── register/        # /register
 │   │
 │   ├── user/
 │   │   ├── layout/
 │   │   │   └── UserLayout.tsx
-│   │   └── features/
-│   │       ├── drive/       # /drive
-│   │       ├── favorites/   # /favorites
-│   │       ├── recents/     # /recents
-│   │       ├── trash/       # /trash
-│   │       └── settings/    # /settings
+│   │   ├── drive/           # /drive
+│   │   ├── favorites/       # /favorites
+│   │   ├── recents/         # /recents
+│   │   ├── trash/           # /trash
+│   │   └── settings/        # /settings
 │   │
 │   └── admin/
 │       ├── layout/
 │       │   └── AdminLayout.tsx
-│       └── features/
-│           ├── user-management/   # /admin/users
-│           ├── moderation/          # /admin/reports
-│           └── audit/               # (estructura preparada)
+│       ├── user-management/   # /admin/users
+│       ├── moderation/        # /admin/reports
+│       └── audit/             # (estructura preparada, sin ruta aún)
 │
 ├── shared/
 │   ├── components/
@@ -104,7 +114,7 @@ src/
 │   │   ├── VaultModal.tsx
 │   │   └── VaultCard.tsx
 │   ├── hooks/
-│   │   └── useRequestDeduper.js
+│   │   └── useRequestDeduper.ts
 │   ├── pages/
 │   │   ├── AppLoadingScreen.tsx
 │   │   └── AppNotFoundScreen.tsx
@@ -179,10 +189,15 @@ src/router/
 
 ## 7. Patrón de módulos (features)
 
-Cada feature sigue la misma estructura dentro de `modules/[rol]/features/[feature]/`:
+Cada feature sigue la misma estructura dentro de `modules/[rol]/[feature]/`:
+
+> **Cambio de arquitectura:** se eliminó la carpeta intermedia `features/`. Las
+> features ahora cuelgan directamente del módulo de rol (`modules/admin/audit/`
+> en lugar de `modules/admin/features/audit/`). Las rutas de importación y la
+> documentación se actualizaron en consecuencia.
 
 ```text
-modules/[rol]/features/[feature]/
+modules/[rol]/[feature]/
 ├── api/
 │   └── [feature]Api.ts       # Llamadas HTTP o persistencia local
 ├── hooks/
@@ -215,9 +230,9 @@ modules/[rol]/features/[feature]/
 | Módulo | Feature | Estado |
 |---|---|---|
 | `auth` | landing, login, register | UI completa con mock |
-| `user` | drive, favorites, recents, trash, settings | Estructura base |
-| `admin` | user-management, moderation | Estructura base |
-| `admin` | audit | Estructura preparada |
+| `user` | drive, favorites, recents, trash, settings | Estructura base (página + estructura estándar) |
+| `admin` | user-management, moderation | Página placeholder ("en construcción") |
+| `admin` | audit | Estructura preparada (sin `pages/` ni ruta) |
 
 ---
 
@@ -245,8 +260,8 @@ No usa `AuthLayout`; renderiza su propia estructura con `AuthTopBar` fijo.
 El flujo actual no llama a un backend. La lógica vive en:
 
 - `core/context/AuthContext.tsx` — estado global (`user`, `login`, `register`, `logout`)
-- `modules/auth/features/login/api/loginApi.ts` — usuarios hardcodeados y sesión en `localStorage`
-- `modules/auth/features/register/api/registerApi.ts` — registro en `localStorage`
+- `modules/auth/login/api/loginApi.ts` — usuarios hardcodeados y sesión en `localStorage`
+- `modules/auth/register/api/registerApi.ts` — registro en `localStorage`
 
 Claves de almacenamiento:
 
@@ -343,7 +358,7 @@ Reglas que aplicarán cuando exista backend:
 
 ## 15. Checklist al agregar una feature
 
-- [ ] Crear carpeta en `modules/[rol]/features/[feature]/` con la estructura estándar.
+- [ ] Crear carpeta en `modules/[rol]/[feature]/` con la estructura estándar.
 - [ ] Exportar la página desde `pages/page.tsx`.
 - [ ] Registrar la ruta en el router correspondiente (`AuthRoutes`, `AppRoutes` o `AdminRoutes`).
 - [ ] Envolver rutas privadas con `ProtectedRoute` y el layout adecuado.
@@ -357,3 +372,20 @@ Reglas que aplicarán cuando exista backend:
 ## 16. Documentación relacionada
 
 - [AUTH_LANDING_LOGIN_REGISTRO.md](./AUTH_LANDING_LOGIN_REGISTRO.md) — Landing, login, registro y flujo de autenticación mock.
+- [pantallas/README.md](./pantallas/README.md) — Índice de documentación por pantalla (auth y admin).
+- [flujos/README.md](./flujos/README.md) — Índice de flujos de usuario (auth y admin).
+
+### Documentación maestra del producto
+
+La carpeta `Gestor-Documental-Tipo-Google/.docs/` contiene la especificación
+funcional completa del producto. Referencias útiles para este frontend:
+
+| Tema | Archivo |
+|---|---|
+| Autenticación y RBAC | `.docs/05-modules/system/auth.md` |
+| Gestión de usuarios | `.docs/05-modules/admin/user-management.md` |
+| Moderación | `.docs/05-modules/admin/moderation.md` |
+| Log de auditoría | `.docs/05-modules/admin/audit-log.md` |
+| Dashboard admin | `.docs/05-modules/admin/dashboard.md` |
+| Gestión de planes | `.docs/05-modules/admin/plans-management.md` |
+| Drive y vistas | `.docs/05-modules/user/` |
