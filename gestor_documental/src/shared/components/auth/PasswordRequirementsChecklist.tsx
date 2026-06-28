@@ -1,5 +1,5 @@
 import { CheckCircle2, Circle } from 'lucide-react';
-import type { PasswordRequirements } from '../../../modules/auth/features/register/types/register.types';
+import type { PasswordRequirements } from '../../../modules/auth/register/types/register.types';
 
 const REQUIREMENT_CONFIG = [
   { key: 'minLength' as const, label: 'Longitud mínima de 8 caracteres.' },

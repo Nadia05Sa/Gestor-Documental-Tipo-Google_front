@@ -1,6 +1,6 @@
 import { forwardRef, useState } from 'react';
 import { Eye, EyeOff, Info } from 'lucide-react';
-import { renderIcon } from '../vault-utils.js';
+import { renderIcon } from '../vault-utils';
 
 const resolveEffectiveInputType = ({ canTogglePassword, isPasswordVisible, type }) => {
   if (!canTogglePassword) {

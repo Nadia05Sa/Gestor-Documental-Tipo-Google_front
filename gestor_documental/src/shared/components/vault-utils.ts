@@ -1,4 +1,5 @@
 import { createElement } from 'react';
+import type { ReactElement } from 'react';
 import {
   Cloud,
   File,
@@ -11,8 +12,9 @@ import {
   Upload,
   Users,
 } from 'lucide-react';
+import type { LucideIcon, LucideProps } from 'lucide-react';
 
-export const iconMap = {
+export const iconMap: Record<string, LucideIcon> = {
   file: File,
   folder: Folder,
   share: Share2,
@@ -25,18 +27,21 @@ export const iconMap = {
   shield: Shield,
 };
 
-export function resolveIcon(icon) {
+export type IconInput = string | LucideIcon | null | undefined;
+export type DaysLeftTone = 'neutral' | 'danger' | 'warning' | 'success';
+
+export function resolveIcon(icon: IconInput): LucideIcon | null {
   if (!icon) return null;
   if (typeof icon === 'string') return iconMap[icon] || File;
   return icon;
 }
 
-export function renderIcon(icon, props) {
+export function renderIcon(icon: IconInput, props?: LucideProps): ReactElement | null {
   const Icon = resolveIcon(icon);
   return Icon ? createElement(Icon, props) : null;
 }
 
-export function resolveDaysLeftTone(days) {
+export function resolveDaysLeftTone(days: number | string): DaysLeftTone {
   const value = typeof days === 'number' ? days : parseInt(String(days).replace(/\D/g, ''), 10);
 
   if (Number.isNaN(value)) return 'neutral';

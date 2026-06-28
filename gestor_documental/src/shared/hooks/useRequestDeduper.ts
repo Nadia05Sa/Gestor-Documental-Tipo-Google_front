@@ -1,7 +1,6 @@
 import { useCallback, useRef } from 'react';
 
-// Normaliza un valor para su inclusión en la firma de la solicitud
-const normalizeValue = (value) => {
+const normalizeValue = (value: unknown): string => {
   if (value === undefined || value === null) {
     return '';
   }
@@ -13,8 +12,10 @@ const normalizeValue = (value) => {
   return String(value);
 };
 
-// Construye una firma única para una solicitud basada en los parámetros y las claves relevantes
-export const buildRequestSignature = (params = {}, keys = []) => {
+export const buildRequestSignature = (
+  params: Record<string, unknown> = {},
+  keys: string[] = [],
+): string => {
   if (!Array.isArray(keys) || keys.length === 0) {
     return JSON.stringify(params);
   }
@@ -24,11 +25,10 @@ export const buildRequestSignature = (params = {}, keys = []) => {
     .join('|');
 };
 
-// Hook para deduplicar solicitudes basándose en una firma generada a partir de los parámetros
-export const useRequestDeduper = ({ windowMs = 150 } = {}) => {
+export const useRequestDeduper = ({ windowMs = 150 }: { windowMs?: number } = {}) => {
   const lastRequestRef = useRef({ key: '', ts: 0 });
 
-  const shouldRun = useCallback((signature) => {
+  const shouldRun = useCallback((signature: string): boolean => {
     const now = Date.now();
 
     if (

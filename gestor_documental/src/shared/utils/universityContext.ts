@@ -1,13 +1,29 @@
+type UniversityLike =
+  | string
+  | number
+  | {
+      id?: number | string | null;
+      university_id?: number | string | null;
+      name?: string | null;
+      short_name?: string | null;
+    }
+  | null
+  | undefined;
+
 export const getSelectedUniversityDisplayName = (
-  selectedUniversity,
+  selectedUniversity: UniversityLike,
   fallback = 'Universidad seleccionada',
-) => {
+): string => {
   if (!selectedUniversity) {
     return fallback;
   }
 
   if (typeof selectedUniversity === 'string') {
     return selectedUniversity;
+  }
+
+  if (typeof selectedUniversity === 'number') {
+    return String(selectedUniversity);
   }
 
   const fullName = String(selectedUniversity.name || '').trim();
@@ -20,12 +36,12 @@ export const getSelectedUniversityDisplayName = (
   return fullName || shortName || fallback;
 };
 
-export const getSelectedUniversityId = (selectedUniversity) => {
+export const getSelectedUniversityId = (selectedUniversity: UniversityLike): number | null => {
   if (selectedUniversity === null || selectedUniversity === undefined) {
     return null;
   }
 
-  const parseId = (value) => {
+  const parseId = (value: number | string | null | undefined): number | null => {
     if (value === null || value === undefined || value === '') {
       return null;
     }

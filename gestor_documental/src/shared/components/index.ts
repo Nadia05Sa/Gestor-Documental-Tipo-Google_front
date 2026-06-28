@@ -12,4 +12,4 @@ export { VaultModal } from './VaultModal';
 export { VaultBadge } from './VaultBadge';
 export { VaultAlert } from './VaultAlert';
 export { VaultSidePanel } from './VaultSidePanel';
-export { renderIcon, resolveIcon, resolveDaysLeftTone, iconMap } from './vault-utils.js';
+export { renderIcon, resolveIcon, resolveDaysLeftTone, iconMap } from './vault-utils';

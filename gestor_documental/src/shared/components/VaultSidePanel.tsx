@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { VaultButton } from './inputs/ActionButton';
-import { renderIcon } from './vault-utils.js';
+import { renderIcon } from './vault-utils';
 
 const SIZE_CLASSES = {
   sm: 'max-w-sm',
