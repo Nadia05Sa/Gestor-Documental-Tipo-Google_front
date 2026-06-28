@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '@context/AuthContext';
 import { AppLoadingScreen } from '@shared/pages/AppLoadingScreen';
-import { getHomePathByRole } from '../modules/auth/features/login/api/loginApi';
+import { getHomePathByRole } from '../modules/auth/login/api/loginApi';
 
 type ProtectedRouteOptions = {
   allowedRole?: 'admin' | 'user';

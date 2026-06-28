@@ -1,10 +1,10 @@
 import { Route } from 'react-router-dom';
 import { UserLayout } from '../modules/user/layout/UserLayout';
-import { DrivePage } from '../modules/user/features/drive/pages/page';
-import { FavoritesPage } from '../modules/user/features/favorites/pages/page';
-import { RecentsPage } from '../modules/user/features/recents/pages/page';
-import { TrashPage } from '../modules/user/features/trash/pages/page';
-import { SettingsPage } from '../modules/user/features/settings/pages/page';
+import { DrivePage } from '../modules/user/drive/pages/page';
+import { FavoritesPage } from '../modules/user/favorites/pages/page';
+import { RecentsPage } from '../modules/user/recents/pages/page';
+import { TrashPage } from '../modules/user/trash/pages/page';
+import { SettingsPage } from '../modules/user/settings/pages/page';
 import { ProtectedRoute } from './ProtectedRoute';
 
 export const AppRoutes = (

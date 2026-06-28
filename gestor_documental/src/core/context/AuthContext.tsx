@@ -6,8 +6,8 @@ import {
   readStoredUser,
   saveSessionUser,
   shouldBlockForAuthBootstrap,
-} from '../../modules/auth/features/login/api/loginApi';
-import { saveRegisteredUser } from '../../modules/auth/features/register/api/registerApi';
+} from '../../modules/auth/login/api/loginApi';
+import { saveRegisteredUser } from '../../modules/auth/register/api/registerApi';
 
 type AuthRole = 'admin' | 'user' | string;
 
