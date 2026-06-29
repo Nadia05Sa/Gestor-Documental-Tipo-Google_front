@@ -13,32 +13,48 @@ Login (rol: admin)
       ▼
    /admin  ──(index redirect)──►  /admin/users
       │
-      ├── /admin/users     Gestión de usuarios
-      ├── /admin/reports   Moderación / reportes
-      └── (futuro) /admin/audit   Auditoría
+      ├── /admin/dashboard   Panel de Administración   (propuesta de diseño)
+      ├── /admin/users       Gestión de usuarios
+      ├── /admin/files       Gestión de archivos       (propuesta de diseño)
+      ├── /admin/audit       Bitácora y Auditoría       (estructura preparada)
+      └── /admin/reports     Moderación / reportes      (sin ref. Figma)
 ```
 
 - Todas las rutas admin están envueltas en `ProtectedRoute allowedRole="admin"` + `AdminLayout`.
-- `/admin` y cualquier ruta admin no reconocida redirigen a `/admin/users`.
+- `/admin` y cualquier ruta admin no reconocida redirigen a `/admin/users` (en el diseño
+  VAULT el sidebar admin abre con **Panel de Administración**).
+- El sidebar admin del diseño VAULT muestra: Dashboard, Gestión de Usuarios, Gestión de
+  Archivos y Bitácora/Auditoría. **Moderación / reportes** no aparece en el Figma (deriva de
+  la documentación maestra de backend); las acciones de bloqueo viven en Gestión de Archivos.
 
 ---
 
 ## Diagrama de navegación
 
 ```
-                 ┌──────────────┐
-   admin login → │   /admin     │ → redirect → /admin/users
-                 └──────┬───────┘
-        ┌───────────────┼───────────────┐
-        ▼               ▼               ▼
-  Gestión de        Moderación       Auditoría
-  usuarios          /admin/reports   (futuro)
-  /admin/users
+                      ┌──────────────┐
+   admin login →      │   /admin     │ → redirect → /admin/users
+                      └──────┬───────┘
+   ┌──────────┬─────────────┼─────────────┬──────────────┐
+   ▼          ▼             ▼             ▼              ▼
+ Dashboard  Gestión de   Gestión de   Bitácora y    Moderación
+ /admin/    usuarios     archivos     Auditoría     /admin/reports
+ dashboard  /admin/users /admin/files /admin/audit  (sin ref. Figma)
+ (propuesta)             (propuesta)  (preparada)
 ```
 
 ---
 
 ## Flujos de negocio principales
+
+### 0. Panel de Administración (`/admin/dashboard`) — propuesta de diseño
+
+```
+1. El admin entra y ve métricas globales (Total de Usuarios, Usuarios Activos Hoy,
+   Archivos en el Sistema, Promedio por Usuario)
+2. Bloque de almacenamiento: Capacidad Total, Espacio Disponible, Almacenamiento Usado (%)
+3. Solo lectura; punto de entrada al resto del panel admin
+```
 
 ### A. Gestión de usuarios (`/admin/users`)
 
@@ -48,12 +64,25 @@ Login (rol: admin)
 3. Busca por email/nombre
 4. Selecciona un usuario → detalle (GET /users/:id)
 5. Acción:
-   - Activar/Desactivar (PUT /users/:id/toggle-status)  → is_active
-   - Promover a admin / editar (PATCH /users/:id)
+   - Suspender/Activar (PUT /users/:id/toggle-status)  → is_active
+   - Cambiar rol Administrador/Usuario / editar (PATCH /users/:id)
+   - Ajustar límite de almacenamiento (GB) y cambiar plan (Free/Pro/Business)
+   - Eliminar usuario (marcado lógico)
 6. Cada acción exige el privilegio correspondiente (RBAC) y genera evento de auditoría
 ```
 
 > Regla: el admin nunca borra físicamente; usa `is_active = false`.
+
+### A2. Gestión de archivos (`/admin/files`) — propuesta de diseño
+
+```
+1. Admin lista/busca TODOS los archivos del sistema (owner, tipo, tamaño, estado)
+2. Vista previa / detalle del archivo
+3. Acciones de supervisión:
+   - Bloquear (soft = una copia / hard = todas por hash)
+   - Eliminar (marcado lógico)
+4. Genera eventos ITEM_BLOCKED / GLOBAL_HASH_BLOCKED en audit_log
+```
 
 ### B. Moderación de reportes (`/admin/reports`)
 
@@ -94,15 +123,18 @@ Login (rol: admin)
 
 | Módulo | Estado frontend |
 |---|---|
+| Panel de Administración (Dashboard) | Propuesta de diseño (sin módulo aún) |
 | Gestión de usuarios | Placeholder ("en construcción") |
-| Moderación | Placeholder ("en construcción") |
-| Auditoría | Estructura preparada, sin `pages/` ni ruta |
-| Dashboard / Planes | No implementados (existen en la doc maestra) |
+| Gestión de archivos | Propuesta de diseño (sin módulo aún) |
+| Bitácora y Auditoría | Estructura preparada, sin `pages/` ni ruta |
+| Moderación | Placeholder ("en construcción"); sin referencia en el Figma |
 
 ---
 
 ## Pantallas relacionadas
 
+- [Panel de Administración](../../pantallas/admin/dashboard.md) (propuesta)
 - [Gestión de usuarios](../../pantallas/admin/user-management.md)
-- [Moderación](../../pantallas/admin/moderation.md)
-- [Auditoría](../../pantallas/admin/audit.md)
+- [Gestión de archivos](../../pantallas/admin/file-management.md) (propuesta)
+- [Bitácora y Auditoría](../../pantallas/admin/audit.md)
+- [Moderación](../../pantallas/admin/moderation.md) (sin ref. Figma)

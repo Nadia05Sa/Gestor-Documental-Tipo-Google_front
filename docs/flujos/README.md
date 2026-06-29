@@ -14,15 +14,16 @@ redirecciones según el rol.
 | Flujo | Ámbito | Documento |
 |---|---|---|
 | Autenticación | Landing → Login / Registro → área por rol | [auth/flujo-autenticacion.md](./auth/flujo-autenticacion.md) |
+| Área de usuario | Drive, vistas laterales y configuración | [user/flujo-usuario.md](./user/flujo-usuario.md) |
 | Administración | Acceso admin y operaciones de gestión | [admin/flujo-administracion.md](./admin/flujo-administracion.md) |
 
 ---
 
 ## Roles y home por defecto
 
-| Rol | Home tras login | Rutas |
+| Rol | Home tras login | Rutas principales |
 |---|---|---|
-| `user` | `/drive` | `/drive`, `/favorites`, `/recents`, `/trash`, `/settings` |
+| `user` | `/drive` | `/drive`, `/shared`, `/recents`, `/favorites`, `/trash`, `/billing`, `/settings` |
 | `admin` | `/admin/users` | `/admin/users`, `/admin/reports` |
 
 La redirección por rol se resuelve con `getHomePathByRole(role)` en
