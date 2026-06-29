@@ -38,10 +38,11 @@ Gestor-Documental-Tipo-Google_front/
 ├── docs/                    # Documentación del frontend
 │   ├── ESTRUCTURA_PROYECTO.md
 │   ├── AUTH_LANDING_LOGIN_REGISTRO.md
-│   ├── pantallas/           # Documentación por pantalla (auth, admin)
+│   ├── pantallas/           # Documentación por pantalla (auth, user, admin)
 │   │   ├── auth/
+│   │   ├── user/
 │   │   └── admin/
-│   └── flujos/              # Flujos de usuario (auth, admin)
+│   └── flujos/              # Flujos de usuario (auth, user, admin)
 │       ├── auth/
 │       └── admin/
 ├── gestor_documental/       # Aplicación frontend (Vite)
@@ -71,7 +72,8 @@ src/
 │
 ├── core/
 │   └── context/
-│       └── AuthContext.tsx  # Estado global de autenticación
+│       ├── AuthContext.tsx         # Estado global de autenticación
+│       └── DriveSearchContext.tsx  # Búsqueda global del Drive (UserLayout)
 │
 ├── router/
 │   ├── index.tsx            # BrowserRouter y rutas 404
@@ -91,10 +93,12 @@ src/
 │   ├── user/
 │   │   ├── layout/
 │   │   │   └── UserLayout.tsx
-│   │   ├── drive/           # /drive
-│   │   ├── favorites/       # /favorites
+│   │   ├── drive/           # /drive (explorador + store mock + abstracciones compartidas)
+│   │   ├── shared/          # /shared   (Compartidos conmigo)
 │   │   ├── recents/         # /recents
+│   │   ├── favorites/       # /favorites (Destacados)
 │   │   ├── trash/           # /trash
+│   │   ├── billing/         # /billing
 │   │   └── settings/        # /settings
 │   │
 │   └── admin/
@@ -107,10 +111,21 @@ src/
 ├── shared/
 │   ├── components/
 │   │   ├── auth/            # AuthTopBar, InfinityVaultLogo, etc.
+│   │   ├── drive/           # Cuadrícula, tabla, listas, DnD, utilidades
+│   │   │   ├── DriveItemsGrid.tsx      # Cuadrícula unificada (con DnD opcional)
+│   │   │   ├── DriveItemsTable.tsx     # Tabla con menú contextual
+│   │   │   ├── DriveVaultList.tsx      # Lista + empty state (vistas laterales)
+│   │   │   ├── DriveFileCard.tsx       # Tarjeta Figma VAULT
+│   │   │   ├── MoveItemModal.tsx
+│   │   │   ├── ViewModeToggle.tsx
+│   │   │   ├── driveItemUtils.ts       # formatBytes, formatDate, iconos, grupos recientes
+│   │   │   ├── driveRowActions.ts      # buildStandardDriveRowActions
+│   │   │   └── useDriveItemDragDrop.ts # Hook DnD sobre carpetas (grid)
 │   │   ├── inputs/          # InputText, Checkbox, ActionButton, etc.
-│   │   ├── layout/          # AuthenticatedLayout, Sidebar, Header, etc.
-│   │   ├── tables/          # Pagination, EntityListItem, etc.
+│   │   ├── layout/          # AuthenticatedLayout, Sidebar, VaultViewPageLayout, DetailInfoRow
+│   │   ├── tables/          # Pagination, EmptyStatePanel, EntityListStateRenderer
 │   │   ├── ConfirmModal.tsx
+│   │   ├── Toast.tsx        # toast() + ToastHost (notificaciones)
 │   │   ├── VaultModal.tsx
 │   │   └── VaultCard.tsx
 │   ├── hooks/
@@ -165,10 +180,12 @@ src/router/
 | `/` | Público | Landing |
 | `/login` | Solo invitado | Login |
 | `/register` | Solo invitado | Registro |
-| `/drive` | Usuario autenticado | Explorador principal |
-| `/favorites` | Usuario autenticado | Favoritos |
+| `/drive` | Usuario autenticado | Explorador principal (home) |
+| `/shared` | Usuario autenticado | Compartidos conmigo |
 | `/recents` | Usuario autenticado | Recientes |
+| `/favorites` | Usuario autenticado | Favoritos |
 | `/trash` | Usuario autenticado | Papelera |
+| `/billing` | Usuario autenticado | Facturación |
 | `/settings` | Usuario autenticado | Configuración |
 | `/admin` | Admin | Redirige a `/admin/users` |
 | `/admin/users` | Admin | Gestión de usuarios |
@@ -202,17 +219,63 @@ modules/[rol]/[feature]/
 │   └── [feature]Api.ts       # Llamadas HTTP o persistencia local
 ├── hooks/
 │   └── use[Feature].ts       # Lógica de negocio y estado
-├── components/
-│   ├── [Feature]List.tsx
-│   ├── [Feature]Detail.tsx
-│   └── [Feature]Form.tsx
-├── validations/
-│   └── [feature]Schema.ts    # Validaciones de formulario
-├── types/
-│   └── [feature].types.ts    # Tipos y constantes de contenido
+├── components/               # Solo componentes propios de la feature (opcional)
+├── validations/              # Validaciones de formulario (opcional)
+├── types/                    # Tipos propios de la feature (opcional)
 └── pages/
     └── page.tsx              # Página exportada al router
 ```
+
+> **Nota:** no cree stubs vacíos (`() => null`) ni archivos `types/` que solo
+> re-exporten tipos del módulo `drive`. Las vistas laterales (favoritos,
+> recientes, compartidos) delegan en abstracciones compartidas documentadas en
+> §7.1.
+
+### 7.1 Abstracciones compartidas del área Drive
+
+Tras la refactorización de los módulos `user`, estas piezas centralizan la UI y
+la lógica de las vistas de archivos:
+
+| Pieza | Ubicación | Uso |
+|---|---|---|
+| `DriveItem`, `ViewMode` | `modules/user/drive/types/drive.types.ts` | Fuente única de tipos de ítems |
+| `useDriveItemCollection` | `modules/user/drive/hooks/` | Hook genérico: lista, preview, estrella, papelera, `detailHandlers` |
+| `DriveVaultViewPage` | `modules/user/drive/components/` | Layout: `VaultViewPageLayout` + lista + `MoveItemModal` + `DriveDetail` |
+| `DriveVaultList` | `@shared/components/drive/` | Lista unificada con empty state, grid/list y menú contextual |
+| `DriveVaultSectionList` | `@shared/components/drive/` | Igual que arriba, agrupada por secciones (recientes) |
+| `DriveItemsGrid` | `@shared/components/drive/` | Cuadrícula con `DriveFileCard`; DnD opcional vía `useDriveItemDragDrop` |
+| `DriveItemsTable` | `@shared/components/drive/` | Tabla con columnas configurables y selección |
+| `buildStandardDriveRowActions` | `@shared/components/drive/driveRowActions.ts` | Menú contextual estándar |
+| `DetailInfoRow` | `@shared/components/layout/` | Filas label/valor en paneles de detalle |
+| `VaultViewPageLayout` | `@shared/components/layout/` | Encabezado + toggle grid/list + contador |
+
+**Hooks delgados por vista** (ejemplo):
+
+```typescript
+// modules/user/favorites/hooks/useFavorites.ts
+export const useFavorites = () =>
+  useDriveItemCollection({
+    api: favoritesApi,
+    getToggleStarMessage: () => 'Eliminado de destacados',
+    openFolder: 'navigate-drive',
+    closePreviewOnToggleStar: true,
+  });
+```
+
+**Página típica de vista lateral** (Destacados, Compartidos, Recientes):
+
+```typescript
+// pages/page.tsx — compone DriveVaultViewPage + DriveVaultList
+<DriveVaultViewPage title="..." itemCount={...} previewItem={...} detailHandlers={...} onRefresh={...}>
+  {({ viewMode, onMove }) => (
+    <DriveVaultList items={...} viewMode={viewMode} emptyState={...} onMove={onMove} ... />
+  )}
+</DriveVaultViewPage>
+```
+
+El módulo **drive** conserva su layout propio (`DriveToolbar`, breadcrumbs, modales
+de crear/subir/compartir/búsqueda) porque es el explorador completo; usa
+`DriveItemsGrid` en cuadrícula y `DriveItemsTable` en lista.
 
 ### Responsabilidades
 
@@ -230,7 +293,7 @@ modules/[rol]/[feature]/
 | Módulo | Feature | Estado |
 |---|---|---|
 | `auth` | landing, login, register | UI completa con mock |
-| `user` | drive, favorites, recents, trash, settings | Estructura base (página + estructura estándar) |
+| `user` | drive, shared, recents, favorites, trash, billing, settings | Implementadas con store mock en `localStorage`; vistas laterales reutilizan abstracciones Drive (§7.1) |
 | `admin` | user-management, moderation | Página placeholder ("en construcción") |
 | `admin` | audit | Estructura preparada (sin `pages/` ni ruta) |
 
@@ -246,8 +309,13 @@ Usado en `/login` y `/register`. Layout limpio sin sidebar.
 
 Ambos delegan en `AuthenticatedLayout` (`@shared/components/layout/AuthenticatedLayout.tsx`):
 
-- Header con email del usuario y botón de cerrar sesión.
+- `Sidebar` lateral fijo en escritorio y como **drawer** en móvil (botón de menú).
+- Header con marca, email del usuario y botón de cerrar sesión.
 - `<Outlet />` para el contenido de cada feature.
+- `ToastHost` montado para las notificaciones globales (`toast()`).
+
+El `Sidebar` adapta sus ítems según el rol: para `user` muestra Mi Drive,
+Compartidos, Recientes, Favoritos, Papelera, Facturación y Configuración.
 
 ### Landing
 
@@ -269,6 +337,8 @@ Claves de almacenamiento:
 |---|---|
 | `vault_auth_user` | Sesión activa (sin contraseña) |
 | `vault_registered_users` | Cuentas registradas desde `/register` |
+| `vault_drive_items` | Store mock del Drive (archivos/carpetas) — Drive, Compartidos, Recientes, Favoritos, Papelera, Facturación |
+| `vault_user_settings` | Preferencias del usuario (perfil, tema, idioma, zona) |
 
 Ver [AUTH_LANDING_LOGIN_REGISTRO.md](./AUTH_LANDING_LOGIN_REGISTRO.md) para el flujo completo.
 
@@ -286,7 +356,11 @@ Ver [AUTH_LANDING_LOGIN_REGISTRO.md](./AUTH_LANDING_LOGIN_REGISTRO.md) para el f
 
 ### Layout
 
-`AuthenticatedLayout`, `Sidebar`, `Header`, `SideDrawer`, `PageSectionHeader`, `SurfacePanel`, `LoadingStatePanel`, `InfoFieldCard`
+`AuthenticatedLayout`, `Sidebar`, `Header`, `SideDrawer`, `PageSectionHeader`, `VaultViewPageLayout`, `SurfacePanel`, `LoadingStatePanel`, `DetailInfoRow`, `InfoFieldCard`
+
+### Drive (componentes de archivos)
+
+`DriveItemsGrid`, `DriveItemsTable`, `DriveVaultList`, `DriveVaultSectionList`, `DriveFileCard`, `DriveItemIcon`, `MoveItemModal`, `ViewModeToggle`, `driveItemUtils`, `driveRowActions`, `useDriveItemDragDrop`
 
 ### Tablas y listas
 
@@ -362,9 +436,11 @@ Reglas que aplicarán cuando exista backend:
 - [ ] Exportar la página desde `pages/page.tsx`.
 - [ ] Registrar la ruta en el router correspondiente (`AuthRoutes`, `AppRoutes` o `AdminRoutes`).
 - [ ] Envolver rutas privadas con `ProtectedRoute` y el layout adecuado.
-- [ ] Colocar componentes reutilizables en `shared/components/`.
-- [ ] Tipos y constantes en `types/`; validaciones en `validations/`.
+- [ ] Colocar componentes reutilizables en `shared/components/` o, para vistas de archivos laterales, reutilizar las abstracciones de §7.1.
+- [ ] Tipos de ítems Drive en `drive/types/drive.types.ts`; evitar re-exports por módulo.
+- [ ] Validaciones en `validations/` cuando haya formularios.
 - [ ] Lógica de negocio en hooks, no en componentes.
+- [ ] No crear stubs vacíos (`() => null`) ni archivos placeholder sin uso.
 - [ ] Actualizar esta documentación si cambia la arquitectura o las rutas.
 
 ---
@@ -372,8 +448,8 @@ Reglas que aplicarán cuando exista backend:
 ## 16. Documentación relacionada
 
 - [AUTH_LANDING_LOGIN_REGISTRO.md](./AUTH_LANDING_LOGIN_REGISTRO.md) — Landing, login, registro y flujo de autenticación mock.
-- [pantallas/README.md](./pantallas/README.md) — Índice de documentación por pantalla (auth y admin).
-- [flujos/README.md](./flujos/README.md) — Índice de flujos de usuario (auth y admin).
+- [pantallas/README.md](./pantallas/README.md) — Índice de documentación por pantalla (auth, user y admin).
+- [flujos/README.md](./flujos/README.md) — Índice de flujos de usuario (auth, user y admin).
 
 ### Documentación maestra del producto
 
