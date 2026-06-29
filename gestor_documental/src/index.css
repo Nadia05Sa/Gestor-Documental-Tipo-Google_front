@@ -6,19 +6,36 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --bg-base: #ffffff;
-  --bg-surface: #f3f4f6;
+  /* VAULT / Figma palette */
+  --bg-base: #f8faff;
+  --bg-app: #f3f4f8;
+  --bg-surface: #eef2ff;
   --bg-elevated: #ffffff;
-  --text-primary: #111827;
-  --text-secondary: #6b7280;
-  --text-disabled: #d1d5db;
+  --text-primary: #1e3a5f;
+  --text-secondary: #64748b;
+  --text-disabled: #cbd5e1;
   --text-on-accent: #ffffff;
-  --border-subtle: #e5e7eb;
-  --border-default: #d1d5db;
-  --border-strong: #9ca3af;
+  --border-subtle: #e8edf5;
+  --border-default: #dbe3f0;
+  --border-strong: #94a3b8;
   --accent: #3b82f6;
   --accent-hover: #2563eb;
   --accent-subtle: #eff6ff;
+  --brand-purple: #8b5cf6;
+  --brand-navy: #1e3a5f;
+  --gradient-primary: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+  --gradient-sidebar-active: linear-gradient(180deg, #3b82f6 0%, #8b5cf6 100%);
+  --radius-card: 0.875rem;
+  --radius-pill: 9999px;
+  --shadow-card: 0 1px 3px rgba(30, 58, 95, 0.06), 0 4px 12px rgba(30, 58, 95, 0.04);
+  --shadow-soft: 0 8px 24px rgba(30, 58, 95, 0.08);
+
+  --success-600: #16a34a;
+  --warning-600: #d97706;
+  --danger-600: #dc2626;
+  --error: #dc2626;
+  --error-subtle: #fef2f2;
+  --error-border: #fee2e2;
 
   --system-accent: var(--accent);
   --system-accent-hover: var(--accent-hover);
@@ -32,23 +49,15 @@
   --system-button-outline-hover-text: var(--text-primary);
   --system-secondary-border: var(--border-default);
   --system-secondary-hover-border: var(--border-strong);
-
-  --error: #dc2626;
-  --error-subtle: #fef2f2;
-  --error-border: #fee2e2;
 }
 
 [data-theme="light"] {
-  --bg-base: #ffffff;
-  --bg-surface: #f3f4f6;
+  --bg-base: #f8faff;
+  --bg-app: #f3f4f8;
+  --bg-surface: #eef2ff;
   --bg-elevated: #ffffff;
-  --text-primary: #111827;
-  --text-secondary: #6b7280;
-  --text-disabled: #d1d5db;
-  --text-on-accent: #ffffff;
-  --border-subtle: #e5e7eb;
-  --border-default: #d1d5db;
-  --border-strong: #9ca3af;
+  --text-primary: #1e3a5f;
+  --text-secondary: #64748b;
   --accent: #3b82f6;
   --accent-hover: #2563eb;
   --accent-subtle: #eff6ff;
@@ -57,11 +66,19 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--bg-base);
+  background: var(--bg-app);
   color: var(--text-primary);
+  font-family: Manrope, Inter, system-ui, sans-serif;
 }
 
 #root {
   width: 100%;
   min-height: 100vh;
+}
+
+.vault-gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }

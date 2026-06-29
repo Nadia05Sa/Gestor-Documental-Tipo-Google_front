@@ -55,9 +55,11 @@ export const getHomePathByRole = (role: string) => {
 export const isPrivateRoute = (pathname: string) =>
   pathname.startsWith('/admin')
   || pathname.startsWith('/drive')
+  || pathname.startsWith('/shared')
   || pathname.startsWith('/favorites')
   || pathname.startsWith('/recents')
   || pathname.startsWith('/trash')
+  || pathname.startsWith('/billing')
   || pathname.startsWith('/settings');
 
 export const isGuestAuthRoute = (pathname: string) =>

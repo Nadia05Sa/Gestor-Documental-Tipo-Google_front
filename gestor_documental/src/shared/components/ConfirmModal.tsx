@@ -1,6 +1,21 @@
+import type { ReactNode } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { ActionButton } from './inputs/ActionButton';
 import { VaultModal } from './VaultModal';
+
+type ConfirmModalProps = {
+  isOpen?: boolean;
+  open?: boolean;
+  onClose?: () => void;
+  onConfirm?: () => void;
+  title?: ReactNode;
+  message?: ReactNode;
+  confirmLabel?: ReactNode;
+  cancelLabel?: ReactNode;
+  isLoading?: boolean;
+  loadingLabel?: ReactNode;
+  tone?: 'danger' | 'primary';
+};
 
 export const ConfirmModal = ({
   isOpen,
@@ -14,7 +29,7 @@ export const ConfirmModal = ({
   isLoading = false,
   loadingLabel = 'Procesando...',
   tone = 'danger',
-}) => {
+}: ConfirmModalProps) => {
   const resolvedOpen = Boolean(isOpen ?? open);
   const isDanger = tone === 'danger';
 

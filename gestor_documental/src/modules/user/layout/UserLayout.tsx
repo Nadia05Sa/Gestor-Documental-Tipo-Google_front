@@ -1,5 +1,8 @@
+import { DriveSearchProvider } from '@context/DriveSearchContext';
 import { AuthenticatedLayout } from '@shared/components/layout/AuthenticatedLayout';
 
 export const UserLayout = () => (
-  <AuthenticatedLayout eyebrow="Infinity Vault" />
+  <DriveSearchProvider>
+    <AuthenticatedLayout />
+  </DriveSearchProvider>
 );

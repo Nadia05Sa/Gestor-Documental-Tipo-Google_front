@@ -20,7 +20,7 @@ const PageSectionHeader = ({
   return (
     <div className="flex items-center justify-between gap-4 flex-wrap">
       <div>
-        <h2 className="text-2xl font-semibold" style={{ color: 'var(--text-primary, #111827)' }}>
+        <h2 className="text-2xl font-extrabold tracking-tight" style={{ color: 'var(--text-primary, #1e3a5f)' }}>
           {title}
         </h2>
 

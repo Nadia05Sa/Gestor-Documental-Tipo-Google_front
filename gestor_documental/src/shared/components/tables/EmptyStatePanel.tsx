@@ -1,5 +1,15 @@
+import type { ComponentType, ReactNode } from 'react';
 import { SurfacePanel } from '@shared/components/layout/SurfacePanel';
 import { ActionButton } from '@shared/components/inputs/ActionButton';
+
+type EmptyStatePanelProps = {
+  icon?: ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  title?: ReactNode;
+  description?: ReactNode;
+  actionIcon?: ComponentType<{ size?: number; className?: string }>;
+  actionLabel?: ReactNode;
+  onAction?: () => void;
+};
 
 /**
  * EmptyStatePanel
@@ -11,7 +21,7 @@ export const EmptyStatePanel = ({
   actionIcon,
   actionLabel,
   onAction,
-}) => {
+}: EmptyStatePanelProps) => {
   return (
     <SurfacePanel padding="p-12" centered>
       {Icon ? <Icon className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--text-secondary, #6b7280)' }} /> : null}
