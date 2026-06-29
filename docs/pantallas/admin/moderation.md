@@ -83,7 +83,64 @@ Tablas: `item_abuse_reports`, `report_reasons`, `drive_items`, `file_contents`,
 
 ---
 
+## Prompt para IA
+
+> **Nota de diseño:** esta pantalla **no aparece** en el Figma VAULT proporcionado
+> (el área admin del diseño cubre Dashboard, Gestión de Usuarios, Gestión de Archivos y
+> Bitácora/Auditoría). Por eso el prompt se basa en la **documentación maestra de backend**
+> (`.docs/05-modules/admin/moderation.md`) y aplica las **mismas reglas de arquitectura y
+> design system** que el resto de pantallas VAULT. Las acciones de bloqueo de contenido del
+> diseño viven en **Gestión de Archivos** (ver [file-management.md](./file-management.md)).
+
+```text
+Construye la pantalla "Moderación / Reportes" (/admin/reports) del frontend Infinity Vault.
+
+CONTEXTO
+- SPA React 19 + TypeScript + Vite 7 + React Router 7 + Tailwind CSS 4. Iconos: lucide-react.
+- Rol `admin`, dentro de AdminLayout. Hoy es un placeholder; complétala.
+- No hay referencia visual en el Figma: respeta el design system VAULT (tokens, componentes
+  Vault*) y la coherencia con las demás pantallas admin.
+- Persistencia: mock con misma firma para apiClient.ts.
+
+DISEÑO (derivado de la funcionalidad de backend + design system VAULT)
+- Cola de reportes ordenada por nº de quejas/severidad; cada fila: contenido reportado,
+  razón, denunciante(s), fecha y severidad (insignia critical/warning).
+- Detalle del reporte: vista del ítem denunciado, razón, historial y notas del admin.
+- Resolución con dos niveles: "Bloqueo individual" (soft, una copia) y "Bloqueo global por
+  hash" (hard, todas las copias por SHA-256) + campo de notas.
+- Confirmación reforzada para el bloqueo global por hash (impacto masivo).
+
+REGLAS DE ARQUITECTURA (OBLIGATORIAS)
+- Patrón de módulos: modules/admin/moderation/{api,hooks,components,pages,types,validations}.
+  - api/moderationApi.ts: cola + resolución (mock → apiClient.ts).
+  - hooks/useModeration.ts: cola, filtros, selección y resolución. Sin lógica en componentes.
+  - components/: ModerationList, ModerationDetail, ModerationForm (UI pura).
+  - pages/page.tsx: compone layout + hook + componentes; exporta `ReportsPage`.
+  - types/moderation.types.ts: AbuseReport, ResolutionAction, razones.
+  - validations/moderationSchema.ts: validación de la resolución.
+- Con backend real: HTTP vía apiClient.ts; resolución con useRequestDeduper. Acceso RBAC.
+  Las acciones generan eventos ITEM_BLOCKED / GLOBAL_HASH_BLOCKED en audit_log.
+- Importa con alias @shared/*.
+
+COMPONENTES REUTILIZABLES (NO reinventar)
+- @shared/components/layout/PageSectionHeader; tablas compartidas (EntityListItem,
+  EntityListStateRenderer, Pagination) para la cola.
+- @shared/components/VaultBadge para severidad; VaultSidePanel/VaultModal para el detalle.
+- @shared/components/ConfirmModal para confirmar bloqueos (reforzado en hard block).
+- @shared/components/inputs (Select de sanción, Textarea de notas, ActionButton). toast() para feedback.
+
+ESTILOS
+- Solo tokens CSS del tema (var(--danger), var(--warning)). Sin colores hardcodeados.
+
+CRITERIOS DE ACEPTACIÓN
+- Listar/priorizar la cola, ver detalle, resolver con soft/hard block + notas y confirmación
+  reforzada en el bloqueo global; reutiliza tablas/badges/modales compartidos y tokens del tema.
+```
+
+---
+
 ## Referencias
 
 - Flujo admin: [../../flujos/admin/flujo-administracion.md](../../flujos/admin/flujo-administracion.md)
+- Pantalla relacionada (diseño): [file-management.md](./file-management.md)
 - Backend: `Gestor-Documental-Tipo-Google/.docs/05-modules/admin/moderation.md`
