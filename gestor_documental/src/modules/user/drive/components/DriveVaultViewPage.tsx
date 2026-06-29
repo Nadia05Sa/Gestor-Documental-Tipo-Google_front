@@ -1,8 +1,8 @@
 import { useState, type Dispatch, type ReactNode, type SetStateAction } from 'react';
 import { VaultViewPageLayout } from '@shared/components/layout/VaultViewPageLayout';
 import { MoveItemModal } from '@shared/components/drive/MoveItemModal';
-import { DriveDetail } from '../../../modules/user/drive/components/DriveDetail';
-import type { DriveItem, ViewMode } from '../../../modules/user/drive/types/drive.types';
+import { DriveDetail } from './DriveDetail';
+import type { DriveItem, ViewMode } from '../types/drive.types';
 
 type DriveVaultViewPageProps = {
   title: string;
