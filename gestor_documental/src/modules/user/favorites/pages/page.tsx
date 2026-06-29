@@ -1,6 +1,35 @@
-export const FavoritesPage = () => (
-  <div className="p-8">
-    <h1 className="text-2xl font-bold text-[var(--text-primary)]">Favoritos</h1>
-    <p className="mt-2 text-[var(--text-secondary)]">Vista de favoritos en construccion.</p>
-  </div>
-);
+import { Star } from 'lucide-react';
+import { useFavorites } from '../hooks/useFavorites';
+import { DriveVaultViewPage } from '../../drive/components/DriveVaultViewPage';
+import { DriveVaultList } from '@shared/components/drive/DriveVaultList';
+
+export const FavoritesPage = () => {
+  const favorites = useFavorites();
+
+  return (
+    <DriveVaultViewPage
+      title="Destacados"
+      itemCount={favorites.items.length}
+      previewItem={favorites.previewItem}
+      setPreviewItem={favorites.setPreviewItem}
+      detailHandlers={favorites.detailHandlers}
+      onRefresh={favorites.refresh}
+    >
+      {({ viewMode, onMove }) => (
+        <DriveVaultList
+          items={favorites.items}
+          viewMode={viewMode}
+          emptyState={{
+            icon: Star,
+            title: 'No tienes archivos destacados',
+            description: 'Marca archivos o carpetas con la estrella para verlos aquí.',
+          }}
+          onOpenItem={favorites.openItem}
+          onToggleStar={favorites.toggleStar}
+          onMoveToTrash={favorites.moveToTrash}
+          onMove={onMove}
+        />
+      )}
+    </DriveVaultViewPage>
+  );
+};
