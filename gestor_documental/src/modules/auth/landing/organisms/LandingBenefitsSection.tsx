@@ -39,13 +39,12 @@ export const LandingBenefitsSection = () => (
             {LANDING_BENEFITS.stats.map((stat) => {
               const Icon = stat.icon;
               return (
-                <div
-                  key={stat.label}
-                  className={`transform rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] p-5 shadow-lg transition-transform md:p-6 md:hover:-translate-y-2 ${stat.offset}`}
-                >
-                  <Icon className="mb-4 h-8 w-8 text-[var(--accent)]" strokeWidth={1.75} />
-                  <h4 className="text-2xl font-bold md:text-3xl">{stat.value}</h4>
-                  <p className="text-sm text-[var(--text-secondary)]">{stat.label}</p>
+                <div key={stat.label} className={stat.offset}>
+                  <div className="transform rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] p-5 shadow-lg transition-[transform,box-shadow] duration-300 ease-out md:p-6 md:hover:-translate-y-2 md:hover:shadow-xl">
+                    <Icon className="mb-4 h-8 w-8 text-[var(--accent)]" strokeWidth={1.75} />
+                    <h4 className="text-2xl font-bold md:text-3xl">{stat.value}</h4>
+                    <p className="text-sm text-[var(--text-secondary)]">{stat.label}</p>
+                  </div>
                 </div>
               );
             })}
