@@ -27,7 +27,7 @@ export const LoginForm = ({
 }: LoginFormProps) => (
   <div className="mx-auto w-full max-w-md">
     <div className="mb-10 text-center">
-      <InfinityVaultLogo />
+      <InfinityVaultLogo size="lg" showName="always" />
       <h1 className="mt-8 text-3xl font-bold text-[var(--text-primary,#111827)]" style={MANROPE_STYLE}>
         Bienvenido de vuelta
       </h1>

@@ -27,7 +27,7 @@ export const RegisterForm = ({
 }: RegisterFormProps) => (
   <>
     <div className="mb-8 text-center">
-      <InfinityVaultLogo />
+      <InfinityVaultLogo size="lg" showName="always" />
       <h1 className="mt-6 text-3xl font-bold tracking-tight" style={{ ...MANROPE_STYLE, color: BRAND_NAVY }}>
         Crear cuenta en <span style={{ color: BRAND_PURPLE }}>VAULT</span>
       </h1>
