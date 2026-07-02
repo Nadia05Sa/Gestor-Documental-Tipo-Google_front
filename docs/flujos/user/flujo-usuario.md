@@ -25,9 +25,10 @@ Login (rol: user)
 ```
 
 Todas las rutas están envueltas en `ProtectedRoute allowedRole="user"` +
-`UserLayout`. La navegación entre vistas se hace desde el `Sidebar`. Hoy muestra 7
-ítems (con un separador antes de Papelera); **Unidades compartidas** y **Asistente
-IA** son pantallas del diseño VAULT aún no implementadas (ver sus fichas).
+`UserLayout` (incluye `DriveSearchProvider`). La navegación entre vistas se hace
+desde el `Sidebar` (`USER_MENU`: 7 ítems + separador antes de Papelera). **Unidades
+compartidas** y **Asistente IA** son pantallas del diseño VAULT aún no implementadas
+(sin ruta; `shared-drives/pages/` existe vacío).
 
 ---
 
@@ -147,22 +148,23 @@ IA** son pantallas del diseño VAULT aún no implementadas (ver sus fichas).
 |---|---|
 | Drive | Implementada (mock): explorador completo, DnD, modales, búsqueda avanzada |
 | Compartidos conmigo | Implementada (mock): `DriveVaultViewPage` + `DriveVaultList` |
-| Unidades compartidas | Propuesta de diseño (sin módulo aún) |
+| Unidades compartidas | Propuesta de diseño (`modules/user/shared-drives/pages/` vacío) |
 | Recientes | Implementada (mock): agrupada por fecha, `DriveVaultSectionList` |
 | Favoritos / Destacados | Implementada (mock): `useDriveItemCollection` |
 | Papelera | Implementada (mock): selección en lote, `DriveItemsTable` custom |
 | Facturación | Implementada (mock): plan, uso, historial |
 | Configuración | Implementada (mock): perfil + preferencias + loading state |
-| Asistente IA | Propuesta de diseño (sin módulo aún) |
+| Asistente IA | Propuesta de diseño (sin módulo ni ruta) |
 
-### Abstracciones compartidas (refactor 2025)
+### Abstracciones compartidas del área Drive
 
 Las vistas laterales de archivos comparten:
 
 - **Hook:** `useDriveItemCollection` (`modules/user/drive/hooks/`)
-- **Layout de página:** `DriveVaultViewPage`
-- **Listas:** `DriveVaultList` / `DriveVaultSectionList` (`@shared/components/drive/`)
-- **Tipos:** `drive.types.ts` como fuente única de `DriveItem`
+- **Layout de página:** `DriveVaultViewPage` (= `DriveVaultCollectionShell` en `@shared/domain/drive/organisms/`)
+- **Re-export:** `modules/user/drive/organisms/DriveVaultViewPage.tsx` (punto de importación usado por favorites, shared, recents)
+- **Listas:** `DriveVaultList` / `DriveVaultSectionList` (`@shared/domain/drive/organisms/`)
+- **Tipos:** `@shared/domain/drive/types/drive.types.ts` (fuente única de `DriveItem`)
 
 Ver [ESTRUCTURA_PROYECTO.md §7.1](../../ESTRUCTURA_PROYECTO.md).
 

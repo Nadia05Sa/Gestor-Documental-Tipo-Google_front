@@ -130,7 +130,9 @@ Estructuras de pantalla con **slots** (`children` o props `ReactNode`). No conoc
 </DriveVaultCollectionShell>
 ```
 
-`DriveVaultViewPage` es un **alias** de `DriveVaultCollectionShell` (compatibilidad).
+`DriveVaultViewPage` es un **alias** de `DriveVaultCollectionShell` (misma implementación en
+`shared/domain/drive/organisms/DriveVaultCollectionShell.tsx`). Las vistas laterales lo
+importan desde `modules/user/drive/organisms/DriveVaultViewPage.tsx`, que re-exporta el shell del dominio.
 
 **Ejemplo — layout puro (sin estado):**
 
@@ -332,7 +334,7 @@ Las carpetas `@shared/components/inputs/`, `layout/`, `auth/`, `tables/` y `driv
 | Landing | `auth/landing/pages/` | `LandingTemplate` | `LandingHeroSection`, … |
 | Registro | `auth/register/pages/` | `RegisterTemplate` | `RegisterForm`, `RegisterSuccess` |
 | Mi Unidad | `user/drive/pages/` | `DrivePageTemplate` | `DriveToolbar`, `DriveList`, `DrivePageModals` |
-| Destacados | `user/favorites/pages/` | `DriveVaultCollectionShell` | `DriveVaultList` (domain) |
+| Destacados | `user/favorites/pages/` | `DriveVaultCollectionShell` (vía `DriveVaultViewPage`) | `DriveVaultList` (domain) |
 | Papelera | `user/trash/pages/` | `VaultViewPageLayout` | `TrashList`, `TrashDetail` |
 | Configuración | `user/settings/pages/` | `VaultViewPageLayout` | `SettingsForm` |
 
@@ -360,11 +362,15 @@ Al implementar pantallas admin, seguir el mismo esquema que `user/`:
 modules/admin/[feature]/
 ├── api/
 ├── hooks/
-├── organisms/     # Listados, formularios, paneles de detalle
+├── organisms/     # Listados, formularios, paneles de detalle (aún no creados)
 ├── types/
 ├── validations/
 └── pages/page.tsx # Delgada: hook + template/organismos
 ```
+
+**Estado actual (2026):** `user-management` y `moderation` tienen placeholder en
+`pages/page.tsx` y hooks vacíos (`() => ({})`). `audit` no tiene `pages/`. Ningún
+módulo admin tiene carpeta `organisms/` ni `components/` en disco.
 
 Reutilizar de shared:
 

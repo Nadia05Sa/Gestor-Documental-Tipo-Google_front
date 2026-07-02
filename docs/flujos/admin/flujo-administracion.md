@@ -21,11 +21,12 @@ Login (rol: admin)
 ```
 
 - Todas las rutas admin están envueltas en `ProtectedRoute allowedRole="admin"` + `AdminLayout`.
-- `/admin` y cualquier ruta admin no reconocida redirigen a `/admin/users` (en el diseño
-  VAULT el sidebar admin abre con **Panel de Administración**).
-- El sidebar admin del diseño VAULT muestra: Dashboard, Gestión de Usuarios, Gestión de
-  Archivos y Bitácora/Auditoría. **Moderación / reportes** no aparece en el Figma (deriva de
-  la documentación maestra de backend); las acciones de bloqueo viven en Gestión de Archivos.
+- `/admin` y cualquier ruta admin no reconocida redirigen a `/admin/users`.
+- El **sidebar admin implementado** (`ADMIN_MENU`) muestra solo **Usuarios**
+  (`/admin/users`). El diseño VAULT prevé Dashboard, Gestión de Archivos y
+  Bitácora/Auditoría — aún sin ruta ni ítems en el menú.
+- **Moderación / reportes** (`/admin/reports`) está enrutada pero es placeholder;
+  deriva de la documentación maestra de backend, no del Figma VAULT.
 
 ---
 
@@ -123,11 +124,11 @@ Login (rol: admin)
 
 | Módulo | Estado frontend |
 |---|---|
-| Panel de Administración (Dashboard) | Propuesta de diseño (sin módulo aún) |
-| Gestión de usuarios | Placeholder ("en construcción") |
-| Gestión de archivos | Propuesta de diseño (sin módulo aún) |
-| Bitácora y Auditoría | Estructura preparada, sin `pages/` ni ruta |
-| Moderación | Placeholder ("en construcción"); sin referencia en el Figma |
+| Panel de Administración (Dashboard) | Propuesta de diseño (sin módulo ni ruta) |
+| Gestión de usuarios | Placeholder en `pages/page.tsx`; hook vacío; sin `organisms/` |
+| Gestión de archivos | Propuesta de diseño (sin módulo ni ruta) |
+| Bitácora y Auditoría | Solo `api/`, `hooks/`, `types/`, `validations/`; sin `pages/` ni ruta |
+| Moderación | Placeholder en `pages/page.tsx`; hook vacío; sin `organisms/` |
 
 ---
 

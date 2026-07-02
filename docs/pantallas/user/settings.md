@@ -25,7 +25,7 @@ carga. Preferencias en `localStorage` (`vault_user_settings`); tema vía
 ```text
 modules/user/settings/
 ├── api/settingsApi.ts           # persistencia mock + applyTheme
-├── components/SettingsForm.tsx  # secciones Perfil y Preferencias
+├── organisms/SettingsForm.tsx  # secciones Perfil y Preferencias
 ├── hooks/useSettings.ts         # expone settings, loading, saveProfile, savePreferences
 ├── pages/page.tsx               # tabs + cerrar sesión + loading state
 ├── types/settings.types.ts      # UserSettings, opciones de tema/idioma/zona
@@ -78,7 +78,7 @@ Tabla: `user_settings` (1:1 con `users`).
 2. `settingsApi.ts` con `apiClient.ts`; cada `PATCH` granular como mutación con `useRequestDeduper`.
 3. `useSettings` carga la configuración y expone updaters por sección.
 4. `SettingsForm` agrupa secciones (perfil, seguridad, preferencias) con
-   `validations/settingsSchema.ts`; usar `Switch`, `Select` de `@shared/components/inputs`.
+   `validations/settingsSchema.ts`; usar `Switch`, `Select` de `@shared/components/atoms`.
 
 ---
 
@@ -105,10 +105,10 @@ DISEÑO (VAULT, copys reales del Figma)
 - Al pie/cabecera: botón "Cerrar sesión" con confirmación.
 
 REGLAS DE ARQUITECTURA (OBLIGATORIAS)
-- Patrón de módulos: modules/user/settings/{api,hooks,components,pages,types,validations}.
+- Patrón de módulos: modules/user/settings/{api,hooks,organisms,pages,types,validations}.
   - api/settingsApi.ts: persistencia mock + applyTheme; misma firma para apiClient.ts.
-  - hooks/useSettings.ts: carga la config y expone updaters por sección. Sin lógica en componentes.
-  - components/SettingsForm.tsx: secciones Perfil y Preferencias (UI pura).
+  - hooks/useSettings.ts: carga la config y expone updaters por sección. Sin lógica en organismos.
+  - organisms/SettingsForm.tsx: secciones Perfil y Preferencias (UI pura).
   - pages/page.tsx: tabs + "Cerrar sesión"; exporta `SettingsPage`.
   - types/settings.types.ts: UserSettings (perfil: firstName, lastName, motherLastName,
     email) + enums de tema/idioma/zona.
@@ -118,13 +118,13 @@ REGLAS DE ARQUITECTURA (OBLIGATORIAS)
 - Importa con alias @shared/* y @context/AuthContext.
 
 COMPONENTES REUTILIZABLES (NO reinventar)
-- @shared/components/inputs: InputText, Select, Switch (para preferencias), ActionButton.
-- @shared/components/layout/VaultViewPageLayout para el layout de página.
-- @shared/components/layout/LoadingStatePanel mientras `useSettings().loading`.
-- @shared/components/VaultCard para tabs y formularios.
-- @shared/components/ConfirmModal para confirmar "Cerrar sesión".
-- @shared/components/auth/AuthFormError (o patrón equivalente) para errores de validación.
-- toast() de @shared/components/Toast para confirmar guardado.
+- @shared/components/atoms: InputText, Select, Switch (para preferencias), ActionButton.
+- @shared/components/templates/VaultViewPageLayout para el layout de página.
+- @shared/components/molecules/LoadingStatePanel mientras `useSettings().loading`.
+- @shared/components/atoms/VaultCard para tabs y formularios.
+- @shared/components/molecules/ConfirmModal para confirmar "Cerrar sesión".
+- @shared/components/molecules/AuthFormError (o patrón equivalente) para errores de validación.
+- toast() de @shared/components/organisms/Toast para confirmar guardado.
 
 ESTILOS
 - Solo tokens CSS del tema. El cambio de tema debe reflejarse en dataset.theme. Sin colores hardcodeados.

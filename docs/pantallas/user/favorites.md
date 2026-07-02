@@ -63,7 +63,7 @@ Tabla: `item_favorites` (`item_id`, `user_id`).
 
 ## Guía de construcción
 
-1. Tipos: importar `DriveItem` y `ViewMode` desde `modules/user/drive/types/drive.types.ts`.
+1. Tipos: importar `DriveItem` y `ViewMode` desde `@shared/domain/drive` (o vía `modules/user/drive/types/drive.types.ts`, que re-exporta).
 2. `favoritesApi.ts` con firmas compatibles con `DriveItemCollectionApi`.
 3. `useFavorites` como wrapper de `useDriveItemCollection` con
    `closePreviewOnToggleStar: true` y `openFolder: 'navigate-drive'`.
@@ -89,9 +89,10 @@ DISEÑO (VAULT)
 - DriveDetail lateral: quitar destacado, mover a papelera, mover a… (MoveItemModal).
 
 ARQUITECTURA
-- modules/user/favorites/{api,hooks,pages} — sin types/ ni components/ propios salvo necesidad real.
+- modules/user/favorites/{api,hooks,pages} — sin types/ ni organisms/ propios salvo necesidad real.
 - api/favoritesApi.ts → driveApi. hooks/useFavorites.ts → useDriveItemCollection.
-- Tipos desde drive/types/drive.types.ts.
+- Import: DriveVaultViewPage desde `modules/user/drive/organisms/DriveVaultViewPage`.
+- Tipos desde `@shared/domain/drive`.
 
 COMPONENTES REUTILIZABLES
 - DriveVaultViewPage, DriveVaultList, DriveItemsGrid, DriveItemsTable, MoveItemModal, DriveDetail.

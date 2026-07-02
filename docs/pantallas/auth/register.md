@@ -39,14 +39,16 @@ Pantalla **centrada** con tarjeta blanca sobre fondo con gradiente suave:
 
 ```text
 modules/auth/register/
-├── pages/page.tsx                    # Estado y validación
+├── pages/page.tsx                    # Estado y validación; RegisterTemplate
 ├── hooks/useRegister.ts              # Llamada a AuthContext.register()
 ├── api/registerApi.ts                # Persistencia en localStorage
 ├── validations/registerSchema.ts     # Reglas de validación
 ├── types/register.types.ts           # Tipos del formulario
-└── components/
+└── organisms/
     ├── RegisterForm.tsx              # Formulario completo
     └── RegisterSuccess.tsx           # Pantalla post-registro
+
+shared/components/templates/RegisterTemplate.tsx
 ```
 
 ---

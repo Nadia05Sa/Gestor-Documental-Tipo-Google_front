@@ -13,29 +13,36 @@ Cada unidad tiene miembros, roles e invitaciones. Es distinta de "Compartidos co
 | Ruta | `/shared-drives` |
 | Acceso | `ProtectedRoute allowedRole="user"` |
 | Layout | `UserLayout` |
-| Registro de ruta | `router/AppRoutes.tsx` |
+| Registro de ruta | **Pendiente** (no registrada en `AppRoutes.tsx`) |
 
 ---
 
 ## Estado de implementación
 
-**No implementada (propuesta de diseño).** Aún no existe el módulo
-`modules/user/shared-drives/`. Esta ficha documenta el diseño VAULT y el prompt para
-construirla siguiendo el patrón del repositorio.
+**No implementada (propuesta de diseño).** Existe la carpeta
+`modules/user/shared-drives/pages/` (vacía) pero no hay código, ruta ni ítem en el
+`Sidebar`. Esta ficha documenta el diseño VAULT y el prompt para construirla.
 
 ```text
-modules/user/shared-drives/      (propuesto)
-├── api/sharedDrivesApi.ts        # CRUD de unidades, miembros e invitaciones (mock → apiClient.ts)
-├── components/
-│   ├── SharedDrivesList.tsx      # cuadrícula de unidades (tarjetas)
-│   ├── SharedDriveCard.tsx       # tarjeta de unidad (nombre, miembros, mi rol)
-│   ├── SharedDriveForm.tsx       # crear / editar unidad
-│   ├── MembersPanel.tsx          # pestañas Miembros / Invitaciones
-│   └── InviteMemberModal.tsx     # invitar nuevo miembro
-├── hooks/useSharedDrives.ts      # lista, crear, editar, eliminar, miembros, invitaciones
-├── pages/page.tsx                # exporta SharedDrivesPage
-├── types/shared-drives.types.ts  # SharedDrive, DriveMember, DriveRole, Invitation
-└── validations/sharedDriveSchema.ts # validateDriveName
+modules/user/shared-drives/      (reservado, sin implementar)
+└── pages/                       # carpeta vacía
+```
+
+Estructura **propuesta** al implementar:
+
+```text
+modules/user/shared-drives/
+├── api/sharedDrivesApi.ts
+├── organisms/
+│   ├── SharedDrivesList.tsx
+│   ├── SharedDriveCard.tsx
+│   ├── SharedDriveForm.tsx
+│   ├── MembersPanel.tsx
+│   └── InviteMemberModal.tsx
+├── hooks/useSharedDrives.ts
+├── pages/page.tsx
+├── types/shared-drives.types.ts
+└── validations/sharedDriveSchema.ts
 ```
 
 ---
@@ -129,12 +136,12 @@ DISEÑO (VAULT, copys reales del Figma)
   "Miembro eliminado", "Invitación reenviada", "Invitación cancelada".
 
 REGLAS DE ARQUITECTURA (OBLIGATORIAS)
-- Patrón de módulos: modules/user/shared-drives/{api,hooks,components,pages,types,validations}.
+- Patrón de módulos: modules/user/shared-drives/{api,hooks,organisms,pages,types,validations}.
   - api/sharedDrivesApi.ts: CRUD de unidades, miembros e invitaciones (mock → apiClient.ts).
-  - hooks/useSharedDrives.ts: TODO el estado y orquestación. Sin lógica en componentes.
-  - components/: SharedDrivesList, SharedDriveCard, SharedDriveForm, MembersPanel,
+  - hooks/useSharedDrives.ts: TODO el estado y orquestación. Sin lógica en organismos.
+  - organisms/: SharedDrivesList, SharedDriveCard, SharedDriveForm, MembersPanel,
     InviteMemberModal (UI pura).
-  - pages/page.tsx: compone hook + componentes; exporta `SharedDrivesPage`.
+  - pages/page.tsx: compone hook + organismos; exporta `SharedDrivesPage`.
   - types/shared-drives.types.ts: SharedDrive, DriveMember, DriveRole, Invitation.
   - validations/sharedDriveSchema.ts: validateDriveName.
 - Con backend real: HTTP vía apiClient.ts; toda mutación con useRequestDeduper. La
@@ -142,14 +149,14 @@ REGLAS DE ARQUITECTURA (OBLIGATORIAS)
 - Importa con alias @shared/*. Registrar la ruta en router/AppRoutes.tsx y el ítem en el Sidebar.
 
 COMPONENTES REUTILIZABLES (NO reinventar)
-- @shared/components/layout/SurfacePanel / VaultCard para las tarjetas de unidad.
-- @shared/components/layout/PageSectionHeader para el encabezado + acción "Crear unidad".
-- @shared/components/inputs (InputText, Textarea, Select para el rol, ActionButton).
-- @shared/components/VaultModal para crear/editar y para invitar; ConfirmModal para eliminar
+- @shared/components/molecules/SurfacePanel / @shared/components/atoms/VaultCard para las tarjetas de unidad.
+- @shared/components/molecules/PageSectionHeader para el encabezado + acción "Crear unidad".
+- @shared/components/atoms (InputText, Textarea, Select para el rol, ActionButton).
+- @shared/components/molecules/VaultModal para crear/editar y para invitar; @shared/components/molecules/ConfirmModal para eliminar
   unidad y quitar miembro.
-- @shared/components/VaultBadge para el rol propio / contador; tablas compartidas
-  (EntityListItem) para la lista de miembros si aplica.
-- @shared/components/tables/EmptyStatePanel para el estado vacío; toast() para feedback.
+- @shared/components/atoms/VaultBadge para el rol propio / contador; tablas compartidas
+  (@shared/components/organisms/EntityListItem) para la lista de miembros si aplica.
+- @shared/components/molecules/EmptyStatePanel para el estado vacío; toast() para feedback.
 
 ESTILOS
 - Solo tokens CSS del tema. Sin colores hardcodeados.

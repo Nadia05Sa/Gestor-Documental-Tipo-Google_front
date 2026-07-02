@@ -19,20 +19,18 @@ Ruta sugerida: `/admin/audit`.
 
 ## Estado de implementación
 
-**Estructura preparada.** El módulo existe pero **no tiene carpeta `pages/`** ni
-ruta registrada. Es el módulo admin menos avanzado.
+**Estructura preparada.** El módulo tiene capas de datos (`api/`, `hooks/`,
+`types/`, `validations/`) pero **no tiene carpeta `pages/`**, **`organisms/`** ni
+ruta registrada. `useAudit` devuelve `{}`.
 
 ```text
 modules/admin/audit/
 ├── api/auditApi.ts
-├── components/
-│   ├── AuditList.tsx
-│   ├── AuditDetail.tsx
-│   └── AuditForm.tsx
-├── hooks/useAudit.ts
+├── hooks/useAudit.ts                 # stub: () => ({})
 ├── types/audit.types.ts
 └── validations/auditSchema.ts
         (falta) pages/page.tsx
+        (falta) organisms/
 ```
 
 ---
@@ -116,20 +114,20 @@ DISEÑO (VAULT, copys reales del Figma)
 - Paginación. La UI NUNCA escribe en audit_log.
 
 REGLAS DE ARQUITECTURA (OBLIGATORIAS)
-- Patrón de módulos: modules/admin/audit/{api,hooks,components,pages,types,validations}.
+- Patrón de módulos: modules/admin/audit/{api,hooks,organisms,pages,types,validations}.
   - api/auditApi.ts: GET de eventos + exportación (mock → apiClient.ts). Sin mutaciones de escritura.
-  - hooks/useAudit.ts: filtros, paginación y selección de detalle. Sin lógica en componentes.
-  - components/: AuditList, AuditDetail, AuditForm (filtros) — UI pura.
-  - pages/page.tsx: compone layout + hook + componentes; exporta `AuditPage`.
+  - hooks/useAudit.ts: filtros, paginación y selección de detalle. Sin lógica en organismos.
+  - organisms/: AuditList, AuditDetail, AuditForm (filtros) — UI pura.
+  - pages/page.tsx: compone layout + hook + organismos; exporta `AuditPage`.
   - types/audit.types.ts: AuditEvent, AuditSeverity, filtros.
 - Registrar /admin/audit en AdminRoutes.tsx y el ítem en el Sidebar admin.
 - Acceso RBAC (privilegio de auditoría/EXPORT). Importa con alias @shared/*.
 
 COMPONENTES REUTILIZABLES (NO reinventar)
-- @shared/components/layout/PageSectionHeader para encabezado + acciones exportar/recargar.
-- @shared/components/tables (EntityListItem, EntityListStateRenderer, Pagination).
-- @shared/components/inputs (Select rol/resultado, InputText búsqueda, ActionButton, fechas).
-- @shared/components/VaultBadge para severidad/resultado; @shared/components/VaultSidePanel o
+- @shared/components/molecules/PageSectionHeader para encabezado + acciones exportar/recargar.
+- @shared/components/organisms (EntityListItem, EntityListStateRenderer) y @shared/components/molecules/Pagination.
+- @shared/components/atoms (Select rol/resultado, InputText búsqueda, ActionButton, fechas).
+- @shared/components/atoms/VaultBadge para severidad/resultado; @shared/components/organisms/VaultSidePanel o
   VaultModal para el detalle del evento; toast() para exportar/copiar.
 
 ESTILOS

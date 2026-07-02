@@ -42,20 +42,21 @@ En móvil solo se muestra el formulario.
 
 ```text
 modules/auth/login/
-├── pages/page.tsx                    # Estado del formulario
+├── pages/page.tsx                    # Estado del formulario; AuthSplitTemplate
 ├── hooks/useLogin.ts                 # Lógica de submit y redirección
 ├── api/loginApi.ts                   # Credenciales mock y utilidades de sesión
 ├── types/login.types.ts              # Tipos y textos del panel promo (LOGIN_PROMO)
 ├── validations/loginSchema.ts
-└── components/
+└── organisms/
     ├── LoginForm.tsx                 # UI del formulario
     └── LoginPromoPanel.tsx           # Panel derecho promocional
 
-modules/auth/layout/AuthLayout.tsx    # Layout contenedor
+modules/auth/layout/AuthLayout.tsx
+shared/components/templates/AuthSplitTemplate.tsx
 ```
 
 Componentes compartidos: `InputText`, `Checkbox`, `AuthGradientButton`,
-`AuthFormError`, `GoogleIcon`, `InfinityVaultLogo` (en `@shared/components/`).
+`AuthFormError`, `GoogleIcon`, `InfinityVaultLogo` (en `@shared/components/molecules/` y `@shared/components/atoms/`).
 
 ---
 

@@ -59,7 +59,7 @@ Tablas: `item_permissions`, `drive_items`.
 
 ## Guía de construcción
 
-1. Tipos desde `drive/types/drive.types.ts`.
+1. Tipos desde `@shared/domain/drive`.
 2. `sharedApi.ts` + `useShared` vía `useDriveItemCollection` (`openFolder: 'navigate-drive'`).
 3. `DriveVaultList` con `tableVariant="shared"` y `showSharedIcon`.
 4. `detailHandlers` del hook actualiza estrella en el panel sin cerrarlo.

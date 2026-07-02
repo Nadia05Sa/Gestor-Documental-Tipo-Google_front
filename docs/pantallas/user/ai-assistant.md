@@ -13,7 +13,7 @@ natural. Visible para el rol `user`.
 | Ruta | `/assistant` (además, panel flotante accesible desde cualquier vista) |
 | Acceso | `ProtectedRoute allowedRole="user"` |
 | Layout | `UserLayout` |
-| Registro de ruta | `router/AppRoutes.tsx` |
+| Registro de ruta | **Pendiente** (no registrada en `AppRoutes.tsx`) |
 
 > En el diseño VAULT el asistente aparece como **panel/chat lateral** invocable desde un
 > botón global. Puede vivir como pantalla propia (`/assistant`) y/o como overlay montado en
@@ -30,7 +30,7 @@ construirla siguiendo el patrón del repositorio.
 ```text
 modules/user/assistant/        (propuesto)
 ├── api/assistantApi.ts         # envío de mensajes (mock → apiClient.ts)
-├── components/
+├── organisms/
 │   ├── AssistantPanel.tsx      # contenedor del chat (header + lista + input)
 │   ├── MessageList.tsx         # historial de mensajes
 │   ├── MessageBubble.tsx       # burbuja (usuario / asistente)
@@ -110,11 +110,11 @@ DISEÑO (VAULT, copys reales del Figma) — "VAULT AI Assistant"
   cualquier vista; comparte el mismo componente de chat.
 
 REGLAS DE ARQUITECTURA (OBLIGATORIAS)
-- Patrón de módulos: modules/user/assistant/{api,hooks,components,pages,types}.
+- Patrón de módulos: modules/user/assistant/{api,hooks,organisms,pages,types}.
   - api/assistantApi.ts: envío de mensaje (mock → apiClient.ts).
-  - hooks/useAssistant.ts: lista de mensajes, isProcessing y envío. Sin lógica en componentes.
-  - components/: AssistantPanel, MessageList, MessageBubble, MessageComposer (UI pura).
-  - pages/page.tsx: compone hook + componentes; exporta `AssistantPage`.
+  - hooks/useAssistant.ts: lista de mensajes, isProcessing y envío. Sin lógica en organismos.
+  - organisms/: AssistantPanel, MessageList, MessageBubble, MessageComposer (UI pura).
+  - pages/page.tsx: compone hook + organismos; exporta `AssistantPage`.
   - types/assistant.types.ts: ChatMessage, ChatRole.
 - Con backend real: HTTP vía apiClient.ts; el envío como mutación con useRequestDeduper.
   No exponer IDs internos; respetar permisos del usuario. Permitir respuesta por streaming.
@@ -122,11 +122,11 @@ REGLAS DE ARQUITECTURA (OBLIGATORIAS)
 - Registrar la ruta en router/AppRoutes.tsx (y/o montar el panel en AuthenticatedLayout).
 
 COMPONENTES REUTILIZABLES (NO reinventar)
-- @shared/components/inputs/Textarea para el composer e InputText si procede.
-- @shared/components/inputs/ActionButton para enviar (icon, loading, disabled).
-- @shared/components/layout/SurfacePanel para encuadrar el chat; PageSectionHeader para el título.
-- @shared/components/VaultSidePanel si se usa como overlay lateral.
-- toast() de @shared/components/Toast para errores de envío.
+- @shared/components/atoms/Textarea para el composer e InputText si procede.
+- @shared/components/atoms/ActionButton para enviar (icon, loading, disabled).
+- @shared/components/molecules/SurfacePanel para encuadrar el chat; @shared/components/molecules/PageSectionHeader para el título.
+- @shared/components/organisms/VaultSidePanel si se usa como overlay lateral.
+- toast() de @shared/components/organisms/Toast para errores de envío.
 
 ESTILOS
 - Solo tokens CSS del tema (var(--text-primary), var(--text-secondary), var(--accent),

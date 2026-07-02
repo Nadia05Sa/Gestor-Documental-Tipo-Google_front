@@ -30,23 +30,27 @@ modules/user/drive/
 ├── hooks/
 │   ├── useDrive.ts                    # carpeta actual, breadcrumbs, acciones del explorador
 │   └── useDriveItemCollection.ts      # hook genérico reutilizado por vistas laterales
-├── components/
+├── organisms/
 │   ├── DriveToolbar.tsx               # título, toggle grid/list, nueva carpeta, subir
 │   ├── DriveBreadcrumbs.tsx           # ruta de navegación + DnD
 │   ├── DriveList.tsx                  # DriveItemsGrid / DriveItemsTable + empty state
 │   ├── DriveForm.tsx                  # modal crear carpeta / renombrar
 │   ├── UploadFileModal.tsx
 │   ├── DriveDetail.tsx                # panel lateral de previsualización
-│   ├── DriveVaultViewPage.tsx         # layout reutilizable (vistas laterales)
+│   ├── DriveVaultViewPage.tsx         # re-export de DriveVaultCollectionShell (vistas laterales)
 │   ├── ShareModal.tsx
 │   ├── AdvancedSearchModal.tsx
-│   └── CreateContentModal.tsx
-├── pages/page.tsx
-├── types/drive.types.ts               # DriveItem, Breadcrumb, ViewMode (fuente única)
+│   ├── CreateContentModal.tsx
+│   └── DrivePageModals.tsx            # orquestador de modales
+├── pages/page.tsx                     # compone DrivePageTemplate + organismos
+├── types/drive.types.ts               # re-export desde @shared/domain/drive
 └── validations/driveSchema.ts
 ```
 
-> La cuadrícula, la tabla y las listas unificadas viven en `@shared/components/drive/`
+> `DriveVaultViewPage` apunta a `@shared/domain/drive/organisms/DriveVaultCollectionShell.tsx`.
+> Favoritos, Compartidos y Recientes lo importan desde `../drive/organisms/DriveVaultViewPage`.
+>
+> La cuadrícula, la tabla y las listas unificadas viven en `@shared/domain/drive/organisms/`
 > (`DriveItemsGrid`, `DriveItemsTable`, `DriveVaultList`, `DriveFileCard`,
 > `driveItemUtils`, `buildStandardDriveRowActions`). Las reutilizan Favoritos,
 > Recientes, Compartidos y Papelera.
@@ -93,7 +97,7 @@ Tablas: `drive_items`, `item_permissions`, `drive_trash_details`.
 1. Tipos en `types/drive.types.ts` (`DriveItem`, `ItemKind`, breadcrumb, permisos).
 2. `driveApi.ts` con `apiClient.ts`; mutaciones (mover, renombrar, borrar) con `useRequestDeduper`.
 3. `useDrive` orquesta: carpeta actual, breadcrumbs, selección, drag & drop, acciones.
-4. Componentes:
+4. Organismos:
    - `DriveList` → `DriveItemsGrid` (grid, con DnD) / `DriveItemsTable` (lista).
    - `DriveDetail` → panel lateral con `DetailInfoRow` compartido.
    - `DriveForm` → diálogos de "nueva carpeta" y "renombrar", con `driveSchema.ts`.
@@ -145,13 +149,13 @@ DISEÑO (VAULT, copys reales del Figma) — explorador tipo Google Drive ("Mi Un
   compartir y panel de detalle/preview.
 
 REGLAS DE ARQUITECTURA (OBLIGATORIAS)
-- Respeta el patrón de módulos: modules/user/drive/{api,hooks,components,pages,types,validations}.
+- Respeta el patrón de módulos: modules/user/drive/{api,hooks,organisms,pages,types,validations}.
   - api/driveApi.ts: acceso a datos (mock localStorage hoy; misma firma para apiClient.ts).
   - hooks/useDrive.ts: TODO el estado y la orquestación (carpeta actual, breadcrumbs,
-    viewMode, selección, acciones). Los componentes NO contienen lógica de negocio.
-  - components/: UI pura que recibe props y callbacks (DriveToolbar, DriveBreadcrumbs,
+    viewMode, selección, acciones). Los organismos NO contienen lógica de negocio.
+  - organisms/: UI pura que recibe props y callbacks (DriveToolbar, DriveBreadcrumbs,
     DriveList, DriveForm, UploadFileModal, DriveDetail).
-  - pages/page.tsx: compone hook + componentes; exporta `DrivePage`.
+  - pages/page.tsx: compone hook + organismos; exporta `DrivePage`.
   - types/drive.types.ts: DriveItem, ItemKind, Breadcrumb, ViewMode.
   - validations/driveSchema.ts: validateItemName.
 - Cuando exista backend: toda petición HTTP vía apiClient.ts y toda mutación (crear,
@@ -159,16 +163,16 @@ REGLAS DE ARQUITECTURA (OBLIGATORIAS)
 - Importa con alias @shared/* y @context/*. Borrado = soft-delete (no destructivo).
 
 COMPONENTES REUTILIZABLES (NO reinventar)
-- Cuadrícula: @shared/components/drive/DriveItemsGrid (movable/onMoveItem para DnD).
-- Tabla: @shared/components/drive/DriveItemsTable + buildStandardDriveRowActions.
-- Toggle de vista: @shared/components/drive/ViewModeToggle.
-- Iconos y formatos: @shared/components/drive/driveItemUtils.
-- Filas de detalle: @shared/components/layout/DetailInfoRow.
-- Botones: @shared/components/inputs/ActionButton.
-- Estado vacío: @shared/components/tables/EmptyStatePanel.
-- Modales: @shared/components/VaultModal; panel lateral: VaultSidePanel.
-- Mover ítem: @shared/components/drive/MoveItemModal.
-- Notificaciones: toast() de @shared/components/Toast. Confirmaciones: ConfirmModal.
+- Cuadrícula: @shared/domain/drive/organisms/DriveItemsGrid (movable/onMoveItem para DnD).
+- Tabla: @shared/domain/drive/organisms/DriveItemsTable + buildStandardDriveRowActions.
+- Toggle de vista: @shared/domain/drive/molecules/ViewModeToggle.
+- Iconos y formatos: @shared/domain/drive/utils/driveItemUtils.
+- Filas de detalle: @shared/components/molecules/DetailInfoRow.
+- Botones: @shared/components/atoms/ActionButton.
+- Estado vacío: @shared/components/molecules/EmptyStatePanel.
+- Modales: @shared/components/molecules/VaultModal; panel lateral: @shared/components/organisms/VaultSidePanel.
+- Mover ítem: @shared/domain/drive/organisms/MoveItemModal.
+- Notificaciones: toast() de @shared/components/organisms/Toast. Confirmaciones: @shared/components/molecules/ConfirmModal.
 
 ESTILOS
 - Usa exclusivamente los tokens CSS del tema: var(--text-primary), var(--text-secondary),

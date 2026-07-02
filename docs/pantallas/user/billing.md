@@ -27,7 +27,7 @@ contrato de `svc-billing`.
 ```text
 modules/user/billing/
 ├── api/billingApi.ts              # resumen mock + uso real (driveApi.getUsedBytes)
-├── components/
+├── organisms/
 │   ├── BillingView.tsx            # plan, uso, métodos de pago, historial
 │   └── PaymentMethodModal.tsx
 ├── hooks/useBilling.ts
@@ -112,27 +112,27 @@ DISEÑO (VAULT, copys reales del Figma) — sección "Plan y facturación"
   coloreado pagado / pendiente ("Pago pendiente") / en proceso ("En proceso") / fallido.
 
 REGLAS DE ARQUITECTURA (OBLIGATORIAS)
-- Patrón de módulos: modules/user/billing/{api,hooks,components,pages,types}.
+- Patrón de módulos: modules/user/billing/{api,hooks,organisms,pages,types}.
   - api/billingApi.ts: resumen mock (plan, método, historial) + uso real; misma firma para apiClient.ts.
-  - hooks/useBilling.ts: carga el resumen. Sin lógica en componentes.
-  - components/BillingView.tsx (UI pura que recibe `summary`) + un modal de alta de
+  - hooks/useBilling.ts: carga el resumen. Sin lógica en organismos.
+  - organisms/BillingView.tsx (UI pura que recibe `summary`) + un modal de alta de
     tarjeta (p. ej. PaymentMethodModal) con su validación en validations/.
-  - pages/page.tsx: compone hook + componentes; exporta `BillingPage`.
+  - pages/page.tsx: compone hook + organismos; exporta `BillingPage`.
   - types/billing.types.ts: BillingPlan, PaymentRecord, PaymentMethod, PaymentStatus, BillingSummary.
 - Con backend real: HTTP vía apiClient.ts; el checkout como mutación con useRequestDeduper
   (los pagos los procesa Stripe; svc-billing recibe webhooks).
 - Importa con alias @shared/*.
 
 COMPONENTES REUTILIZABLES (NO reinventar)
-- @shared/components/layout/SurfacePanel para todas las tarjetas (prop padding, className).
-- @shared/components/inputs/ActionButton para los botones (variant primary/secondary, size, fullWidth).
-- @shared/components/VaultBadge (tone primary/success) para "Actual".
-- @shared/components/VaultModal para el alta de método de pago; inputs desde
-  @shared/components/inputs (InputText para número/nombre/expiración, Switch/Checkbox para
+- @shared/components/molecules/SurfacePanel para todas las tarjetas (prop padding, className).
+- @shared/components/atoms/ActionButton para los botones (variant primary/secondary, size, fullWidth).
+- @shared/components/atoms/VaultBadge (tone primary/success) para "Actual".
+- @shared/components/molecules/VaultModal para el alta de método de pago; inputs desde
+  @shared/components/atoms (InputText para número/nombre/expiración, Switch/Checkbox para
   "predeterminado").
-- @shared/components/ConfirmModal para eliminar método de pago y confirmar cambio de plan.
-- Formatos desde @shared/components/drive/driveItemUtils (formatBytes, formatDate).
-- toast() de @shared/components/Toast para feedback (alta/baja/predeterminado).
+- @shared/components/molecules/ConfirmModal para eliminar método de pago y confirmar cambio de plan.
+- Formatos desde @shared/domain/drive/utils/driveItemUtils (formatBytes, formatDate).
+- toast() de @shared/components/organisms/Toast para feedback (alta/baja/predeterminado).
 
 ESTILOS
 - Solo tokens CSS del tema: var(--text-primary), var(--text-secondary), var(--accent),

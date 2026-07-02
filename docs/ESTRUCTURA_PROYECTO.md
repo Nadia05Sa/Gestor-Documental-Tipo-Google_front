@@ -75,7 +75,7 @@ src/
 ├── core/
 │   └── context/
 │       ├── AuthContext.tsx         # Estado global de autenticación
-│       └── DriveSearchContext.tsx  # Búsqueda global del Drive (UserLayout)
+│       └── DriveSearchContext.tsx  # Búsqueda global del Drive (montado en UserLayout)
 │
 ├── router/
 │   ├── index.tsx            # BrowserRouter y rutas 404
@@ -115,7 +115,7 @@ src/
 │   │   ├── atoms/           # InputText, ActionButton, VaultCard, …
 │   │   ├── molecules/       # ConfirmModal, PageSectionHeader, VaultModal, …
 │   │   ├── organisms/       # Sidebar, AppNavbar, AuthTopBar, Toast, …
-│   │   ├── templates/       # AuthenticatedLayout, VaultViewPageLayout, AuthSplitTemplate
+│   │   ├── templates/       # AuthenticatedLayout, VaultViewPageLayout, AuthSplitTemplate, LandingTemplate, RegisterTemplate
 │   │   ├── vault-utils.ts
 │   │   └── index.ts
 │   ├── domain/
@@ -124,7 +124,8 @@ src/
 │   │       ├── atoms/       # DriveItemIcon
 │   │       ├── molecules/   # ViewModeToggle
 │   │       ├── organisms/   # DriveVaultList, DriveItemsTable, MoveItemModal, …
-│   │       ├── templates/   # DriveVaultViewPage, DrivePageTemplate
+│   │       ├── templates/   # DrivePageTemplate, DriveVaultCollectionTemplate
+│   │       ├── organisms/   # DriveVaultCollectionShell (= DriveVaultViewPage), …
 │   │       ├── utils/       # driveItemUtils, driveRowActions
 │   │       ├── hooks/       # useDriveItemDragDrop
 │   │       └── index.ts
@@ -155,7 +156,7 @@ Configurados en `vite.config.ts` y `tsconfig.app.json`:
 Ejemplo:
 
 ```typescript
-import { AuthTopBar } from '@shared/components/auth/AuthTopBar';
+import { AuthTopBar } from '@shared/components/organisms/AuthTopBar';
 import { useAuth } from '@context/AuthContext';
 ```
 
@@ -243,7 +244,7 @@ la lógica de las vistas de archivos:
 |---|---|---|
 | `DriveItem`, `ViewMode` | `shared/domain/drive/types/drive.types.ts` | Fuente única de tipos de ítems |
 | `useDriveItemCollection` | `modules/user/drive/hooks/` | Hook genérico: lista, preview, estrella, papelera, `detailHandlers` |
-| `DriveVaultViewPage` | `shared/domain/drive/templates/` | Layout: `VaultViewPageLayout` + lista + `MoveItemModal` + `DriveDetail` |
+| `DriveVaultViewPage` | `shared/domain/drive/organisms/DriveVaultCollectionShell.tsx` | Shell de vistas laterales: encabezado + toggle + `MoveItemModal` + `DriveDetail`. Re-exportado desde `modules/user/drive/organisms/DriveVaultViewPage.tsx` |
 | `DrivePageTemplate` | `shared/domain/drive/templates/` | Layout de Mi Unidad (toolbar, migas, content, modals) |
 | `DrivePageModals` | `modules/user/drive/organisms/` | Modales agrupados de la page Drive |
 | `DriveVaultList` | `shared/domain/drive/organisms/` | Lista unificada con empty state, grid/list y menú contextual |
@@ -272,6 +273,9 @@ export const useFavorites = () =>
 
 ```typescript
 // pages/page.tsx — compone DriveVaultViewPage + DriveVaultList
+import { DriveVaultViewPage } from '../../drive/organisms/DriveVaultViewPage';
+import { DriveVaultList } from '@shared/domain/drive/organisms/DriveVaultList';
+
 <DriveVaultViewPage title="..." itemCount={...} previewItem={...} detailHandlers={...} onRefresh={...}>
   {({ viewMode, onMove }) => (
     <DriveVaultList items={...} viewMode={viewMode} emptyState={...} onMove={onMove} ... />
@@ -298,8 +302,9 @@ El módulo **drive** usa `DrivePageTemplate` + `DrivePageModals` en la page; el 
 |---|---|---|
 | `auth` | landing, login, register | UI completa con mock |
 | `user` | drive, shared, recents, favorites, trash, billing, settings | Implementadas con store mock en `localStorage`; vistas laterales reutilizan abstracciones Drive (§7.1) |
-| `admin` | user-management, moderation | Página placeholder ("en construcción") |
-| `admin` | audit | Estructura preparada (sin `pages/` ni ruta) |
+| `admin` | user-management, moderation | Placeholder en `pages/page.tsx`; hooks vacíos (`() => ({})`); sin `organisms/` |
+| `admin` | audit | Solo `api/`, `hooks/`, `types/`, `validations/`; sin `pages/` ni ruta |
+| `user` | shared-drives | Carpeta `pages/` reservada; sin implementación ni ruta |
 
 ---
 
@@ -311,15 +316,22 @@ Usado en `/login` y `/register`. Layout limpio sin sidebar.
 
 ### `UserLayout` / `AdminLayout`
 
-Ambos delegan en `AuthenticatedLayout` (`@shared/components/layout/AuthenticatedLayout.tsx`):
+**UserLayout** envuelve `AuthenticatedLayout` con `DriveSearchProvider` (contexto de
+búsqueda global del Drive). **AdminLayout** delega directamente en
+`AuthenticatedLayout`.
+
+Ambos usan `@shared/components/templates/AuthenticatedLayout.tsx`:
 
 - `Sidebar` lateral fijo en escritorio y como **drawer** en móvil (botón de menú).
 - Header con marca, email del usuario y botón de cerrar sesión.
 - `<Outlet />` para el contenido de cada feature.
 - `ToastHost` montado para las notificaciones globales (`toast()`).
 
-El `Sidebar` adapta sus ítems según el rol: para `user` muestra Mi Drive,
-Compartidos, Recientes, Favoritos, Papelera, Facturación y Configuración.
+El `Sidebar` adapta sus ítems según el rol (`USER_MENU` / `ADMIN_MENU` en
+`shared/components/organisms/Sidebar.tsx`):
+
+- **user:** Mi Unidad, Compartidos, Recientes, Destacados, Papelera, Plan y facturación, Configuración (7 ítems + separador antes de Papelera).
+- **admin:** Usuarios (`/admin/users`) — el diseño VAULT prevé más ítems (dashboard, archivos, auditoría) aún no enrutados.
 
 ### Landing
 
@@ -366,7 +378,7 @@ Organizados según **Atomic Design**. Detalle completo en [arquitectura/atomic-d
 
 ### Templates (`shared/components/templates/`)
 
-`AuthenticatedLayout`, `VaultViewPageLayout`, `AuthSplitTemplate`
+`AuthenticatedLayout`, `VaultViewPageLayout`, `AuthSplitTemplate`, `LandingTemplate`, `RegisterTemplate`
 
 ### Dominio Drive (`shared/domain/drive/`)
 

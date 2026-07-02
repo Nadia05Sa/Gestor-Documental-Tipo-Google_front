@@ -25,7 +25,7 @@ supervisión/moderación. Aparece en el diseño VAULT como "Gestión de Archivos
 ```text
 modules/admin/file-management/    (propuesto)
 ├── api/fileManagementApi.ts       # listar/buscar/bloquear/eliminar (mock → apiClient.ts)
-├── components/
+├── organisms/
 │   ├── FileManagementList.tsx     # tabla global de archivos
 │   ├── FileManagementDetail.tsx   # detalle / vista previa
 │   └── FileManagementToolbar.tsx  # búsqueda + filtros
@@ -105,11 +105,11 @@ DISEÑO (VAULT, copys reales del Figma)
 - Paginación.
 
 REGLAS DE ARQUITECTURA (OBLIGATORIAS)
-- Patrón de módulos: modules/admin/file-management/{api,hooks,components,pages,types,validations}.
+- Patrón de módulos: modules/admin/file-management/{api,hooks,organisms,pages,types,validations}.
   - api/fileManagementApi.ts: listar/buscar/detalle/bloquear/eliminar (mock → apiClient.ts).
-  - hooks/useFileManagement.ts: lista, filtros, paginación y acciones. Sin lógica en componentes.
-  - components/: FileManagementList, FileManagementDetail, FileManagementToolbar (UI pura).
-  - pages/page.tsx: compone layout + hook + componentes; exporta `FilesPage`.
+  - hooks/useFileManagement.ts: lista, filtros, paginación y acciones. Sin lógica en organismos.
+  - organisms/: FileManagementList, FileManagementDetail, FileManagementToolbar (UI pura).
+  - pages/page.tsx: compone layout + hook + organismos; exporta `FilesPage`.
   - types/file-management.types.ts: AdminFile, estado, filtros.
   - validations/fileManagementSchema.ts: validación de acciones.
 - Con backend real: HTTP vía apiClient.ts; bloquear/eliminar con useRequestDeduper. Acceso
@@ -117,12 +117,12 @@ REGLAS DE ARQUITECTURA (OBLIGATORIAS)
 - Registrar /admin/files en AdminRoutes.tsx y el ítem en el Sidebar admin.
 
 COMPONENTES REUTILIZABLES (NO reinventar)
-- @shared/components/drive/DriveItemsView para la cuadrícula/lista (getActions para bloquear/
-  eliminar/ver) y ViewModeToggle; iconos/formatos en driveItemUtils.
-- @shared/components/layout/PageSectionHeader para el encabezado.
-- @shared/components/tables (Pagination, EntityListStateRenderer) y EmptyStatePanel.
-- @shared/components/ConfirmModal para bloquear/eliminar (reforzado en hard block);
-  VaultSidePanel/VaultModal para el detalle; VaultBadge para el estado; toast() para feedback.
+- @shared/domain/drive/organisms/DriveItemsGrid o DriveItemsTable para la cuadrícula/lista (getActions para bloquear/
+  eliminar/ver) y @shared/domain/drive/molecules/ViewModeToggle; iconos/formatos en driveItemUtils.
+- @shared/components/molecules/PageSectionHeader para el encabezado.
+- @shared/components/molecules/Pagination, @shared/components/organisms/EntityListStateRenderer y @shared/components/molecules/EmptyStatePanel.
+- @shared/components/molecules/ConfirmModal para bloquear/eliminar (reforzado en hard block);
+  @shared/components/organisms/VaultSidePanel / @shared/components/molecules/VaultModal para el detalle; @shared/components/atoms/VaultBadge para el estado; toast() para feedback.
 
 ESTILOS
 - Solo tokens CSS del tema (var(--danger) para bloqueo/eliminar, var(--warning)).

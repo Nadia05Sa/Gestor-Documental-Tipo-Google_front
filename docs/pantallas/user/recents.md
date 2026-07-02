@@ -56,7 +56,7 @@ Tabla: `item_recents`.
 
 ## Guía de construcción
 
-1. Tipos desde `drive/types/drive.types.ts` (`visitedAt` en `DriveItem`).
+1. Tipos desde `@shared/domain/drive` (`visitedAt` en `DriveItem`).
 2. `recentsApi.ts` compatible con `DriveItemCollectionApi`.
 3. `useRecents`: `useDriveItemCollection` + `sections` agrupadas con `getRecentGroup`.
 4. `pages/page.tsx`: `DriveVaultSectionList` con `getFooterRight={formatRelativeTime}`.
@@ -72,7 +72,7 @@ DriveVaultViewPage y DriveVaultSectionList.
 DISEÑO: grupos Hoy/Ayer/Esta semana/Antes; tiempo relativo en tarjetas;
 empty state "Aún no hay archivos recientes"; panel DriveDetail con estrella y papelera.
 
-NO crear RecentsList.tsx ni types/recents.types.ts. Tipos desde drive.types.ts.
+NO crear RecentsList.tsx ni types/recents.types.ts. Import DriveVaultViewPage desde drive/organisms/.
 ```
 
 ---

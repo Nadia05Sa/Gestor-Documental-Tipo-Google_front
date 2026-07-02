@@ -24,7 +24,7 @@ redirecciones según el rol.
 | Rol | Home tras login | Rutas principales |
 |---|---|---|
 | `user` | `/drive` | `/drive`, `/shared`, `/recents`, `/favorites`, `/trash`, `/billing`, `/settings` |
-| `admin` | `/admin/users` | `/admin/users`, `/admin/reports` |
+| `admin` | `/admin/users` | `/admin/users`, `/admin/reports` (sidebar: solo Usuarios) |
 
 La redirección por rol se resuelve con `getHomePathByRole(role)` en
 `modules/auth/login/api/loginApi.ts`.

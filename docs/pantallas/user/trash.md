@@ -27,14 +27,15 @@ del Drive.
 ```text
 modules/user/trash/
 ├── api/trashApi.ts              # reutiliza driveApi (listTrash / restore / …)
-├── components/
+├── organisms/
 │   ├── TrashList.tsx            # DriveItemsTable con columnas custom + selección
 │   └── TrashDetail.tsx          # panel lateral (DetailInfoRow compartido)
 ├── hooks/useTrash.ts            # lista, selección, restaurar, borrar, vaciar
-└── pages/page.tsx
+├── validations/trashSchema.ts
+└── pages/page.tsx               # VaultViewPageLayout + TrashList + barra flotante
 ```
 
-> Tipos `DriveItem` importados desde `modules/user/drive/types/drive.types.ts`.
+> Tipos `DriveItem` desde `@shared/domain/drive` (vía `modules/user/drive/types/drive.types.ts`).
 
 ---
 
@@ -101,23 +102,23 @@ DISEÑO (VAULT, copys reales del Figma)
 - Estado vacío: "La papelera está vacía".
 
 REGLAS DE ARQUITECTURA (OBLIGATORIAS)
-- Patrón de módulos: modules/user/trash/{api,hooks,components,pages,types}.
+- Patrón de módulos: modules/user/trash/{api,hooks,organisms,pages,types}.
   - api/trashApi.ts: reutiliza driveApi (listTrash / restore / deletePermanent / emptyTrash).
-  - hooks/useTrash.ts: lista, selección, restaurar, borrar y vaciar. Sin lógica en componentes.
-  - components/TrashList.tsx y TrashDetail.tsx: UI pura.
-  - pages/page.tsx: compone hook + componentes; exporta `TrashPage`.
+  - hooks/useTrash.ts: lista, selección, restaurar, borrar y vaciar. Sin lógica en organismos.
+  - organisms/TrashList.tsx y TrashDetail.tsx: UI pura.
+  - pages/page.tsx: compone hook + organismos; exporta `TrashPage`.
   - Tipos desde `drive/types/drive.types.ts` (campos deletedAt, deletedBy, etc.).
 - Con backend real: HTTP vía apiClient.ts; restaurar/borrar definitivo/vaciar con
   useRequestDeduper. Borrado definitivo = marcado lógico (no destructivo físicamente).
 - Importa con alias @shared/*.
 
 COMPONENTES REUTILIZABLES (NO reinventar)
-- @shared/components/drive/DriveItemsTable (selectable, columnas custom, getRowActions).
-- @shared/components/layout/DetailInfoRow en TrashDetail.
-- @shared/components/ConfirmModal para borrado permanente y vaciar papelera.
-- @shared/components/layout/VaultViewPageLayout para el encabezado + acción "Vaciar papelera".
-- @shared/components/VaultSidePanel para TrashDetail.
-- @shared/components/tables/EmptyStatePanel, VaultBadge, toast().
+- @shared/domain/drive/organisms/DriveItemsTable (selectable, columnas custom, getRowActions).
+- @shared/components/molecules/DetailInfoRow en TrashDetail.
+- @shared/components/molecules/ConfirmModal para borrado permanente y vaciar papelera.
+- @shared/components/templates/VaultViewPageLayout para el encabezado + acción "Vaciar papelera".
+- @shared/components/organisms/VaultSidePanel para TrashDetail.
+- @shared/components/molecules/EmptyStatePanel, @shared/components/atoms/VaultBadge, toast().
 
 ESTILOS
 - Solo tokens CSS del tema (incluye var(--danger-600) para acciones destructivas). Sin colores hardcodeados.

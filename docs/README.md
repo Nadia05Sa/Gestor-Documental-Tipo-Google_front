@@ -83,9 +83,11 @@ Los tipos de ítems del Drive (`DriveItem`, `ViewMode`, etc.) tienen fuente úni
 
 | Módulo | Pantallas | Estado |
 |---|---|---|
-| auth | landing, login, register | Implementadas (mock) |
-| user | drive, shared, recents, favorites, trash, billing, settings | Implementadas (mock) |
-| user | shared-drives, assistant | Propuesta de diseño (sin ruta) |
-| admin | user-management, moderation | Placeholder |
-| admin | audit | Estructura preparada (sin ruta) |
-| admin | dashboard, file-management | Propuesta de diseño (sin ruta) |
+| auth | landing, login, register | Implementadas (mock); templates `LandingTemplate`, `AuthSplitTemplate`, `RegisterTemplate` |
+| user | drive, shared, recents, favorites, trash, billing, settings | Implementadas (mock); vistas laterales vía `useDriveItemCollection` + `DriveVaultViewPage` |
+| user | shared-drives, assistant | Propuesta de diseño; `shared-drives/pages/` vacío, sin ruta |
+| admin | user-management, moderation | Placeholder en `pages/page.tsx`; hooks vacíos; sin UI en `organisms/` |
+| admin | audit | Solo capas `api/`, `hooks/`, `types/`, `validations/`; sin `pages/` ni ruta |
+| admin | dashboard, file-management | Propuesta de diseño (sin módulo ni ruta) |
+
+> **Convención vigente:** UI de features en `organisms/`; no existen carpetas `components/` por módulo. Imports shared vía `@shared/components/{atoms,molecules,organisms,templates}/` y drive vía `@shared/domain/drive/`.

@@ -19,18 +19,16 @@ malicioso, ilegal o que infrinja los términos de servicio.
 ## Estado de implementación
 
 **Placeholder.** Hoy `pages/page.tsx` exporta `ReportsPage`, que solo muestra un
-título y el texto "Módulo de reportes en construcción".
+título y el texto "Módulo de reportes en construcción". Existe la estructura de
+capas pero **no hay carpeta `organisms/`** ni UI implementada. `useModeration`
+devuelve `{}`.
 
 ```text
 modules/admin/moderation/
 ├── api/moderationApi.ts
-├── components/
-│   ├── ModerationList.tsx
-│   ├── ModerationDetail.tsx
-│   └── ModerationForm.tsx
-├── hooks/useModeration.ts
+├── hooks/useModeration.ts            # stub: () => ({})
 ├── pages/page.tsx                    # ← placeholder actual
-├── types/moderation.types.ts         # ← actualmente `Record<string, never>`
+├── types/moderation.types.ts
 └── validations/moderationSchema.ts
 ```
 
@@ -111,11 +109,11 @@ DISEÑO (derivado de la funcionalidad de backend + design system VAULT)
 - Confirmación reforzada para el bloqueo global por hash (impacto masivo).
 
 REGLAS DE ARQUITECTURA (OBLIGATORIAS)
-- Patrón de módulos: modules/admin/moderation/{api,hooks,components,pages,types,validations}.
+- Patrón de módulos: modules/admin/moderation/{api,hooks,organisms,pages,types,validations}.
   - api/moderationApi.ts: cola + resolución (mock → apiClient.ts).
-  - hooks/useModeration.ts: cola, filtros, selección y resolución. Sin lógica en componentes.
-  - components/: ModerationList, ModerationDetail, ModerationForm (UI pura).
-  - pages/page.tsx: compone layout + hook + componentes; exporta `ReportsPage`.
+  - hooks/useModeration.ts: cola, filtros, selección y resolución. Sin lógica en organismos.
+  - organisms/: ModerationList, ModerationDetail, ModerationForm (UI pura).
+  - pages/page.tsx: compone layout + hook + organismos; exporta `ReportsPage`.
   - types/moderation.types.ts: AbuseReport, ResolutionAction, razones.
   - validations/moderationSchema.ts: validación de la resolución.
 - Con backend real: HTTP vía apiClient.ts; resolución con useRequestDeduper. Acceso RBAC.
@@ -123,11 +121,11 @@ REGLAS DE ARQUITECTURA (OBLIGATORIAS)
 - Importa con alias @shared/*.
 
 COMPONENTES REUTILIZABLES (NO reinventar)
-- @shared/components/layout/PageSectionHeader; tablas compartidas (EntityListItem,
-  EntityListStateRenderer, Pagination) para la cola.
-- @shared/components/VaultBadge para severidad; VaultSidePanel/VaultModal para el detalle.
-- @shared/components/ConfirmModal para confirmar bloqueos (reforzado en hard block).
-- @shared/components/inputs (Select de sanción, Textarea de notas, ActionButton). toast() para feedback.
+- @shared/components/molecules/PageSectionHeader; tablas compartidas (@shared/components/organisms/EntityListItem,
+  EntityListStateRenderer) y @shared/components/molecules/Pagination para la cola.
+- @shared/components/atoms/VaultBadge para severidad; @shared/components/organisms/VaultSidePanel / @shared/components/molecules/VaultModal para el detalle.
+- @shared/components/molecules/ConfirmModal para confirmar bloqueos (reforzado en hard block).
+- @shared/components/atoms (Select de sanción), @shared/components/atoms/Textarea (notas), @shared/components/atoms/ActionButton. toast() para feedback.
 
 ESTILOS
 - Solo tokens CSS del tema (var(--danger), var(--warning)). Sin colores hardcodeados.

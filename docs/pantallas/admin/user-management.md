@@ -20,19 +20,16 @@ aquí).
 ## Estado de implementación
 
 **Placeholder.** Hoy `pages/page.tsx` exporta `UsersPage`, que solo muestra un
-título y el texto "Módulo de administración en construcción". La estructura del
-módulo existe pero la lógica está pendiente.
+título y el texto "Módulo de administración en construcción". Existe la estructura
+de capas (`api/`, `hooks/`, `types/`, `validations/`) pero **no hay carpeta
+`organisms/`** ni UI implementada. `useUserManagement` devuelve `{}`.
 
 ```text
 modules/admin/user-management/
 ├── api/userManagementApi.ts
-├── components/
-│   ├── UserManagementList.tsx
-│   ├── UserManagementDetail.tsx
-│   └── UserManagementForm.tsx
-├── hooks/useUserManagement.ts
+├── hooks/useUserManagement.ts        # stub: () => ({})
 ├── pages/page.tsx                    # ← placeholder actual
-├── types/userManagement.types.ts     # ← actualmente `Record<string, never>`
+├── types/userManagement.types.ts
 └── validations/userManagementSchema.ts
 ```
 
@@ -132,11 +129,11 @@ DISEÑO (VAULT, copys reales del Figma)
 - Paginación: tamaños "25 / 50 / 100 por página" y "Página N".
 
 REGLAS DE ARQUITECTURA (OBLIGATORIAS)
-- Patrón de módulos: modules/admin/user-management/{api,hooks,components,pages,types,validations}.
+- Patrón de módulos: modules/admin/user-management/{api,hooks,organisms,pages,types,validations}.
   - api/userManagementApi.ts: listar/actualizar/estado/límite/rol/plan (mock → apiClient.ts).
-  - hooks/useUserManagement.ts: estado, búsqueda, paginación y acciones. Sin lógica en componentes.
-  - components/: UserManagementList, UserManagementDetail, UserManagementForm (UI pura).
-  - pages/page.tsx: compone layout + hook + componentes; exporta `UsersPage`.
+  - hooks/useUserManagement.ts: estado, búsqueda, paginación y acciones. Sin lógica en organismos.
+  - organisms/: UserManagementList, UserManagementDetail, UserManagementForm (UI pura).
+  - pages/page.tsx: compone layout + hook + organismos; exporta `UsersPage`.
   - types/userManagement.types.ts: AdminUser (rol, estado, storageUsed, storageLimit, plan).
   - validations/userManagementSchema.ts: validación de límite/rol.
 - Con backend real: HTTP vía apiClient.ts; toda mutación con useRequestDeduper. Cada acción
@@ -145,12 +142,12 @@ REGLAS DE ARQUITECTURA (OBLIGATORIAS)
 - Importa con alias @shared/*.
 
 COMPONENTES REUTILIZABLES (NO reinventar)
-- @shared/components/layout/PageSectionHeader para el encabezado + acción "Agregar usuario".
-- @shared/components/tables (EntityListItem, EntityListStateRenderer, Pagination) para la tabla.
-- @shared/components/inputs (InputText buscador, Select rol/plan, ActionButton).
-- @shared/components/VaultBadge para rol/estado (tono morado admin); barra de progreso de
+- @shared/components/molecules/PageSectionHeader para el encabezado + acción "Agregar usuario".
+- @shared/components/organisms (EntityListItem, EntityListStateRenderer) y @shared/components/molecules/Pagination para la tabla.
+- @shared/components/atoms (InputText buscador, Select rol/plan, ActionButton).
+- @shared/components/atoms/VaultBadge para rol/estado (tono morado admin); barra de progreso de
   almacenamiento con color por severidad usando tokens del tema.
-- @shared/components/VaultModal para "Ajustar límite"/"Agregar usuario"; ConfirmModal para
+- @shared/components/molecules/VaultModal para "Ajustar límite"/"Agregar usuario"; @shared/components/molecules/ConfirmModal para
   suspender/eliminar/cambiar plan. toast() para feedback.
 
 ESTILOS

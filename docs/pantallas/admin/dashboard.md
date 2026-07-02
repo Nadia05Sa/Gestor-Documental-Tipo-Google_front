@@ -15,8 +15,9 @@ usuarios, archivos y capacidad de almacenamiento. Es la primera pantalla del
 | Layout | `AdminLayout` |
 | Registro de ruta | `router/AdminRoutes.tsx` |
 
-> Hoy `/admin` redirige a `/admin/users`. En el diseño VAULT el sidebar admin
-> abre con **Dashboard**; al implementarlo, valora moverlo a index de `/admin`.
+> Hoy `/admin` redirige a `/admin/users` y el `ADMIN_MENU` del sidebar solo incluye
+> **Usuarios**. En el diseño VAULT el sidebar admin abre con **Dashboard**; al
+> implementarlo, valora moverlo a index de `/admin` y ampliar el menú.
 
 ---
 
@@ -28,7 +29,7 @@ usuarios, archivos y capacidad de almacenamiento. Es la primera pantalla del
 ```text
 modules/admin/dashboard/      (propuesto)
 ├── api/dashboardApi.ts        # métricas agregadas (mock → apiClient.ts)
-├── components/
+├── organisms/
 │   ├── DashboardMetrics.tsx   # cuadrícula de tarjetas de métrica
 │   └── MetricCard.tsx         # tarjeta individual (label, valor, subtítulo)
 ├── hooks/useDashboard.ts      # carga de métricas
@@ -98,20 +99,20 @@ DISEÑO (VAULT, copys reales del Figma)
 - Panel informativo de solo lectura; sirve de entrada al resto del panel admin.
 
 REGLAS DE ARQUITECTURA (OBLIGATORIAS)
-- Patrón de módulos: modules/admin/dashboard/{api,hooks,components,pages,types}.
+- Patrón de módulos: modules/admin/dashboard/{api,hooks,organisms,pages,types}.
   - api/dashboardApi.ts: GET de métricas (mock → apiClient.ts).
-  - hooks/useDashboard.ts: carga de métricas. Sin lógica en componentes.
-  - components/: DashboardMetrics, MetricCard (UI pura).
-  - pages/page.tsx: compone hook + componentes; exporta `DashboardPage`.
+  - hooks/useDashboard.ts: carga de métricas. Sin lógica en organismos.
+  - organisms/: DashboardMetrics, MetricCard (UI pura).
+  - pages/page.tsx: compone hook + organismos; exporta `DashboardPage`.
   - types/dashboard.types.ts: Metric, DashboardMetrics.
 - Registrar /admin/dashboard en AdminRoutes.tsx y el ítem "Dashboard" en el Sidebar admin.
   Acceso RBAC de lectura administrativa. Importa con alias @shared/*.
 
 COMPONENTES REUTILIZABLES (NO reinventar)
-- @shared/components/layout/SurfacePanel para cada tarjeta de métrica.
-- @shared/components/layout/PageSectionHeader para el encabezado.
-- @shared/components/VaultBadge para "Panel Administrador".
-- Formatos desde @shared/components/drive/driveItemUtils (formatBytes) para capacidades.
+- @shared/components/molecules/SurfacePanel para cada tarjeta de métrica.
+- @shared/components/molecules/PageSectionHeader para el encabezado.
+- @shared/components/atoms/VaultBadge para "Panel Administrador".
+- Formatos desde @shared/domain/drive/utils/driveItemUtils (formatBytes) para capacidades.
 
 ESTILOS
 - Solo tokens CSS del tema (var(--accent), var(--success), var(--vault-purple) para admin,

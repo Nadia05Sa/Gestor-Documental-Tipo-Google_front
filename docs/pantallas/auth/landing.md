@@ -39,20 +39,22 @@ La landing se compone de la barra superior más 5 secciones:
 
 ```text
 modules/auth/landing/
-├── pages/page.tsx                    # Orquestador (~60 líneas)
+├── pages/page.tsx                    # Orquestador; compone LandingTemplate
 ├── hooks/useLanding.ts               # Navegación a login/registro
 ├── api/landingApi.ts
 ├── types/landing.types.ts            # Textos, stats e iconos por sección
 ├── validations/landingSchema.ts
-└── components/
-    ├── LandingHeroSection.tsx
-    ├── LandingFeaturesSection.tsx
-    ├── LandingBenefitsSection.tsx
-    ├── LandingCtaSection.tsx
-    ├── LandingFooter.tsx
-    └── SectionHeading.tsx
+├── organisms/
+│   ├── LandingHeroSection.tsx
+│   ├── LandingFeaturesSection.tsx
+│   ├── LandingBenefitsSection.tsx
+│   ├── LandingCtaSection.tsx
+│   └── LandingFooter.tsx
+├── molecules/
+│   └── SectionHeading.tsx
 
-shared/components/auth/AuthTopBar.tsx  # Barra fija superior
+shared/components/templates/LandingTemplate.tsx
+shared/components/organisms/AuthTopBar.tsx  # Barra fija superior
 shared/utils/authTheme.ts             # Tema, gradientes y setupAuthPage()
 ```
 

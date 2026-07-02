@@ -26,7 +26,7 @@ patrón de módulos del repositorio.
 |---|---|---|---|
 | Mi Drive | `/drive` | Implementada (mock) | [user/drive.md](./user/drive.md) |
 | Compartidos conmigo | `/shared` | Implementada (mock) | [user/shared.md](./user/shared.md) |
-| Unidades compartidas | `/shared-drives` | Propuesta (diseño) | [user/shared-drives.md](./user/shared-drives.md) |
+| Unidades compartidas | `/shared-drives` | Propuesta (carpeta `pages/` vacía) | [user/shared-drives.md](./user/shared-drives.md) |
 | Recientes | `/recents` | Implementada (mock) | [user/recents.md](./user/recents.md) |
 | Favoritos / Destacados | `/favorites` | Implementada (mock) | [user/favorites.md](./user/favorites.md) |
 | Papelera | `/trash` | Implementada (mock) | [user/trash.md](./user/trash.md) |
@@ -41,8 +41,8 @@ patrón de módulos del repositorio.
 | Panel de Administración | `/admin/dashboard` | Propuesta (diseño) | [admin/dashboard.md](./admin/dashboard.md) |
 | Gestión de usuarios | `/admin/users` | Placeholder | [admin/user-management.md](./admin/user-management.md) |
 | Gestión de archivos | `/admin/files` | Propuesta (diseño) | [admin/file-management.md](./admin/file-management.md) |
-| Bitácora y Auditoría | `/admin/audit` | Estructura preparada | [admin/audit.md](./admin/audit.md) |
-| Moderación / Reportes | `/admin/reports` | Placeholder (sin ref. Figma) | [admin/moderation.md](./admin/moderation.md) |
+| Bitácora y Auditoría | `/admin/audit` | Preparada (sin `pages/` ni ruta) | [admin/audit.md](./admin/audit.md) |
+| Moderación / Reportes | `/admin/reports` | Placeholder | [admin/moderation.md](./admin/moderation.md) |
 
 ---
 
@@ -64,7 +64,7 @@ Cada documento de pantalla sigue esta estructura:
 ## Cómo agregar una pantalla nueva
 
 1. Crear `modules/[rol]/[feature]/` con las carpetas necesarias (`api`, `hooks`,
-   `pages`; `components`, `types`, `validations` solo si aportan valor).
+   `pages`; `organisms`, `types`, `validations` solo si aportan valor).
 2. Para vistas de archivos laterales: reutilizar `useDriveItemCollection`,
    `DriveVaultViewPage` y `DriveVaultList` (ver ESTRUCTURA_PROYECTO §7.1).
 3. Exportar la página desde `pages/page.tsx`.

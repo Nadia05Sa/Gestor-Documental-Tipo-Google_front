@@ -63,18 +63,20 @@ La landing se compone de **5 secciones** más la barra superior:
 
 ```text
 modules/auth/landing/
-├── pages/page.tsx                    # Orquestador (~60 líneas)
+├── pages/page.tsx                    # Orquestador; usa LandingTemplate
 ├── hooks/useLanding.ts               # Navegación a login/registro
 ├── types/landing.types.ts            # Textos, stats e iconos de cada sección
-└── components/
-    ├── LandingHeroSection.tsx
-    ├── LandingFeaturesSection.tsx
-    ├── LandingBenefitsSection.tsx
-    ├── LandingCtaSection.tsx
-    ├── LandingFooter.tsx
-    └── SectionHeading.tsx
+├── organisms/
+│   ├── LandingHeroSection.tsx
+│   ├── LandingFeaturesSection.tsx
+│   ├── LandingBenefitsSection.tsx
+│   ├── LandingCtaSection.tsx
+│   └── LandingFooter.tsx
+├── molecules/
+│   └── SectionHeading.tsx
 
-shared/components/auth/AuthTopBar.tsx   # Barra fija superior
+shared/components/templates/LandingTemplate.tsx
+shared/components/organisms/AuthTopBar.tsx   # Barra fija superior
 shared/utils/authTheme.ts             # Tema, gradientes y setupAuthPage()
 ```
 
@@ -123,15 +125,16 @@ La ruta está envuelta en `AuthLayout` + `ProtectedRoute guestOnly`.
 
 ```text
 modules/auth/login/
-├── pages/page.tsx                    # Estado del formulario
+├── pages/page.tsx                    # Estado del formulario; usa AuthSplitTemplate
 ├── hooks/useLogin.ts                 # Lógica de submit y redirección
 ├── api/loginApi.ts                   # Credenciales mock y utilidades de sesión
 ├── types/login.types.ts              # Tipos y textos del panel promo (LOGIN_PROMO)
-└── components/
+└── organisms/
     ├── LoginForm.tsx                 # UI del formulario
     └── LoginPromoPanel.tsx           # Panel derecho promocional
 
 modules/auth/layout/AuthLayout.tsx    # Layout contenedor
+shared/components/templates/AuthSplitTemplate.tsx
 ```
 
 ### Componentes reutilizables usados
@@ -143,7 +146,7 @@ modules/auth/layout/AuthLayout.tsx    # Layout contenedor
 - `GoogleIcon` — botón social (solo visual, sin OAuth real)
 - `InfinityVaultLogo`
 
-Todos en `@shared/components/`.
+Todos en `@shared/components/atoms/` y `@shared/components/molecules/` (ver tabla abajo).
 
 ### Flujo de inicio de sesión
 
@@ -200,14 +203,16 @@ Pantalla **centrada** con tarjeta blanca sobre fondo con gradiente suave:
 
 ```text
 modules/auth/register/
-├── pages/page.tsx                    # Estado y validación
+├── pages/page.tsx                    # Estado y validación; usa RegisterTemplate
 ├── hooks/useRegister.ts              # Llamada a AuthContext.register()
 ├── api/registerApi.ts                # Persistencia en localStorage
 ├── validations/registerSchema.ts     # Reglas de validación
 ├── types/register.types.ts           # Tipos del formulario
-└── components/
+└── organisms/
     ├── RegisterForm.tsx              # Formulario completo
     └── RegisterSuccess.tsx           # Pantalla post-registro
+
+shared/components/templates/RegisterTemplate.tsx
 ```
 
 ### Campos del formulario
@@ -294,10 +299,10 @@ Utilidades relacionadas en `loginApi.ts`:
 | Archivo | Función |
 |---------|---------|
 | `shared/utils/authTheme.ts` | `setupAuthPage()`, gradientes, colores de marca, estilos de labels |
-| `shared/components/auth/InfinityVaultLogo.tsx` | Logo usado en login, registro y top bar |
-| `shared/components/auth/AuthGradientButton.tsx` | Botón primario con gradiente azul → morado |
-| `shared/components/auth/AuthTopBar.tsx` | Barra superior de la landing |
-| `shared/components/auth/PasswordRequirementsChecklist.tsx` | Checklist de requisitos de contraseña |
+| `shared/components/atoms/InfinityVaultLogo.tsx` | Logo usado en login, registro y top bar |
+| `shared/components/molecules/AuthGradientButton.tsx` | Botón primario con gradiente azul → morado |
+| `shared/components/organisms/AuthTopBar.tsx` | Barra superior de la landing |
+| `shared/components/molecules/PasswordRequirementsChecklist.tsx` | Checklist de requisitos de contraseña |
 
 ---
 
