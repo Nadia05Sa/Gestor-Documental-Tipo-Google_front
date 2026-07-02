@@ -1,6 +1,6 @@
 import { LANDING_FEATURES } from '../types/landing.types';
 import { MANROPE_STYLE } from '@shared/utils/authTheme';
-import { SectionHeading } from './SectionHeading';
+import { SectionHeading } from '../molecules/SectionHeading';
 
 export const LandingFeaturesSection = () => (
   <section id="funciones" className="bg-[var(--bg-surface)] py-16 md:py-20">

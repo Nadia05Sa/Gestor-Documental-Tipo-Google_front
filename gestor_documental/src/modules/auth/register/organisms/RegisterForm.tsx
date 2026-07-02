@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
-import Checkbox from '@shared/components/inputs/Checkbox';
-import InputText from '@shared/components/inputs/InputText';
-import { AuthFormError } from '@shared/components/auth/AuthFormError';
-import { AuthGradientButton } from '@shared/components/auth/AuthGradientButton';
-import { InfinityVaultLogo } from '@shared/components/auth/InfinityVaultLogo';
-import { PasswordRequirementsChecklist } from '@shared/components/auth/PasswordRequirementsChecklist';
+import Checkbox from '@shared/components/atoms/Checkbox';
+import InputText from '@shared/components/atoms/InputText';
+import { AuthFormError } from '@shared/components/molecules/AuthFormError';
+import { AuthGradientButton } from '@shared/components/molecules/AuthGradientButton';
+import { InfinityVaultLogo } from '@shared/components/atoms/InfinityVaultLogo';
+import { PasswordRequirementsChecklist } from '@shared/components/molecules/PasswordRequirementsChecklist';
+import type { RegisterFormProps } from '../types/register.types';
 import {
   BRAND_LINK_COLOR,
   BRAND_NAVY,
@@ -23,7 +24,7 @@ export const RegisterForm = ({
   isSubmitEnabled,
   onFieldChange,
   onSubmit,
-}) => (
+}: RegisterFormProps) => (
   <>
     <div className="mb-8 text-center">
       <InfinityVaultLogo />

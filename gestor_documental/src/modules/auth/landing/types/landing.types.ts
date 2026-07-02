@@ -103,3 +103,20 @@ export const LANDING_CTA = {
 };
 
 export const LANDING_FOOTER_LINKS = ['Contacto', 'Privacidad', 'Términos', 'Ayuda'];
+
+export type LandingCtaSectionProps = {
+  onRegister: () => void;
+  isBusy: boolean;
+  isRegisterLoading: boolean;
+};
+
+export type LandingHeroSectionProps = LandingCtaSectionProps & {
+  onLogin: () => void;
+  isLoginLoading: boolean;
+};
+
+export type SectionHeadingProps = {
+  title: string;
+  description?: string;
+  className?: string;
+};

@@ -1,8 +1,8 @@
-import { ActionButton } from '@shared/components/inputs/ActionButton';
-import { LANDING_CTA } from '../types/landing.types';
+import { ActionButton } from '@shared/components/atoms/ActionButton';
+import { LANDING_CTA, type LandingCtaSectionProps } from '../types/landing.types';
 import { CTA_BANNER_GRADIENT, MANROPE_STYLE } from '@shared/utils/authTheme';
 
-export const LandingCtaSection = ({ onRegister, isBusy, isRegisterLoading }) => (
+export const LandingCtaSection = ({ onRegister, isBusy, isRegisterLoading }: LandingCtaSectionProps) => (
   <section id="cta" className="px-4 py-16 sm:px-6 md:py-20">
     <div
       className="relative mx-auto max-w-5xl overflow-hidden rounded-[3rem] p-8 text-center shadow-2xl sm:p-10 md:p-20"

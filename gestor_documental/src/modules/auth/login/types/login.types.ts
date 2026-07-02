@@ -17,10 +17,24 @@ export type AuthAccount = AuthSessionUser & {
 
 export type HardcodedUsers = Record<string, AuthAccount>;
 
+import type { ChangeEvent, FormEvent } from 'react';
+
 export type LoginFormState = {
   email: string;
   password: string;
   rememberMe: boolean;
+};
+
+export type LoginFormProps = {
+  email: string;
+  password: string;
+  rememberMe: boolean;
+  error: string;
+  loading: boolean;
+  onEmailChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  onPasswordChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  onRememberMeChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 };
 
 export type LoginPromoFeature = {

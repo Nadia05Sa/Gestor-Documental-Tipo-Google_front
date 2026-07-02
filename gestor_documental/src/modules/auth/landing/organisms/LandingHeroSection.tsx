@@ -1,6 +1,6 @@
 import { Sparkles } from 'lucide-react';
-import { ActionButton } from '@shared/components/inputs/ActionButton';
-import { LANDING_HERO } from '../types/landing.types';
+import { ActionButton } from '@shared/components/atoms/ActionButton';
+import { LANDING_HERO, type LandingHeroSectionProps } from '../types/landing.types';
 import {
   BRAND_GRADIENT,
   MANROPE_STYLE,
@@ -9,7 +9,13 @@ import {
   gradientButtonStyle,
 } from '@shared/utils/authTheme';
 
-export const LandingHeroSection = ({ onRegister, onLogin, isBusy, isLoginLoading, isRegisterLoading }) => (
+export const LandingHeroSection = ({
+  onRegister,
+  onLogin,
+  isBusy,
+  isLoginLoading,
+  isRegisterLoading,
+}: LandingHeroSectionProps) => (
   <section className="relative mx-auto max-w-7xl overflow-hidden px-4 pt-6 pb-12 sm:px-6 md:pt-10 md:pb-20">
     <div className="grid grid-cols-1 items-start gap-8 md:gap-12 lg:grid-cols-2">
       <div className="z-10 space-y-6 md:space-y-8">

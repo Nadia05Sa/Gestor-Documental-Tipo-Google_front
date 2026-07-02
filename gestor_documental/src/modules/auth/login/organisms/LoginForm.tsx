@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
-import { ActionButton } from '@shared/components/inputs/ActionButton';
-import Checkbox from '@shared/components/inputs/Checkbox';
-import InputText from '@shared/components/inputs/InputText';
-import { AuthFormError } from '@shared/components/auth/AuthFormError';
-import { AuthGradientButton } from '@shared/components/auth/AuthGradientButton';
-import { GoogleIcon } from '@shared/components/auth/GoogleIcon';
-import { InfinityVaultLogo } from '@shared/components/auth/InfinityVaultLogo';
+import { ActionButton } from '@shared/components/atoms/ActionButton';
+import Checkbox from '@shared/components/atoms/Checkbox';
+import InputText from '@shared/components/atoms/InputText';
+import { AuthFormError } from '@shared/components/molecules/AuthFormError';
+import { AuthGradientButton } from '@shared/components/molecules/AuthGradientButton';
+import { GoogleIcon } from '@shared/components/atoms/GoogleIcon';
+import { InfinityVaultLogo } from '@shared/components/atoms/InfinityVaultLogo';
+import type { LoginFormProps } from '../types/login.types';
 import {
   BRAND_LINK_COLOR,
   INPUT_LABEL_STYLE,
@@ -23,7 +24,7 @@ export const LoginForm = ({
   onPasswordChange,
   onRememberMeChange,
   onSubmit,
-}) => (
+}: LoginFormProps) => (
   <div className="mx-auto w-full max-w-md">
     <div className="mb-10 text-center">
       <InfinityVaultLogo />
