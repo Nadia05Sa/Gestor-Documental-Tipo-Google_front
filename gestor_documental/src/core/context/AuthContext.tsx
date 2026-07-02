@@ -41,7 +41,7 @@ type AuthError = Error & {
 
 type AuthContextValue = {
   user: AuthUser | null;
-  login: (email: string, password: string) => Promise<AuthUser>;
+  login: (email: string, password: string, rememberMe?: boolean) => Promise<AuthUser>;
   logout: () => Promise<void>;
   register: (formData: RegisterFormData) => Promise<AuthUser>;
   authLoading: boolean;
@@ -91,7 +91,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     restoreSession();
   }, [restoreSession]);
 
-  const login = useCallback(async (email: string, password: string) => {
+  const login = useCallback(async (email: string, password: string, rememberMe = true) => {
     const account = findAccount(email) as AuthAccount | null;
 
     if (!account || account.password !== password) {
@@ -101,7 +101,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     const userData = buildSessionUser(account);
-    saveSessionUser(userData);
+    saveSessionUser(userData, rememberMe);
     setUser(userData);
     return userData;
   }, []);

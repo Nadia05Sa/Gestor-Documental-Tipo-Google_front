@@ -1,6 +1,7 @@
 import type { AuthAccount, AuthSessionUser, HardcodedUsers } from '../types/login.types';
 
 const SESSION_STORAGE_KEY = 'vault_auth_user';
+const SESSION_TAB_KEY = 'vault_auth_user_session';
 const REGISTERED_USERS_KEY = 'vault_registered_users';
 
 export const HARDCODED_USERS: HardcodedUsers = {
@@ -27,14 +28,42 @@ const readJson = <T>(key: string, fallback: T): T => {
   }
 };
 
-export const readStoredUser = () => readJson<AuthSessionUser | null>(SESSION_STORAGE_KEY, null);
+export const readStoredUser = (): AuthSessionUser | null => {
+  const persistent = readJson<AuthSessionUser | null>(SESSION_STORAGE_KEY, null);
+  if (persistent) return persistent;
 
-export const saveSessionUser = (userData: AuthSessionUser) => {
-  localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(userData));
+  try {
+    const raw = sessionStorage.getItem(SESSION_TAB_KEY);
+    return raw ? (JSON.parse(raw) as AuthSessionUser) : null;
+  } catch {
+    return null;
+  }
+};
+
+export const hasPersistentSession = () => {
+  try {
+    return Boolean(localStorage.getItem(SESSION_STORAGE_KEY));
+  } catch {
+    return false;
+  }
+};
+
+export const saveSessionUser = (userData: AuthSessionUser, rememberMe = true) => {
+  const serialized = JSON.stringify(userData);
+
+  if (rememberMe) {
+    localStorage.setItem(SESSION_STORAGE_KEY, serialized);
+    sessionStorage.removeItem(SESSION_TAB_KEY);
+    return;
+  }
+
+  sessionStorage.setItem(SESSION_TAB_KEY, serialized);
+  localStorage.removeItem(SESSION_STORAGE_KEY);
 };
 
 export const clearSessionUser = () => {
   localStorage.removeItem(SESSION_STORAGE_KEY);
+  sessionStorage.removeItem(SESSION_TAB_KEY);
 };
 
 export const readRegisteredUsers = () => readJson<Record<string, AuthAccount>>(REGISTERED_USERS_KEY, {});

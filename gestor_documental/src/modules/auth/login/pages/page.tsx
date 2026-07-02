@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 
+import { hasPersistentSession } from '../api/loginApi';
 import { useLogin } from '../hooks/useLogin';
 
 import { setupAuthPage } from '@shared/utils/authTheme';
@@ -18,7 +19,7 @@ export const Login = () => {
 
   const [password, setPassword] = useState('');
 
-  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(() => hasPersistentSession());
 
   const { loading, error, loginUser } = useLogin();
 
@@ -36,7 +37,7 @@ export const Login = () => {
 
     event.preventDefault();
 
-    await loginUser(email, password);
+    await loginUser(email, password, rememberMe);
 
   };
 

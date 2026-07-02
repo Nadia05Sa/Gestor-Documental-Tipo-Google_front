@@ -9,13 +9,13 @@ export const useLogin = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const loginUser = async (email: string, password: string) => {
+  const loginUser = async (email: string, password: string, rememberMe = true) => {
     setError('');
     setLoading(true);
     const fallbackMessage = 'No se pudo iniciar sesion. Intenta nuevamente.';
 
     try {
-      const userData = await login(email, password);
+      const userData = await login(email, password, rememberMe);
       if (!userData) {
         setError(fallbackMessage);
         return { success: false };

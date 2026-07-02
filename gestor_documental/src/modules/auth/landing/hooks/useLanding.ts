@@ -15,7 +15,11 @@ export const useLanding = () => {
   const goToRegister = () => {
     if (isBusy) return;
     setPendingAction('register');
-    navigate('/register');
+    try {
+      navigate('/register');
+    } finally {
+      setPendingAction(null);
+    }
   };
 
   const goToLogin = async () => {
@@ -23,22 +27,26 @@ export const useLanding = () => {
 
     setPendingAction('login');
 
-    if (user) {
-      navigate(getHomePathByRole(user.role));
-      return;
-    }
-
     try {
-      const restoredUser = await restoreSession();
-      if (restoredUser) {
-        navigate(getHomePathByRole(restoredUser.role));
+      if (user) {
+        navigate(getHomePathByRole(user.role));
         return;
       }
-    } catch {
-      // Si falla la restauracion, se continua al login.
-    }
 
-    navigate('/login');
+      try {
+        const restoredUser = await restoreSession();
+        if (restoredUser) {
+          navigate(getHomePathByRole(restoredUser.role));
+          return;
+        }
+      } catch {
+        // Si falla la restauracion, se continua al login.
+      }
+
+      navigate('/login');
+    } finally {
+      setPendingAction(null);
+    }
   };
 
   return {
