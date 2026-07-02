@@ -1,10 +1,10 @@
 import { useState, type Dispatch, type ReactNode, type SetStateAction } from 'react';
-import { VaultViewPageLayout } from '@shared/components/layout/VaultViewPageLayout';
-import { MoveItemModal } from '@shared/components/drive/MoveItemModal';
+import { DriveVaultCollectionTemplate } from '../templates/DriveVaultCollectionTemplate';
+import { MoveItemModal } from './MoveItemModal';
 import { DriveDetail } from './DriveDetail';
 import type { DriveItem, ViewMode } from '../types/drive.types';
 
-type DriveVaultViewPageProps = {
+export type DriveVaultCollectionShellProps = {
   title: string;
   itemCount: number;
   defaultViewMode?: ViewMode;
@@ -18,8 +18,11 @@ type DriveVaultViewPageProps = {
   children: (ctx: { viewMode: ViewMode; onMove: (item: DriveItem) => void }) => ReactNode;
 };
 
-/** Layout estándar para vistas de colección de archivos con detalle lateral y mover. */
-export const DriveVaultViewPage = ({
+/**
+ * Shell de vistas drive (destacados, recientes, compartidos…):
+ * orquesta modo de vista, mover ítem y panel de detalle.
+ */
+export function DriveVaultCollectionShell({
   title,
   itemCount,
   defaultViewMode = 'grid',
@@ -28,31 +31,37 @@ export const DriveVaultViewPage = ({
   detailHandlers,
   onRefresh,
   children,
-}: DriveVaultViewPageProps) => {
+}: DriveVaultCollectionShellProps) {
   const [viewMode, setViewMode] = useState<ViewMode>(defaultViewMode);
   const [moveItem, setMoveItem] = useState<DriveItem | null>(null);
 
   return (
-    <VaultViewPageLayout
+    <DriveVaultCollectionTemplate
       title={title}
       itemCount={itemCount}
       viewMode={viewMode}
       onViewModeChange={setViewMode}
+      overlays={(
+        <>
+          <MoveItemModal
+            item={moveItem}
+            onClose={() => setMoveItem(null)}
+            onMoved={onRefresh}
+          />
+
+          <DriveDetail
+            item={previewItem}
+            onClose={() => setPreviewItem(null)}
+            onToggleStar={detailHandlers.onToggleStar}
+            onMoveToTrash={detailHandlers.onMoveToTrash}
+          />
+        </>
+      )}
     >
       {children({ viewMode, onMove: setMoveItem })}
-
-      <MoveItemModal
-        item={moveItem}
-        onClose={() => setMoveItem(null)}
-        onMoved={onRefresh}
-      />
-
-      <DriveDetail
-        item={previewItem}
-        onClose={() => setPreviewItem(null)}
-        onToggleStar={detailHandlers.onToggleStar}
-        onMoveToTrash={detailHandlers.onMoveToTrash}
-      />
-    </VaultViewPageLayout>
+    </DriveVaultCollectionTemplate>
   );
-};
+}
+
+/** @deprecated Usar `DriveVaultCollectionShell`. Alias mantenido por compatibilidad. */
+export const DriveVaultViewPage = DriveVaultCollectionShell;

@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { UploadCloud } from 'lucide-react';
-import { ActionButton } from '@shared/components/inputs/ActionButton';
-import { VaultModal } from '@shared/components/VaultModal';
-import { formatBytes } from '@shared/components/drive/driveItemUtils';
+import { ActionButton } from '@shared/components/atoms/ActionButton';
+import { VaultModal } from '@shared/components/molecules/VaultModal';
+import { formatBytes } from '@shared/domain/drive/utils/driveItemUtils';
 
 type SelectedFile = {
   name: string;

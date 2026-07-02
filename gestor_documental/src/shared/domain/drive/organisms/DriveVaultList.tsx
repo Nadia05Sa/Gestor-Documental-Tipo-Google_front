@@ -1,10 +1,10 @@
 import type { ComponentType } from 'react';
-import { toast } from '@shared/components/Toast';
-import { EmptyStatePanel } from '@shared/components/tables/EmptyStatePanel';
-import { DriveItemsGrid } from '@shared/components/drive/DriveItemsGrid';
-import { DriveItemsTable } from '@shared/components/drive/DriveItemsTable';
-import { buildStandardDriveRowActions } from '@shared/components/drive/driveRowActions';
-import type { DriveItem, ViewMode } from '../../../modules/user/drive/types/drive.types';
+import { toast } from '@shared/components/organisms/Toast';
+import { EmptyStatePanel } from '@shared/components/molecules/EmptyStatePanel';
+import { DriveItemsGrid } from './DriveItemsGrid';
+import { DriveItemsTable } from './DriveItemsTable';
+import { buildStandardDriveRowActions } from '../utils/driveRowActions';
+import type { DriveItem, ViewMode } from '../types/drive.types';
 
 type DriveVaultListEmptyState = {
   icon: ComponentType<{ className?: string }>;

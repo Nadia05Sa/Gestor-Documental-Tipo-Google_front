@@ -1,7 +1,7 @@
 import { Star } from 'lucide-react';
 import { useFavorites } from '../hooks/useFavorites';
-import { DriveVaultViewPage } from '../../drive/components/DriveVaultViewPage';
-import { DriveVaultList } from '@shared/components/drive/DriveVaultList';
+import { DriveVaultViewPage } from '../../drive/organisms/DriveVaultViewPage';
+import { DriveVaultList } from '@shared/domain/drive/organisms/DriveVaultList';
 
 export const FavoritesPage = () => {
   const favorites = useFavorites();

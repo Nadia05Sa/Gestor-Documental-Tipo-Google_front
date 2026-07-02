@@ -1,8 +1,8 @@
 import { Share2, Star } from 'lucide-react';
-import { VaultCard } from '@shared/components/VaultCard';
-import { formatBytes, formatDate } from './driveItemUtils';
-import { DriveItemIcon } from './DriveItemIcon';
-import type { DriveItem } from '../../../modules/user/drive/types/drive.types';
+import { VaultCard } from '@shared/components/atoms/VaultCard';
+import { formatBytes, formatDate } from '../utils/driveItemUtils';
+import { DriveItemIcon } from '../atoms/DriveItemIcon';
+import type { DriveItem } from '../types/drive.types';
 
 type DriveFileCardProps = {
   item: DriveItem;

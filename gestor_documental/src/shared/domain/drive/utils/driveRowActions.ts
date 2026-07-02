@@ -8,9 +8,9 @@ import {
   Star,
   Trash2,
 } from 'lucide-react';
-import { toast } from '@shared/components/Toast';
-import type { DriveItem } from '../../../modules/user/drive/types/drive.types';
-import type { DriveRowAction } from './DriveRowActionsMenu';
+import { toast } from '@shared/components/organisms/Toast';
+import type { DriveItem } from '../types/drive.types';
+import type { DriveRowAction } from '../organisms/DriveRowActionsMenu';
 
 export type DriveItemMenuHandlers = {
   onPreview: (item: DriveItem) => void;

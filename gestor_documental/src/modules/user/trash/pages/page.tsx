@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Trash2, RotateCcw, X } from 'lucide-react';
-import { EmptyStatePanel } from '@shared/components/tables/EmptyStatePanel';
-import { ActionButton } from '@shared/components/inputs/ActionButton';
-import { ConfirmModal } from '@shared/components/ConfirmModal';
-import { VaultViewPageLayout } from '@shared/components/layout/VaultViewPageLayout';
+import { EmptyStatePanel } from '@shared/components/molecules/EmptyStatePanel';
+import { ActionButton } from '@shared/components/atoms/ActionButton';
+import { ConfirmModal } from '@shared/components/molecules/ConfirmModal';
+import { VaultViewPageLayout } from '@shared/components/templates/VaultViewPageLayout';
 import { useTrash } from '../hooks/useTrash';
-import { TrashList } from '../components/TrashList';
-import { TrashDetail } from '../components/TrashDetail';
+import { TrashList } from '../organisms/TrashList';
+import { TrashDetail } from '../organisms/TrashDetail';
 import type { DriveItem } from '../../drive/types/drive.types';
 
 type ConfirmState =

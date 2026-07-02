@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react';
 import { Share2 } from 'lucide-react';
-import Checkbox from '@shared/components/inputs/Checkbox';
-import { VaultCard } from '@shared/components/VaultCard';
+import Checkbox from '@shared/components/atoms/Checkbox';
+import { VaultCard } from '@shared/components/atoms/VaultCard';
 import { DriveRowActionsMenu, type DriveRowAction } from './DriveRowActionsMenu';
-import { formatBytes, formatDate } from './driveItemUtils';
-import { DriveItemIcon } from './DriveItemIcon';
-import type { DriveItem } from '../../../modules/user/drive/types/drive.types';
+import { formatBytes, formatDate } from '../utils/driveItemUtils';
+import { DriveItemIcon } from '../atoms/DriveItemIcon';
+import type { DriveItem } from '../types/drive.types';
 
 export type DriveTableColumn<T = DriveItem> = {
   key: string;

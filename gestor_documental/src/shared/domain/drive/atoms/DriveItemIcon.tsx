@@ -1,4 +1,4 @@
-import { getDriveItemIconMeta } from './driveItemUtils';
+import { getDriveItemIconMeta } from '../utils/driveItemUtils';
 
 type DriveItemIconProps = {
   kind: 'folder' | 'file';

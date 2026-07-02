@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link2, User } from 'lucide-react';
-import { ActionButton } from '@shared/components/inputs/ActionButton';
-import { Select } from '@shared/components/inputs/Select';
-import { VaultModal } from '@shared/components/VaultModal';
-import { toast } from '@shared/components/Toast';
+import { ActionButton } from '@shared/components/atoms/ActionButton';
+import { Select } from '@shared/components/atoms/Select';
+import { VaultModal } from '@shared/components/molecules/VaultModal';
+import { toast } from '@shared/components/organisms/Toast';
 import { PERMISSION_LABELS, type DriveItem, type PermissionLevel, type ShareAccess } from '../types/drive.types';
 
 type ShareModalProps = {

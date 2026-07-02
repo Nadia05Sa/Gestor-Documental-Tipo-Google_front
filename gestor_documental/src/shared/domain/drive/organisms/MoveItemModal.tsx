@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Check, Folder, HardDrive, Search } from 'lucide-react';
-import { ActionButton } from '@shared/components/inputs/ActionButton';
-import { InputText } from '@shared/components/inputs/InputText';
-import { AuthGradientButton } from '@shared/components/auth/AuthGradientButton';
-import { VaultModal } from '@shared/components/VaultModal';
-import { toast } from '@shared/components/Toast';
-import { driveApi } from '../../../modules/user/drive/api/driveApi';
-import type { DriveItem } from '../../../modules/user/drive/types/drive.types';
+import { ActionButton } from '@shared/components/atoms/ActionButton';
+import { InputText } from '@shared/components/atoms/InputText';
+import { AuthGradientButton } from '@shared/components/molecules/AuthGradientButton';
+import { VaultModal } from '@shared/components/molecules/VaultModal';
+import { toast } from '@shared/components/organisms/Toast';
+import { driveApi } from '../../../../modules/user/drive/api/driveApi';
+import type { DriveItem } from '../types/drive.types';
 
 type MoveItemModalProps = {
   item: DriveItem | null;

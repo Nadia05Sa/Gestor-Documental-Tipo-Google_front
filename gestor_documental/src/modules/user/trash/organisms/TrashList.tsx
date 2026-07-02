@@ -1,12 +1,12 @@
 import { Eye, RotateCcw, Trash2 } from 'lucide-react';
-import { VaultBadge } from '@shared/components/VaultBadge';
-import { DriveItemsTable, type DriveTableColumn } from '@shared/components/drive/DriveItemsTable';
-import { NameCell } from '@shared/components/drive/DriveItemsTable';
-import type { DriveRowAction } from '@shared/components/drive/DriveRowActionsMenu';
+import { VaultBadge } from '@shared/components/atoms/VaultBadge';
+import { DriveItemsTable, type DriveTableColumn } from '@shared/domain/drive/organisms/DriveItemsTable';
+import { NameCell } from '@shared/domain/drive/organisms/DriveItemsTable';
+import type { DriveRowAction } from '@shared/domain/drive/organisms/DriveRowActionsMenu';
 import {
   formatDate,
   getDaysUntilPermanentDelete,
-} from '@shared/components/drive/driveItemUtils';
+} from '@shared/domain/drive/utils/driveItemUtils';
 import { resolveDaysLeftTone } from '@shared/components/vault-utils';
 import type { DriveItem } from '../../drive/types/drive.types';
 

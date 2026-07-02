@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { toast } from '@shared/components/Toast';
+import { toast } from '@shared/components/organisms/Toast';
 import { useDriveSearch } from '@context/DriveSearchContext';
 import { driveApi } from '../api/driveApi';
 import type {

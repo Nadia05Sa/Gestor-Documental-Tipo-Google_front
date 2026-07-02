@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { FolderPlus, FileSpreadsheet, FileText, SlidersHorizontal, Upload } from 'lucide-react';
-import { ActionButton } from '@shared/components/inputs/ActionButton';
-import { AuthGradientButton } from '@shared/components/auth/AuthGradientButton';
-import { ViewModeToggle } from '@shared/components/drive/ViewModeToggle';
+import { ActionButton } from '@shared/components/atoms/ActionButton';
+import { AuthGradientButton } from '@shared/components/molecules/AuthGradientButton';
+import { ViewModeToggle } from '@shared/domain/drive/molecules/ViewModeToggle';
 import type { ViewMode } from '../types/drive.types';
 
 type DriveToolbarProps = {

@@ -1,7 +1,7 @@
 import { Users } from 'lucide-react';
 import { useShared } from '../hooks/useShared';
-import { DriveVaultViewPage } from '../../drive/components/DriveVaultViewPage';
-import { DriveVaultList } from '@shared/components/drive/DriveVaultList';
+import { DriveVaultViewPage } from '../../drive/organisms/DriveVaultViewPage';
+import { DriveVaultList } from '@shared/domain/drive/organisms/DriveVaultList';
 
 export const SharedPage = () => {
   const shared = useShared();

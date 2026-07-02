@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
-import { getRecentGroup, formatRelativeTime } from '@shared/components/drive/driveItemUtils';
-import type { RecentGroup } from '@shared/components/drive/driveItemUtils';
+import { getRecentGroup, formatRelativeTime } from '@shared/domain/drive/utils/driveItemUtils';
+import type { RecentGroup } from '@shared/domain/drive/utils/driveItemUtils';
 import { recentsApi } from '../api/recentsApi';
 import { useDriveItemCollection } from '../../drive/hooks/useDriveItemCollection';
 import type { DriveItem } from '../../drive/types/drive.types';

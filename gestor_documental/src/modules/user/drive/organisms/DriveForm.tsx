@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { InputText } from '@shared/components/inputs/InputText';
-import { ActionButton } from '@shared/components/inputs/ActionButton';
-import { VaultModal } from '@shared/components/VaultModal';
+import { InputText } from '@shared/components/atoms/InputText';
+import { ActionButton } from '@shared/components/atoms/ActionButton';
+import { VaultModal } from '@shared/components/molecules/VaultModal';
 import { validateItemName } from '../validations/driveSchema';
 
 type DriveFormProps = {

@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from '@shared/components/Toast';
+import { toast } from '@shared/components/organisms/Toast';
 import type { DriveItem } from '../types/drive.types';
 
 export type DriveItemCollectionApi = {

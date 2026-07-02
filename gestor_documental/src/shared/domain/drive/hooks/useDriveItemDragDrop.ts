@@ -1,5 +1,5 @@
 import { useState, type DragEvent } from 'react';
-import type { DriveItem } from '../../../modules/user/drive/types/drive.types';
+import type { DriveItem } from '../types/drive.types';
 
 const DRAG_MIME = 'application/x-vault-item-id';
 

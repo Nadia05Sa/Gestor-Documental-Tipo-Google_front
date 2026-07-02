@@ -1,6 +1,6 @@
-import type { DriveItem } from '../../../modules/user/drive/types/drive.types';
+import type { DriveItem } from '../types/drive.types';
 import { DriveFileCard } from './DriveFileCard';
-import { useDriveItemDragDrop } from './useDriveItemDragDrop';
+import { useDriveItemDragDrop } from '../hooks/useDriveItemDragDrop';
 
 type DriveItemsGridProps = {
   items: DriveItem[];
@@ -27,7 +27,7 @@ export const DriveItemsGrid = ({
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {items.map((item) => {
-        const dragProps = movable ? getItemDragProps(item) : {};
+        const dragProps = movable ? getItemDragProps(item) : { className: '' };
         const { className: dropClassName, ...restDragProps } = dragProps;
 
         return (

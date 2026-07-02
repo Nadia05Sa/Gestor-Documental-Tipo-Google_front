@@ -1,9 +1,8 @@
 import { RotateCcw, Trash2 } from 'lucide-react';
-import { ActionButton } from '@shared/components/inputs/ActionButton';
-import { VaultSidePanel } from '@shared/components/VaultSidePanel';
-import { formatBytes, formatDate, getDriveItemIcon, getDriveItemTypeLabel } from '@shared/components/drive/driveItemUtils';
-import { DriveItemIcon } from '@shared/components/drive/DriveItemIcon';
-import { DetailInfoRow } from '@shared/components/layout/DetailInfoRow';
+import { DriveDetail } from '@shared/domain/drive/organisms/DriveDetail';
+import { DriveItemIcon } from '@shared/domain/drive/atoms/DriveItemIcon';
+import { formatBytes, formatDate } from '@shared/domain/drive/utils/driveItemUtils';
+import type { DriveDetailAction, DriveDetailInfoRow } from '@shared/domain/drive/organisms/DriveDetail';
 import type { DriveItem } from '../../drive/types/drive.types';
 
 type TrashDetailProps = {
@@ -15,63 +14,51 @@ type TrashDetailProps = {
 
 export const TrashDetail = ({ item, onClose, onRestore, onDeletePermanent }: TrashDetailProps) => {
   if (!item) return null;
-  const Icon = getDriveItemIcon(item.kind, item.extension);
+
+  const actions: DriveDetailAction[] = [
+    {
+      icon: RotateCcw,
+      label: 'Restaurar',
+      variant: 'secondary',
+      onClick: (driveItem) => onRestore(driveItem),
+      closeAfterClick: true,
+    },
+    {
+      icon: Trash2,
+      label: 'Eliminar permanentemente',
+      variant: 'danger',
+      onClick: (driveItem) => onDeletePermanent(driveItem),
+      closeAfterClick: true,
+    },
+  ];
+
+  const infoRows: DriveDetailInfoRow[] = [
+    {
+      label: 'Tipo',
+      value: item.kind === 'folder' ? 'Carpeta' : (item.extension?.toUpperCase() ?? 'Archivo'),
+    },
+    { label: 'Tamaño', value: item.kind === 'folder' ? '—' : formatBytes(item.size) },
+    { label: 'Ubicación original', value: item.originalLocation ?? 'Mi Unidad' },
+    { label: 'Eliminado por', value: item.deletedBy ?? 'Tú' },
+    { label: 'Eliminado', value: formatDate(item.deletedAt) },
+  ];
 
   return (
-    <VaultSidePanel
-      open={Boolean(item)}
+    <DriveDetail
+      item={item}
       onClose={onClose}
-      title={item.name}
       subtitle="Elemento en la papelera"
-      icon={Icon}
-      size="md"
-      footer={(
-        <div className="flex flex-wrap gap-2">
-          <ActionButton
-            icon={RotateCcw}
-            label="Restaurar"
-            variant="secondary"
-            fullWidth={false}
-            onClick={() => {
-              onRestore(item);
-              onClose();
-            }}
-          />
-          <ActionButton
-            icon={Trash2}
-            label="Eliminar permanentemente"
-            variant="danger"
-            fullWidth={false}
-            onClick={() => {
-              onDeletePermanent(item);
-              onClose();
-            }}
-          />
+      actions={actions}
+      infoRows={infoRows}
+      preview={(
+        <div
+          className="mb-6 flex h-36 flex-col items-center justify-center gap-2 rounded-2xl border border-[var(--border-subtle)]"
+          style={{ background: 'var(--bg-surface)' }}
+        >
+          <DriveItemIcon kind={item.kind} extension={item.extension} size="lg" />
+          <p className="text-xs text-[var(--text-secondary)]">Vista previa no disponible en papelera</p>
         </div>
       )}
-    >
-      <div
-        className="mb-6 flex h-36 flex-col items-center justify-center gap-2 rounded-2xl border border-[var(--border-subtle)]"
-        style={{ background: 'var(--bg-surface)' }}
-      >
-        <DriveItemIcon kind={item.kind} extension={item.extension} size="lg" />
-        <p className="text-xs text-[var(--text-secondary)]">Vista previa no disponible en papelera</p>
-      </div>
-
-      <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-4">
-        <DetailInfoRow
-          label="Tipo"
-          value={
-            item.kind === 'folder'
-              ? 'Carpeta'
-              : (item.extension?.toUpperCase() ?? getDriveItemTypeLabel(item.kind, item.extension))
-          }
-        />
-        <DetailInfoRow label="Tamaño" value={item.kind === 'folder' ? '—' : formatBytes(item.size)} />
-        <DetailInfoRow label="Ubicación original" value={item.originalLocation ?? 'Mi Unidad'} />
-        <DetailInfoRow label="Eliminado por" value={item.deletedBy ?? 'Tú'} />
-        <DetailInfoRow label="Eliminado" value={formatDate(item.deletedAt)} />
-      </div>
-    </VaultSidePanel>
+    />
   );
 };

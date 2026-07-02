@@ -1,7 +1,7 @@
 import { Clock } from 'lucide-react';
-import { EmptyStatePanel } from '@shared/components/tables/EmptyStatePanel';
-import { DriveVaultSectionList } from '@shared/components/drive/DriveVaultList';
-import { DriveVaultViewPage } from '../../drive/components/DriveVaultViewPage';
+import { EmptyStatePanel } from '@shared/components/molecules/EmptyStatePanel';
+import { DriveVaultSectionList } from '@shared/domain/drive/organisms/DriveVaultList';
+import { DriveVaultViewPage } from '../../drive/organisms/DriveVaultViewPage';
 import { useRecents } from '../hooks/useRecents';
 
 export const RecentsPage = () => {

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { ActionButton } from '@shared/components/inputs/ActionButton';
-import Checkbox from '@shared/components/inputs/Checkbox';
-import { InputText } from '@shared/components/inputs/InputText';
-import { Select } from '@shared/components/inputs/Select';
-import { VaultModal } from '@shared/components/VaultModal';
+import { ActionButton } from '@shared/components/atoms/ActionButton';
+import Checkbox from '@shared/components/atoms/Checkbox';
+import { InputText } from '@shared/components/atoms/InputText';
+import { Select } from '@shared/components/atoms/Select';
+import { VaultModal } from '@shared/components/molecules/VaultModal';
 import { EMPTY_ADVANCED_FILTERS, type AdvancedSearchFilters } from '../types/drive.types';
 
 const FILE_TYPE_OPTIONS = [
