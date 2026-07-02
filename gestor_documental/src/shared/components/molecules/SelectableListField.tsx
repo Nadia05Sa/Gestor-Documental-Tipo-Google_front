@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Info, Plus, Trash2, X } from 'lucide-react';
 import { Select } from '@shared/components/atoms/Select';
-import Input from '@shared/components/atoms/InputText';
+import { InputText } from '@shared/components/atoms/InputText';
 
 type SelectableEntry = {
   value: string;
@@ -328,7 +328,7 @@ export const SelectableListField = ({
 
           {enableSecondaryField && (
             <div className="w-28">
-              <Input
+              <InputText
                 label={secondaryLabel}
                 labelClassName="text-xs mb-1"
                 labelStyle={{ color: 'var(--text-secondary, #6b7280)' }}
@@ -430,7 +430,7 @@ export const SelectableListField = ({
 
                     {enableSecondaryField && (
                       <div className="w-28">
-                        <Input
+                        <InputText
                           label={secondaryLabel}
                           labelClassName="text-xs mb-1"
                           labelStyle={{ color: 'var(--text-secondary, #6b7280)' }}

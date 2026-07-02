@@ -24,4 +24,3 @@ export function Switch({ checked, onCheckedChange, disabled = false }: SwitchPro
     </button>
   );
 }
-export default Switch;

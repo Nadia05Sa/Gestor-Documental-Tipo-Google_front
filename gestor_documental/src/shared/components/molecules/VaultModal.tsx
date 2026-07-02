@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
-import { VaultButton } from '../atoms/ActionButton';
+import { ActionButton } from '../atoms/ActionButton';
 
 type VaultModalSize = 'sm' | 'md' | 'lg';
 
@@ -76,7 +76,7 @@ export function VaultModal({
               <p className="mt-1 text-sm text-[var(--text-secondary)]">{description}</p>
             ) : null}
           </div>
-          <VaultButton
+          <ActionButton
             icon={X}
             variant="ghost"
             size="icon"

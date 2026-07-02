@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import Checkbox from '@shared/components/atoms/Checkbox';
-import InputText from '@shared/components/atoms/InputText';
+import { Checkbox } from '@shared/components/atoms/Checkbox';
+import { InputText } from '@shared/components/atoms/InputText';
 import { AuthFormError } from '@shared/components/molecules/AuthFormError';
 import { AuthGradientButton } from '@shared/components/molecules/AuthGradientButton';
 import { InfinityVaultLogo } from '@shared/components/atoms/InfinityVaultLogo';

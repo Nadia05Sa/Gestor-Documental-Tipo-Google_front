@@ -82,5 +82,3 @@ export const ConfirmModal = ({
     </VaultModal>
   );
 };
-
-export default ConfirmModal;

@@ -41,7 +41,7 @@ Elementos mínimos de UI. Sin lógica de negocio ni llamadas a API.
 
 - No importan organismos ni pages.
 - Props genéricas (variant, label, onClick…).
-- Pueden usar utilidades de tema (`authTheme`, variables CSS).
+- Pueden usar utilidades de tema (`authTheme`, variables CSS) o helpers de iconos (`@shared/utils/vaultUtils`).
 
 ```tsx
 import { InputText } from '@shared/components/atoms/InputText';
@@ -201,7 +201,6 @@ gestor_documental/src/
 │   │   ├── molecules/
 │   │   ├── organisms/
 │   │   ├── templates/
-│   │   ├── vault-utils.ts
 │   │   └── index.ts
 │   ├── domain/
 │   │   └── drive/
@@ -215,7 +214,7 @@ gestor_documental/src/
 │   │       └── index.ts
 │   ├── pages/
 │   ├── hooks/
-│   └── utils/
+│   └── utils/                  # appTheme, authTheme, universityContext, vaultUtils
 │
 └── modules/
     └── [rol]/[feature]/
@@ -278,6 +277,7 @@ Tras la Fase 6 de limpieza, usar **solo** estas rutas:
 | Organismo genérico | `@shared/components/organisms/...` |
 | Template | `@shared/components/templates/...` |
 | UI drive | `@shared/domain/drive/...` |
+| Utilidades shared (iconos, tema, contexto) | `@shared/utils/...` |
 | Organismo de feature | `../organisms/...` desde pages/hooks |
 | Barrel shared | `@shared/components` o `@shared/domain/drive` |
 
@@ -296,6 +296,8 @@ Las carpetas `@shared/components/inputs/`, `layout/`, `auth/`, `tables/` y `driv
 | Átomos que importan organismos | Invertir dependencia |
 | Lógica de API dentro de átomos/moléculas | Mover a `hooks/` o `api/` |
 | Duplicar `DriveItem` en cada módulo | Importar desde `@shared/domain/drive` |
+| `export default` o aliases legacy (`VaultButton`, `VaultTextField`) | Named exports con el nombre del componente (`ActionButton`, `InputText`) |
+| Helpers no-UI en `components/` | Mover a `@shared/utils/` (p. ej. `vaultUtils.ts`) |
 | Layout inline de 100+ líneas en `pages/` | Extraer template u organismo |
 
 ---

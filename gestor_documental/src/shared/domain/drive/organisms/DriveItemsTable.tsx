@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Share2 } from 'lucide-react';
-import Checkbox from '@shared/components/atoms/Checkbox';
+import { Checkbox } from '@shared/components/atoms/Checkbox';
 import { VaultCard } from '@shared/components/atoms/VaultCard';
 import { DriveRowActionsMenu, type DriveRowAction } from './DriveRowActionsMenu';
 import { formatBytes, formatDate } from '../utils/driveItemUtils';

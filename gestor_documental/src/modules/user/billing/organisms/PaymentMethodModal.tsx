@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ActionButton } from '@shared/components/atoms/ActionButton';
-import Checkbox from '@shared/components/atoms/Checkbox';
+import { Checkbox } from '@shared/components/atoms/Checkbox';
 import { InputText } from '@shared/components/atoms/InputText';
 import { VaultModal } from '@shared/components/molecules/VaultModal';
 import { validatePaymentMethod } from '../validations/paymentSchema';

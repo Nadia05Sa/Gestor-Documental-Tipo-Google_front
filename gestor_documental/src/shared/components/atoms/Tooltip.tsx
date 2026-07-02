@@ -67,5 +67,3 @@ export const Tooltip = ({
     </span>
   );
 };
-
-export default Tooltip;

@@ -7,7 +7,7 @@ import {
   formatDate,
   getDaysUntilPermanentDelete,
 } from '@shared/domain/drive/utils/driveItemUtils';
-import { resolveDaysLeftTone } from '@shared/components/vault-utils';
+import { resolveDaysLeftTone } from '@shared/utils/vaultUtils';
 import type { DriveItem } from '../../drive/types/drive.types';
 
 const DAYS_TONE_CLASS: Record<string, string> = {

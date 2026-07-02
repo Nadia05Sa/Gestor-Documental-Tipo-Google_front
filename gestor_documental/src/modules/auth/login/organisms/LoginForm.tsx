@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ActionButton } from '@shared/components/atoms/ActionButton';
-import Checkbox from '@shared/components/atoms/Checkbox';
-import InputText from '@shared/components/atoms/InputText';
+import { Checkbox } from '@shared/components/atoms/Checkbox';
+import { InputText } from '@shared/components/atoms/InputText';
 import { AuthFormError } from '@shared/components/molecules/AuthFormError';
 import { AuthGradientButton } from '@shared/components/molecules/AuthGradientButton';
 import { GoogleIcon } from '@shared/components/atoms/GoogleIcon';

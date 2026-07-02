@@ -304,4 +304,3 @@ export function ActionButton({
     </button>
   );
 }
-export { ActionButton as VaultButton };

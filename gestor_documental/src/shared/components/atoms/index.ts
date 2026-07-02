@@ -1,11 +1,12 @@
-export { ActionButton, VaultButton } from './ActionButton';
-export { default as Checkbox } from './Checkbox';
+export { ActionButton } from './ActionButton';
+export { Checkbox } from './Checkbox';
 export { ColorSwatchPicker } from './ColorSwatchPicker';
 export { GoogleIcon } from './GoogleIcon';
 export { InfinityVaultLogo } from './InfinityVaultLogo';
-export { default as InputText, InputText as VaultTextField } from './InputText';
+export { InputText } from './InputText';
 export type { InputTextProps } from './InputText';
 export { Select } from './Select';
+export type { SelectOption } from './Select';
 export { Switch } from './Switch';
 export { Textarea } from './Textarea';
 export { Tooltip } from './Tooltip';

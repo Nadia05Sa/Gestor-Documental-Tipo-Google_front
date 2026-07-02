@@ -1,7 +1,7 @@
 import { forwardRef, useState } from 'react';
 import type { ChangeEvent, CSSProperties, FocusEvent, ReactNode } from 'react';
 import { Eye, EyeOff, Info } from 'lucide-react';
-import { renderIcon, type IconInput } from '../vault-utils';
+import { renderIcon, type IconInput } from '@shared/utils/vaultUtils';
 
 type InputTextProps = {
   label?: ReactNode;
@@ -269,4 +269,3 @@ const InputText = forwardRef<HTMLInputElement, InputTextProps>(
 InputText.displayName = 'InputText';
 export type { InputTextProps };
 export { InputText };
-export default InputText;

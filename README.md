@@ -36,7 +36,7 @@ Gestor-Documental-Tipo-Google_front/
 │           ├── domain/drive/   # tipos, UI y utils del dominio archivos
 │           ├── pages/          # 404, loading
 │           ├── hooks/
-│           └── utils/
+│           └── utils/          # appTheme, authTheme, universityContext, vaultUtils
 └── README.md
 ```
 

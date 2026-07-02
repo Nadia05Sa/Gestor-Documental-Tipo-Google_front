@@ -116,7 +116,6 @@ src/
 │   │   ├── molecules/       # ConfirmModal, PageSectionHeader, VaultModal, …
 │   │   ├── organisms/       # Sidebar, AppNavbar, AuthTopBar, Toast, …
 │   │   ├── templates/       # AuthenticatedLayout, VaultViewPageLayout, AuthSplitTemplate, LandingTemplate, RegisterTemplate
-│   │   ├── vault-utils.ts
 │   │   └── index.ts
 │   ├── domain/
 │   │   └── drive/           # Tipos, utils, UI del dominio archivos
@@ -135,8 +134,10 @@ src/
 │   │   ├── AppLoadingScreen.tsx
 │   │   └── AppNotFoundScreen.tsx
 │   └── utils/
+│       ├── appTheme.ts
 │       ├── authTheme.ts
-│       └── appTheme.ts
+│       ├── universityContext.ts
+│       └── vaultUtils.ts      # iconMap, renderIcon, resolveDaysLeftTone
 │
 └── assets/
 ```
@@ -417,9 +418,9 @@ npm run preview  # Vista previa del build
 
 - Componentes en `.tsx`; lógica, hooks, APIs y tipos en `.ts`.
 - Props tipadas explícitamente (migración en curso: algunos handlers aún sin tipo).
-- Exportaciones nombradas preferidas (`export const Login = ...`).
+- Exportaciones nombradas en componentes shared (`export const`, `export function`; sin `export default`).
 - Páginas del router exportadas como `[Feature]Page` o `[Feature]` desde `pages/page.tsx`.
-- `allowJs: true` permite archivos `.js` legacy (`useRequestDeduper.js`, `vault-utils.js`).
+- `allowJs: true` permite archivos `.js` legacy (`useRequestDeduper.js`).
 
 ---
 

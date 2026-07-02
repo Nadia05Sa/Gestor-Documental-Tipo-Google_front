@@ -151,4 +151,4 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxOptions>(
 );
 
 Checkbox.displayName = 'Checkbox';
-export default Checkbox;
+export { Checkbox };

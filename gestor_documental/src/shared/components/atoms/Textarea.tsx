@@ -205,4 +205,3 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaOptions>(
 
 Textarea.displayName = 'Textarea';
 export { Textarea };
-export default Textarea;

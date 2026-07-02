@@ -1,8 +1,8 @@
 import { useEffect, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
-import { VaultButton } from '../atoms/ActionButton';
-import { renderIcon, type IconInput } from '../vault-utils';
+import { ActionButton } from '../atoms/ActionButton';
+import { renderIcon, type IconInput } from '@shared/utils/vaultUtils';
 
 type VaultSidePanelSize = keyof typeof SIZE_CLASSES;
 
@@ -80,7 +80,7 @@ export function VaultSidePanel({
               {subtitle ? <p className="text-sm text-[var(--text-secondary)]">{subtitle}</p> : null}
             </div>
           </div>
-          <VaultButton
+          <ActionButton
             icon={X}
             variant="ghost"
             size="icon"
