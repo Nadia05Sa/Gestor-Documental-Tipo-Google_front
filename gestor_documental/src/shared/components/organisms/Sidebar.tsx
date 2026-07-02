@@ -85,7 +85,7 @@ export const Sidebar = ({
       {showLogo ? (
         <div className="flex h-16 shrink-0 items-center justify-between gap-2 border-b border-[var(--border-subtle)] px-5">
           <div className="flex min-w-0 items-center gap-2">
-            <InfinityVaultLogo className="justify-start" />
+            <InfinityVaultLogo className="min-w-0 justify-start" showName={collapsed ? 'never' : 'auto'} />
             {badge ? (
               <span className="rounded-full bg-[var(--accent-subtle)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[var(--accent)]">
                 {badge}

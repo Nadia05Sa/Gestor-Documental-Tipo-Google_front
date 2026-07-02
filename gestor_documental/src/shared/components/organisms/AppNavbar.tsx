@@ -102,7 +102,7 @@ export const AppNavbar = ({
       </button>
 
       <div className="flex items-center gap-2 lg:hidden">
-        <InfinityVaultLogo className="justify-start" />
+        <InfinityVaultLogo className="justify-start" showName="never" size="sm" />
         {badge ? (
           <span className="rounded-full bg-[var(--accent-subtle)] px-2 py-0.5 text-[10px] font-bold uppercase text-[var(--accent)]">
             {badge}
