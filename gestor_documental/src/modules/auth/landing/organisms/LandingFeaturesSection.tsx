@@ -3,7 +3,7 @@ import { MANROPE_STYLE } from '@shared/utils/authTheme';
 import { SectionHeading } from '../molecules/SectionHeading';
 
 export const LandingFeaturesSection = () => (
-  <section id="funciones" className="bg-[var(--bg-surface)] py-16 md:py-20">
+  <section id="funciones" className="scroll-mt-24 bg-[var(--bg-surface)] py-16 md:py-20">
     <div className="mx-auto max-w-7xl px-4 sm:px-6">
       <SectionHeading
         className="mb-16 text-center"

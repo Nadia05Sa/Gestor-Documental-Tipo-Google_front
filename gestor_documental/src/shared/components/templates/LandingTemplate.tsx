@@ -21,7 +21,6 @@ export function LandingTemplate({
 }: LandingTemplateProps) {
   return (
     <div
-      id="inicio"
       className="overflow-x-hidden bg-[var(--bg-base)] text-[var(--text-primary)]"
       style={{ ...INTER_STYLE, minHeight: 'max(884px, 100dvh)' }}
     >

@@ -16,7 +16,10 @@ export const LandingHeroSection = ({
   isLoginLoading,
   isRegisterLoading,
 }: LandingHeroSectionProps) => (
-  <section className="relative mx-auto max-w-7xl overflow-hidden px-4 pt-6 pb-12 sm:px-6 md:pt-10 md:pb-20">
+  <section
+    id="inicio"
+    className="relative mx-auto max-w-7xl scroll-mt-24 overflow-hidden px-4 pt-6 pb-12 sm:px-6 md:pt-10 md:pb-20"
+  >
     <div className="grid grid-cols-1 items-start gap-8 md:gap-12 lg:grid-cols-2">
       <div className="z-10 space-y-6 md:space-y-8">
         <div className="inline-flex items-center rounded-full bg-[var(--accent-subtle)] px-4 py-1.5 text-xs font-semibold tracking-wide text-[var(--accent)] md:text-sm">

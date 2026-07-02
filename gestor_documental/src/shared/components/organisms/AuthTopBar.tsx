@@ -1,12 +1,25 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthGradientButton } from '@shared/components/molecules/AuthGradientButton';
 import { InfinityVaultLogo } from '@shared/components/atoms/InfinityVaultLogo';
 
 const NAV_LINKS = [
-  { href: '/#inicio', label: 'Inicio', active: true },
-  { href: '/#funciones', label: 'Funciones' },
-  { href: '/#cta', label: 'Comenzar' },
-];
+  { href: '/#inicio', label: 'Inicio', sectionId: 'inicio' },
+  { href: '/#funciones', label: 'Funciones', sectionId: 'funciones' },
+  { href: '/#cta', label: 'Comenzar', sectionId: 'cta' },
+] as const;
+
+const DEFAULT_SECTION = NAV_LINKS[0].sectionId;
+
+const parseSectionFromHash = (hash: string) => {
+  const sectionId = hash.replace(/^#/, '');
+  return NAV_LINKS.some((link) => link.sectionId === sectionId) ? sectionId : DEFAULT_SECTION;
+};
+
+const ACTIVE_NAV_CLASS =
+  'border-b-2 border-[var(--accent)] font-semibold text-[var(--accent)] transition-colors';
+const INACTIVE_NAV_CLASS =
+  'rounded px-2 py-1 text-[var(--text-secondary)] transition-colors hover:bg-[var(--accent-subtle)]';
 
 type AuthTopBarOptions = {
   showActionButton?: boolean;
@@ -30,6 +43,17 @@ export const AuthTopBar = ({
   onActionClick,
 }: AuthTopBarOptions) => {
   const isDisabled = actionDisabled || isActionLoading;
+  const [activeSection, setActiveSection] = useState(DEFAULT_SECTION);
+
+  useEffect(() => {
+    if (!showNavigation) return;
+
+    const syncFromHash = () => setActiveSection(parseSectionFromHash(window.location.hash));
+
+    syncFromHash();
+    window.addEventListener('hashchange', syncFromHash);
+    return () => window.removeEventListener('hashchange', syncFromHash);
+  }, [showNavigation]);
 
   return (
     <header className="fixed top-0 z-50 w-full border-b border-[var(--border-subtle)] bg-[var(--bg-elevated)] shadow-sm backdrop-blur-xl">
@@ -48,11 +72,9 @@ export const AuthTopBar = ({
               <a
                 key={link.href}
                 href={link.href}
-                className={
-                  link.active
-                    ? 'border-b-2 border-[var(--accent)] font-semibold text-[var(--accent)] transition-colors'
-                    : 'rounded px-2 py-1 text-[var(--text-secondary)] transition-colors hover:bg-[var(--accent-subtle)]'
-                }
+                aria-current={activeSection === link.sectionId ? 'page' : undefined}
+                onClick={() => setActiveSection(link.sectionId)}
+                className={activeSection === link.sectionId ? ACTIVE_NAV_CLASS : INACTIVE_NAV_CLASS}
               >
                 {link.label}
               </a>
