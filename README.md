@@ -1,47 +1,82 @@
 # Vault Frontend
 
-Frontend de **Vault** construido con **React**, **TypeScript** y **Tailwind CSS**.
+Frontend de **Vault** construido con **React**, **TypeScript**, **Vite** y **Tailwind CSS**.
 
 ## Resumen
 
-Esta aplicación concentra la interfaz de usuario del producto: navegación, autenticación visual, exploración de documentos, vistas de detalle y componentes reutilizables de la experiencia web.
+Interfaz del gestor documental: autenticación, exploración de archivos, vistas de detalle y componentes reutilizables organizados con **Atomic Design**.
 
 ## Stack
 
-- React
-- TypeScript
-- Tailwind CSS
-- Node.js para desarrollo local
+- React 19 + TypeScript
+- Vite 7
+- Tailwind CSS 4
+- React Router 7
 
-## Objetivo
+## Estructura del proyecto
 
-El frontend está pensado para una interfaz rápida, modular y fácil de escalar. La base visual se apoya en componentes reutilizables y utilidades de estilo con Tailwind para mantener consistencia entre pantallas.
+La aplicación vive en `gestor_documental/`:
 
-## Estructura esperada
+```text
+gestor_documental/src/
+├── shared/
+│   ├── components/
+│   │   ├── atoms/           # Botones, inputs, badges…
+│   │   ├── molecules/       # Campos compuestos, modales base…
+│   │   ├── organisms/       # Sidebar, navbar, listas admin…
+│   │   └── templates/       # Layouts con slots (auth, landing, registro…)
+│   ├── domain/drive/        # UI del dominio archivos/carpetas (misma jerarquía)
+│   ├── pages/               # Pantallas globales (404, loading)
+│   ├── hooks/
+│   └── utils/
+├── modules/
+│   └── [rol]/[feature]/
+│       ├── api/
+│       ├── hooks/
+│       ├── molecules/       # Solo si aplica al feature (p. ej. landing)
+│       ├── organisms/       # UI del feature
+│       ├── pages/page.tsx   # Pantalla: hooks + ensamblaje
+│       ├── types/
+│       └── validations/
+└── router/
+```
 
-- `src/` para la aplicación principal
-- `src/components/` para componentes reutilizables
-- `src/pages/` o `src/routes/` para pantallas y navegación
-- `src/hooks/` para lógica compartida de UI
-- `src/styles/` para estilos globales y configuración visual
+Documentación detallada: [docs/arquitectura/atomic-design.md](docs/arquitectura/atomic-design.md) y [docs/ESTRUCTURA_PROYECTO.md](docs/ESTRUCTURA_PROYECTO.md).
 
 ## Configuración
 
-1. Instala dependencias con el gestor de paquetes del proyecto.
-2. Crea el archivo de variables de entorno si el frontend necesita endpoints o claves públicas.
-3. Revisa la configuración de Tailwind y los archivos de entrada de React antes de levantar la app.
+```bash
+cd gestor_documental
+npm install
+```
+
+Variables de entorno: revisar `.env.example` si existe en el paquete frontend.
 
 ## Desarrollo
 
-En local, el flujo normal es iniciar el servidor de desarrollo del frontend y trabajar sobre los componentes de la interfaz.
+```bash
+cd gestor_documental
+npm run dev
+```
+
+## Build
+
+```bash
+cd gestor_documental
+npm run build
+```
+
+Ejecuta comprobación TypeScript (`tsc -b`) y genera el bundle en `dist/`.
 
 ## Buenas prácticas
 
-- Mantener los componentes pequeños y reutilizables.
-- Usar TypeScript para tipar props, respuestas y estados.
-- Centralizar clases repetidas en componentes o utilidades.
-- Evitar duplicar lógica de presentación entre pantallas.
+- Respetar la jerarquía **átomos → moléculas → organismos → templates → pages**.
+- Pages delgadas: estado y API en `hooks/`; layout en `templates/`.
+- Tipos drive desde `@shared/domain/drive`.
+- No crear carpetas legacy `components/` por feature (usar `organisms/`).
 
 ## Documentación
 
-Si este frontend se conecta con una API o con servicios adicionales, documenta ahí mismo las variables de entorno necesarias y los flujos de integración.
+- [docs/README.md](docs/README.md) — índice de documentación
+- [docs/pantallas/](docs/pantallas/) — especificación por pantalla
+- [docs/AUTH_LANDING_LOGIN_REGISTRO.md](docs/AUTH_LANDING_LOGIN_REGISTRO.md) — flujo de autenticación

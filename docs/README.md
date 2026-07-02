@@ -15,6 +15,7 @@ usuario.
 | Documento | Contenido |
 |---|---|
 | [ESTRUCTURA_PROYECTO.md](./ESTRUCTURA_PROYECTO.md) | Arquitectura, stack, router, patrón de módulos, abstracciones Drive y convenciones |
+| [arquitectura/atomic-design.md](./arquitectura/atomic-design.md) | Atomic Design: átomos → pages, carpetas, imports y anti-patrones |
 | [AUTH_LANDING_LOGIN_REGISTRO.md](./AUTH_LANDING_LOGIN_REGISTRO.md) | Detalle ampliado del flujo de autenticación (mock) |
 | [pantallas/](./pantallas/README.md) | Documentación por pantalla (auth, user y admin) |
 | [flujos/](./flujos/README.md) | Flujos de navegación y de negocio (auth, user y admin) |
@@ -28,6 +29,8 @@ docs/
 ├── README.md                       # Este índice
 ├── ESTRUCTURA_PROYECTO.md          # Arquitectura del frontend
 ├── AUTH_LANDING_LOGIN_REGISTRO.md  # Auth en detalle
+├── arquitectura/
+│   └── atomic-design.md            # Convenciones Atomic Design
 ├── pantallas/
 │   ├── README.md
 │   ├── auth/
@@ -66,13 +69,13 @@ docs/
 
 Cada pantalla vive en `gestor_documental/src/modules/[rol]/[feature]/`
 (**sin** la carpeta intermedia `features/`). Cada feature incluye las carpetas
-que necesite (`api/`, `hooks/`, `components/`, `pages/`, `types/`, `validations/`);
-**no** es obligatorio crear `List`, `Detail` o `Form` si la pantalla reutiliza
-abstracciones compartidas (ver [ESTRUCTURA_PROYECTO.md §7.1](./ESTRUCTURA_PROYECTO.md)).
+que necesite (`api/`, `hooks/`, `organisms/`, `pages/`, `types/`, `validations/`).
+La UI del feature va en **`organisms/`**; **`pages/`** solo ensambla hooks +
+templates + organismos. Ver [arquitectura/atomic-design.md](./arquitectura/atomic-design.md).
 
-Los tipos de ítems del Drive (`DriveItem`, `ViewMode`, etc.) viven en un único
-archivo: `modules/user/drive/types/drive.types.ts`. Las vistas laterales
-importan desde ahí; no dupliquen archivos `*.types.ts` de re-export.
+Los tipos de ítems del Drive (`DriveItem`, `ViewMode`, etc.) tienen fuente única en
+`shared/domain/drive/types/drive.types.ts`. El archivo
+`modules/user/drive/types/drive.types.ts` re-exporta por compatibilidad.
 
 ---
 

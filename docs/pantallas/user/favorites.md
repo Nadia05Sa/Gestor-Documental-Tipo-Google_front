@@ -30,7 +30,7 @@ modules/user/favorites/
 ```
 
 > No hay componentes `FavoritesList` ni `types/favorites.types.ts`: los tipos
-> vienen de `modules/user/drive/types/drive.types.ts`.
+> vienen de `@shared/domain/drive` (`DriveItem`, etc.).
 
 ---
 

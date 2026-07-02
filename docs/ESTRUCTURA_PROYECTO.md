@@ -38,6 +38,8 @@ Gestor-Documental-Tipo-Google_front/
 ├── docs/                    # Documentación del frontend
 │   ├── ESTRUCTURA_PROYECTO.md
 │   ├── AUTH_LANDING_LOGIN_REGISTRO.md
+│   ├── arquitectura/
+│   │   └── atomic-design.md   # Atomic Design: átomos → pages
 │   ├── pantallas/           # Documentación por pantalla (auth, user, admin)
 │   │   ├── auth/
 │   │   ├── user/
@@ -110,31 +112,30 @@ src/
 │
 ├── shared/
 │   ├── components/
-│   │   ├── auth/            # AuthTopBar, InfinityVaultLogo, etc.
-│   │   ├── drive/           # Cuadrícula, tabla, listas, DnD, utilidades
-│   │   │   ├── DriveItemsGrid.tsx      # Cuadrícula unificada (con DnD opcional)
-│   │   │   ├── DriveItemsTable.tsx     # Tabla con menú contextual
-│   │   │   ├── DriveVaultList.tsx      # Lista + empty state (vistas laterales)
-│   │   │   ├── DriveFileCard.tsx       # Tarjeta Figma VAULT
-│   │   │   ├── MoveItemModal.tsx
-│   │   │   ├── ViewModeToggle.tsx
-│   │   │   ├── driveItemUtils.ts       # formatBytes, formatDate, iconos, grupos recientes
-│   │   │   ├── driveRowActions.ts      # buildStandardDriveRowActions
-│   │   │   └── useDriveItemDragDrop.ts # Hook DnD sobre carpetas (grid)
-│   │   ├── inputs/          # InputText, Checkbox, ActionButton, etc.
-│   │   ├── layout/          # AuthenticatedLayout, Sidebar, VaultViewPageLayout, DetailInfoRow
-│   │   ├── tables/          # Pagination, EmptyStatePanel, EntityListStateRenderer
-│   │   ├── ConfirmModal.tsx
-│   │   ├── Toast.tsx        # toast() + ToastHost (notificaciones)
-│   │   ├── VaultModal.tsx
-│   │   └── VaultCard.tsx
+│   │   ├── atoms/           # InputText, ActionButton, VaultCard, …
+│   │   ├── molecules/       # ConfirmModal, PageSectionHeader, VaultModal, …
+│   │   ├── organisms/       # Sidebar, AppNavbar, AuthTopBar, Toast, …
+│   │   ├── templates/       # AuthenticatedLayout, VaultViewPageLayout, AuthSplitTemplate
+│   │   ├── vault-utils.ts
+│   │   └── index.ts
+│   ├── domain/
+│   │   └── drive/           # Tipos, utils, UI del dominio archivos
+│   │       ├── types/drive.types.ts
+│   │       ├── atoms/       # DriveItemIcon
+│   │       ├── molecules/   # ViewModeToggle
+│   │       ├── organisms/   # DriveVaultList, DriveItemsTable, MoveItemModal, …
+│   │       ├── templates/   # DriveVaultViewPage, DrivePageTemplate
+│   │       ├── utils/       # driveItemUtils, driveRowActions
+│   │       ├── hooks/       # useDriveItemDragDrop
+│   │       └── index.ts
 │   ├── hooks/
 │   │   └── useRequestDeduper.ts
 │   ├── pages/
 │   │   ├── AppLoadingScreen.tsx
 │   │   └── AppNotFoundScreen.tsx
 │   └── utils/
-│       └── authTheme.ts     # Tema, gradientes y setup de páginas auth
+│       ├── authTheme.ts
+│       └── appTheme.ts
 │
 └── assets/
 ```
@@ -219,12 +220,14 @@ modules/[rol]/[feature]/
 │   └── [feature]Api.ts       # Llamadas HTTP o persistencia local
 ├── hooks/
 │   └── use[Feature].ts       # Lógica de negocio y estado
-├── components/               # Solo componentes propios de la feature (opcional)
+├── organisms/                # UI del feature (Atomic Design: organismos)
 ├── validations/              # Validaciones de formulario (opcional)
 ├── types/                    # Tipos propios de la feature (opcional)
 └── pages/
-    └── page.tsx              # Página exportada al router
+    └── page.tsx              # Página exportada al router (Atomic Design: page)
 ```
+
+Ver [arquitectura/atomic-design.md](./arquitectura/atomic-design.md) para reglas de composición (átomos → pages).
 
 > **Nota:** no cree stubs vacíos (`() => null`) ni archivos `types/` que solo
 > re-exporten tipos del módulo `drive`. Las vistas laterales (favoritos,
@@ -238,16 +241,19 @@ la lógica de las vistas de archivos:
 
 | Pieza | Ubicación | Uso |
 |---|---|---|
-| `DriveItem`, `ViewMode` | `modules/user/drive/types/drive.types.ts` | Fuente única de tipos de ítems |
+| `DriveItem`, `ViewMode` | `shared/domain/drive/types/drive.types.ts` | Fuente única de tipos de ítems |
 | `useDriveItemCollection` | `modules/user/drive/hooks/` | Hook genérico: lista, preview, estrella, papelera, `detailHandlers` |
-| `DriveVaultViewPage` | `modules/user/drive/components/` | Layout: `VaultViewPageLayout` + lista + `MoveItemModal` + `DriveDetail` |
-| `DriveVaultList` | `@shared/components/drive/` | Lista unificada con empty state, grid/list y menú contextual |
-| `DriveVaultSectionList` | `@shared/components/drive/` | Igual que arriba, agrupada por secciones (recientes) |
-| `DriveItemsGrid` | `@shared/components/drive/` | Cuadrícula con `DriveFileCard`; DnD opcional vía `useDriveItemDragDrop` |
-| `DriveItemsTable` | `@shared/components/drive/` | Tabla con columnas configurables y selección |
-| `buildStandardDriveRowActions` | `@shared/components/drive/driveRowActions.ts` | Menú contextual estándar |
-| `DetailInfoRow` | `@shared/components/layout/` | Filas label/valor en paneles de detalle |
-| `VaultViewPageLayout` | `@shared/components/layout/` | Encabezado + toggle grid/list + contador |
+| `DriveVaultViewPage` | `shared/domain/drive/templates/` | Layout: `VaultViewPageLayout` + lista + `MoveItemModal` + `DriveDetail` |
+| `DrivePageTemplate` | `shared/domain/drive/templates/` | Layout de Mi Unidad (toolbar, migas, content, modals) |
+| `DrivePageModals` | `modules/user/drive/organisms/` | Modales agrupados de la page Drive |
+| `DriveVaultList` | `shared/domain/drive/organisms/` | Lista unificada con empty state, grid/list y menú contextual |
+| `DriveVaultSectionList` | `shared/domain/drive/organisms/` | Igual que arriba, agrupada por secciones (recientes) |
+| `DriveItemsGrid` | `shared/domain/drive/organisms/` | Cuadrícula con `DriveFileCard`; DnD opcional vía `useDriveItemDragDrop` |
+| `DriveItemsTable` | `shared/domain/drive/organisms/` | Tabla con columnas configurables y selección |
+| `buildStandardDriveRowActions` | `shared/domain/drive/utils/driveRowActions.ts` | Menú contextual estándar |
+| `DetailInfoRow` | `shared/components/molecules/` | Filas label/valor en paneles de detalle |
+| `VaultViewPageLayout` | `shared/components/templates/` | Encabezado + toggle grid/list + contador |
+| `AuthSplitTemplate` | `shared/components/templates/` | Login: formulario + panel promocional |
 
 **Hooks delgados por vista** (ejemplo):
 
@@ -273,9 +279,7 @@ export const useFavorites = () =>
 </DriveVaultViewPage>
 ```
 
-El módulo **drive** conserva su layout propio (`DriveToolbar`, breadcrumbs, modales
-de crear/subir/compartir/búsqueda) porque es el explorador completo; usa
-`DriveItemsGrid` en cuadrícula y `DriveItemsTable` en lista.
+El módulo **drive** usa `DrivePageTemplate` + `DrivePageModals` en la page; el explorador completo conserva toolbar, breadcrumbs y modales propios porque es la vista raíz del árbol de carpetas.
 
 ### Responsabilidades
 
@@ -283,10 +287,10 @@ de crear/subir/compartir/búsqueda) porque es el explorador completo; usa
 |---|---|
 | `api/` | Peticiones HTTP o acceso a almacenamiento (mock en auth) |
 | `hooks/` | Estado, efectos y orquestación de la feature |
-| `components/` | UI pura; recibe props y callbacks |
+| `organisms/` | UI del feature (formularios, listas, modales propios) |
 | `validations/` | Reglas de validación de formularios |
 | `types/` | Tipos TypeScript y constantes de copy |
-| `pages/` | Composición de layout + hooks + componentes |
+| `pages/` | Composición de layout + hooks + organismos (capa Page) |
 
 ### Features implementadas
 
@@ -346,29 +350,29 @@ Ver [AUTH_LANDING_LOGIN_REGISTRO.md](./AUTH_LANDING_LOGIN_REGISTRO.md) para el f
 
 ## 10. Componentes compartidos (`shared/`)
 
-### Auth
+Organizados según **Atomic Design**. Detalle completo en [arquitectura/atomic-design.md](./arquitectura/atomic-design.md).
 
-`AuthTopBar`, `AuthGradientButton`, `AuthFormError`, `InfinityVaultLogo`, `GoogleIcon`, `PasswordRequirementsChecklist`
+### Atoms (`shared/components/atoms/`)
 
-### Inputs
+`InputText`, `Checkbox`, `Switch`, `Select`, `Textarea`, `ActionButton`, `VaultCard`, `VaultBadge`, `VaultAlert`, `Tooltip`, `GoogleIcon`, `InfinityVaultLogo`
 
-`InputText`, `Checkbox`, `Switch`, `Select`, `Textarea`, `ActionButton`, `ColorSwatchPicker`, `SelectableListField`, `CascadingSelectableListField`
+### Molecules (`shared/components/molecules/`)
 
-### Layout
+`ConfirmModal`, `VaultModal`, `PageSectionHeader`, `EmptyStatePanel`, `Pagination`, `AuthFormError`, `AuthGradientButton`, `PasswordRequirementsChecklist`, `DetailInfoRow`, `LoadingStatePanel`, …
 
-`AuthenticatedLayout`, `Sidebar`, `Header`, `SideDrawer`, `PageSectionHeader`, `VaultViewPageLayout`, `SurfacePanel`, `LoadingStatePanel`, `DetailInfoRow`, `InfoFieldCard`
+### Organisms (`shared/components/organisms/`)
 
-### Drive (componentes de archivos)
+`Sidebar`, `AppNavbar`, `AuthTopBar`, `Toast`, `VaultSidePanel`, `EntityListStateRenderer`
 
-`DriveItemsGrid`, `DriveItemsTable`, `DriveVaultList`, `DriveVaultSectionList`, `DriveFileCard`, `DriveItemIcon`, `MoveItemModal`, `ViewModeToggle`, `driveItemUtils`, `driveRowActions`, `useDriveItemDragDrop`
+### Templates (`shared/components/templates/`)
 
-### Tablas y listas
+`AuthenticatedLayout`, `VaultViewPageLayout`, `AuthSplitTemplate`
 
-`EntityListItem`, `EntityListStateRenderer`, `Pagination`, `EmptyStatePanel`
+### Dominio Drive (`shared/domain/drive/`)
 
-### Overlays
+Tipos (`drive.types.ts`), utils, organismos, templates y hooks del dominio archivos.
 
-`ConfirmModal`, `VaultModal`, `VaultSidePanel`, `VaultAlert`, `VaultBadge`, `VaultCard`, `Tooltip`
+> Los imports deben usar `@shared/domain/drive/...` o `@shared/components/atoms|molecules|organisms|templates/...`.
 
 ---
 
@@ -436,8 +440,9 @@ Reglas que aplicarán cuando exista backend:
 - [ ] Exportar la página desde `pages/page.tsx`.
 - [ ] Registrar la ruta en el router correspondiente (`AuthRoutes`, `AppRoutes` o `AdminRoutes`).
 - [ ] Envolver rutas privadas con `ProtectedRoute` y el layout adecuado.
-- [ ] Colocar componentes reutilizables en `shared/components/` o, para vistas de archivos laterales, reutilizar las abstracciones de §7.1.
-- [ ] Tipos de ítems Drive en `drive/types/drive.types.ts`; evitar re-exports por módulo.
+- [ ] Colocar UI del feature en `organisms/`; pages solo ensamblan (ver [atomic-design.md](./arquitectura/atomic-design.md)).
+- [ ] Colocar componentes reutilizables en `shared/components/` o en `shared/domain/drive/` según corresponda.
+- [ ] Tipos Drive en `@shared/domain/drive`; evitar duplicar `*.types.ts` por módulo.
 - [ ] Validaciones en `validations/` cuando haya formularios.
 - [ ] Lógica de negocio en hooks, no en componentes.
 - [ ] No crear stubs vacíos (`() => null`) ni archivos placeholder sin uso.
@@ -447,6 +452,7 @@ Reglas que aplicarán cuando exista backend:
 
 ## 16. Documentación relacionada
 
+- [arquitectura/atomic-design.md](./arquitectura/atomic-design.md) — Atomic Design: átomos, moléculas, organismos, templates, pages.
 - [AUTH_LANDING_LOGIN_REGISTRO.md](./AUTH_LANDING_LOGIN_REGISTRO.md) — Landing, login, registro y flujo de autenticación mock.
 - [pantallas/README.md](./pantallas/README.md) — Índice de documentación por pantalla (auth, user y admin).
 - [flujos/README.md](./flujos/README.md) — Índice de flujos de usuario (auth, user y admin).
