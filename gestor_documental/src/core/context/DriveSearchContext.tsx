@@ -18,4 +18,10 @@ export const DriveSearchProvider = ({ children }: { children: ReactNode }) => {
   return <DriveSearchContext.Provider value={value}>{children}</DriveSearchContext.Provider>;
 };
 
-export const useDriveSearch = () => useContext(DriveSearchContext);
+export const useDriveSearch = () => {
+  const ctx = useContext(DriveSearchContext);
+  if (!ctx) {
+    throw new Error('useDriveSearch debe usarse dentro de DriveSearchProvider');
+  }
+  return ctx;
+};
