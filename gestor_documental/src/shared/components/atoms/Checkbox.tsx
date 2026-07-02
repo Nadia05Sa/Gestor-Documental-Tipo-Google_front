@@ -6,7 +6,7 @@ type CheckboxOptions = {
   label?: ReactNode;
   checked?: boolean;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-  error?: string;
+  error?: string | null;
   helperText?: string;
   infoMessage?: string;
   disabled?: boolean;
@@ -59,7 +59,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxOptions>(
       ? accentColor
       : 'var(--bg-surface, #f3f4f6)';
 
-    const handleChange = (event) => {
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
       onChange?.(event);
     };
 

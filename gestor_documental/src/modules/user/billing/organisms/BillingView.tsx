@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { CreditCard, Check, Plus, Trash2 } from 'lucide-react';
-import { VaultCard } from '@shared/components/VaultCard';
-import { VaultBadge } from '@shared/components/VaultBadge';
-import { ActionButton } from '@shared/components/inputs/ActionButton';
-import { AuthGradientButton } from '@shared/components/auth/AuthGradientButton';
-import { ConfirmModal } from '@shared/components/ConfirmModal';
-import { formatDate, formatGigabytes } from '@shared/components/drive/driveItemUtils';
+import { VaultCard } from '@shared/components/atoms/VaultCard';
+import { VaultBadge } from '@shared/components/atoms/VaultBadge';
+import { ActionButton } from '@shared/components/atoms/ActionButton';
+import { AuthGradientButton } from '@shared/components/molecules/AuthGradientButton';
+import { ConfirmModal } from '@shared/components/molecules/ConfirmModal';
+import { formatDate, formatGigabytes } from '@shared/domain/drive/utils/driveItemUtils';
 import { PaymentMethodModal } from './PaymentMethodModal';
 import type {
   BillingPlan,

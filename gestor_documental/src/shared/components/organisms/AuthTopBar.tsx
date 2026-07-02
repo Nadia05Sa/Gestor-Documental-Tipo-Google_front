@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { AuthGradientButton } from '@shared/components/auth/AuthGradientButton';
-import { InfinityVaultLogo } from '@shared/components/auth/InfinityVaultLogo';
+import { AuthGradientButton } from '@shared/components/molecules/AuthGradientButton';
+import { InfinityVaultLogo } from '@shared/components/atoms/InfinityVaultLogo';
 
 const NAV_LINKS = [
   { href: '/#inicio', label: 'Inicio', active: true },

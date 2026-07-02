@@ -1,14 +1,14 @@
 
 import type { CSSProperties, ComponentType, FocusEvent, MouseEvent, ReactNode } from 'react';
 
-const LEGACY_SIZE_MAP = {
+const LEGACY_SIZE_MAP: Record<string, string> = {
   sm: 'small',
   md: 'medium',
   lg: 'large',
   icon: 'icon',
 };
 
-const resolveVariant = (variant) => {
+const resolveVariant = (variant: string) => {
   if (variant === 'user' || variant === 'default') {
     return 'primary';
   }
@@ -117,7 +117,14 @@ export function ActionButton({
         secondaryHoverBorder: 'var(--border-strong, #9ca3af)',
       };
 
-  const sizeConfig = {
+  const sizeConfig: Record<string, {
+    padding: string;
+    fontSize: string;
+    gap: string | number;
+    iconSize: number;
+    width?: string;
+    height?: string;
+  }> = {
     small: { padding: '0.375rem 0.625rem', fontSize: '0.8125rem', gap: '0.375rem', iconSize: iconSize || 16 },
     medium: { padding: '0.5rem 0.75rem', fontSize: '0.875rem', gap: '0.5rem', iconSize: iconSize || 18 },
     large: { padding: '0.75rem 1rem', fontSize: '1rem', gap: '0.625rem', iconSize: iconSize || 22 },
@@ -187,16 +194,16 @@ export function ActionButton({
 
   const styles = customStyle ? { ...baseStyles, ...variantStyles, ...customStyle } : { ...baseStyles, ...variantStyles };
 
-  const applyStyleObject = (target, styleObject) => {
+  const applyStyleObject = (target: HTMLElement, styleObject?: CSSProperties) => {
     if (!styleObject) return;
     Object.entries(styleObject).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
-        target.style[key] = value;
+        (target.style as unknown as Record<string, string>)[key] = String(value);
       }
     });
   };
 
-  const handleHover = (event) => {
+  const handleHover = (event: MouseEvent<HTMLButtonElement>) => {
     if (isBlocked) return;
 
     if (isPrimary) {
@@ -222,7 +229,7 @@ export function ActionButton({
     applyStyleObject(event.currentTarget, customHoverStyle);
   };
 
-  const handleHoverOut = (event) => {
+  const handleHoverOut = (event: MouseEvent<HTMLButtonElement>) => {
     if (isBlocked) return;
 
     if (isPrimary) {

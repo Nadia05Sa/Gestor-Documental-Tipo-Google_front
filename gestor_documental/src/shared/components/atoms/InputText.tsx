@@ -1,8 +1,52 @@
 import { forwardRef, useState } from 'react';
+import type { ChangeEvent, CSSProperties, FocusEvent, ReactNode } from 'react';
 import { Eye, EyeOff, Info } from 'lucide-react';
-import { renderIcon } from '../vault-utils';
+import { renderIcon, type IconInput } from '../vault-utils';
 
-const resolveEffectiveInputType = ({ canTogglePassword, isPasswordVisible, type }) => {
+type InputTextProps = {
+  label?: ReactNode;
+  icon?: IconInput;
+  error?: string | null;
+  helperText?: string;
+  infoMessage?: string;
+  labelClassName?: string;
+  labelStyle?: CSSProperties;
+  className?: string;
+  inputClassName?: string;
+  type?: string;
+  required?: boolean;
+  enablePasswordToggle?: boolean;
+  colorVariant?: 'user' | 'default' | string;
+  reserveHelperSpace?: boolean;
+  id?: string;
+  name?: string;
+  value?: string | number | readonly string[];
+  defaultValue?: string | number | readonly string[];
+  placeholder?: string;
+  disabled?: boolean;
+  autoComplete?: string;
+  autoFocus?: boolean;
+  min?: string | number;
+  max?: string | number;
+  minLength?: number;
+  maxLength?: number;
+  pattern?: string;
+  inputMode?: 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search';
+  readOnly?: boolean;
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  onFocus?: (event: FocusEvent<HTMLInputElement>) => void;
+  onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
+};
+
+const resolveEffectiveInputType = ({
+  canTogglePassword,
+  isPasswordVisible,
+  type,
+}: {
+  canTogglePassword: boolean;
+  isPasswordVisible: boolean;
+  type: string;
+}) => {
   if (!canTogglePassword) {
     return type;
   }
@@ -10,7 +54,13 @@ const resolveEffectiveInputType = ({ canTogglePassword, isPasswordVisible, type 
   return isPasswordVisible ? 'text' : 'password';
 };
 
-const resolveInputBorderColor = ({ hasError, isBaseDisabled }) => {
+const resolveInputBorderColor = ({
+  hasError,
+  isBaseDisabled,
+}: {
+  hasError: boolean;
+  isBaseDisabled: boolean;
+}) => {
   if (hasError) {
     return 'var(--error, #dc2626)';
   }
@@ -22,7 +72,7 @@ const resolveInputBorderColor = ({ hasError, isBaseDisabled }) => {
   return 'var(--border-default, #d1d5db)';
 };
 
-const resolveInputTextColor = (isBaseDisabled) => {
+const resolveInputTextColor = (isBaseDisabled: boolean) => {
   if (isBaseDisabled) {
     return 'var(--text-disabled, #94a3b8)';
   }
@@ -30,7 +80,7 @@ const resolveInputTextColor = (isBaseDisabled) => {
   return 'var(--text-primary, #111827)';
 };
 
-const InputText = forwardRef(
+const InputText = forwardRef<HTMLInputElement, InputTextProps>(
   (
     {
       label,
@@ -217,5 +267,6 @@ const InputText = forwardRef(
 );
 
 InputText.displayName = 'InputText';
+export type { InputTextProps };
 export { InputText };
 export default InputText;

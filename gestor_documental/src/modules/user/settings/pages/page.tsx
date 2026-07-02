@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, SlidersHorizontal, User } from 'lucide-react';
 import { useAuth } from '@context/AuthContext';
-import { VaultCard } from '@shared/components/VaultCard';
-import { ConfirmModal } from '@shared/components/ConfirmModal';
-import { VaultViewPageLayout } from '@shared/components/layout/VaultViewPageLayout';
-import { LoadingStatePanel } from '@shared/components/layout/LoadingStatePanel';
+import { VaultCard } from '@shared/components/atoms/VaultCard';
+import { ConfirmModal } from '@shared/components/molecules/ConfirmModal';
+import { VaultViewPageLayout } from '@shared/components/templates/VaultViewPageLayout';
+import { LoadingStatePanel } from '@shared/components/molecules/LoadingStatePanel';
 import { useSettings } from '../hooks/useSettings';
-import { SettingsForm } from '../components/SettingsForm';
+import { SettingsForm } from '../organisms/SettingsForm';
 
 type SettingsTab = 'profile' | 'preferences';
 

@@ -1,6 +1,22 @@
-import { useEffect } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { X } from 'lucide-react';
+import { X, type LucideIcon } from 'lucide-react';
+
+type SideDrawerSize = 'sm' | 'md' | 'lg' | 'full';
+
+type SideDrawerProps = {
+  isOpen: boolean;
+  onClose?: () => void;
+  title?: string;
+  children: ReactNode;
+  size?: SideDrawerSize;
+  showCloseButton?: boolean;
+  headerIcon?: LucideIcon;
+  headerBadge?: ReactNode;
+  headerLayout?: 'default' | 'closeOnly';
+  panelClassName?: string;
+  bodyClassName?: string;
+};
 
 /**
  * SideDrawer
@@ -19,8 +35,8 @@ export const SideDrawer = ({
   headerLayout = 'default',
   panelClassName = '',
   bodyClassName,
-}) => {
-  const sizeConfig = {
+}: SideDrawerProps) => {
+  const sizeConfig: Record<SideDrawerSize, string> = {
     sm: 'max-w-xs',  // ~35%
     md: 'max-w-md',  // ~50%
     lg: 'max-w-2xl', // ~65%
@@ -47,7 +63,7 @@ export const SideDrawer = ({
   useEffect(() => {
     if (!isOpen) return undefined;
 
-    const handleEscape = (event) => {
+    const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         onClose?.();
       }

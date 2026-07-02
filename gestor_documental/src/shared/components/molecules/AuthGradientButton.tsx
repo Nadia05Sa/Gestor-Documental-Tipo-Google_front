@@ -1,4 +1,4 @@
-import { ActionButton } from '@shared/components/inputs/ActionButton';
+import { ActionButton } from '@shared/components/atoms/ActionButton';
 import { gradientButtonHoverStyle, gradientButtonStyle } from '@shared/utils/authTheme';
 import type { MouseEvent } from 'react';
 

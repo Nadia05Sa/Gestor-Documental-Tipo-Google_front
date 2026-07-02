@@ -1,5 +1,12 @@
 import { Home, Compass } from 'lucide-react';
-import { ActionButton } from '@shared/components/inputs/ActionButton';
+import { ActionButton } from '@shared/components/atoms/ActionButton';
+
+type AppNotFoundScreenProps = {
+  title?: string;
+  description?: string;
+  buttonLabel?: string;
+  onButtonClick?: () => void;
+};
 
 /**
  * AppNotFoundScreen
@@ -11,7 +18,7 @@ export const AppNotFoundScreen = ({
   description = 'La ruta que intentaste abrir no existe o ya no esta disponible.',
   buttonLabel = 'Ir al inicio',
   onButtonClick,
-}) => {
+}: AppNotFoundScreenProps) => {
   return (
     <div
       className="min-h-screen w-full flex items-center justify-center px-4 overflow-hidden relative bg-[var(--bg-base)]"

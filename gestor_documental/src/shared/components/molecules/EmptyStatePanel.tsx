@@ -1,6 +1,6 @@
 import type { ComponentType, ReactNode } from 'react';
-import { SurfacePanel } from '@shared/components/layout/SurfacePanel';
-import { ActionButton } from '@shared/components/inputs/ActionButton';
+import { SurfacePanel } from '@shared/components/molecules/SurfacePanel';
+import { ActionButton } from '@shared/components/atoms/ActionButton';
 
 type EmptyStatePanelProps = {
   icon?: ComponentType<{ className?: string; style?: React.CSSProperties }>;

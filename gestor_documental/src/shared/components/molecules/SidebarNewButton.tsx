@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FileSpreadsheet, FileText, FolderPlus, Plus, Upload } from 'lucide-react';
-import { AuthGradientButton } from '@shared/components/auth/AuthGradientButton';
+import { AuthGradientButton } from '@shared/components/molecules/AuthGradientButton';
 
 type SidebarNewButtonProps = {
   collapsed?: boolean;

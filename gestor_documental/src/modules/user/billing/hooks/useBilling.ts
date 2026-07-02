@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { toast } from '@shared/components/Toast';
+import { toast } from '@shared/components/organisms/Toast';
 import { billingApi } from '../api/billingApi';
 import type { BillingSummary, PaymentMethodInput } from '../types/billing.types';
 

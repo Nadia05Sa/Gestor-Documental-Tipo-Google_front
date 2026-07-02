@@ -12,9 +12,9 @@ import {
 } from 'lucide-react';
 import type { ComponentType } from 'react';
 import { useAuth } from '@context/AuthContext';
-import { InfinityVaultLogo } from '@shared/components/auth/InfinityVaultLogo';
-import { SidebarNewButton } from '@shared/components/layout/SidebarNewButton';
-import { SidebarStorageFooter } from '@shared/components/layout/SidebarStorageFooter';
+import { InfinityVaultLogo } from '@shared/components/atoms/InfinityVaultLogo';
+import { SidebarNewButton } from '@shared/components/molecules/SidebarNewButton';
+import { SidebarStorageFooter } from '@shared/components/molecules/SidebarStorageFooter';
 
 export type SidebarItem = {
   type?: 'item';

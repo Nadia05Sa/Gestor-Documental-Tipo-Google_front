@@ -1,9 +1,16 @@
+import type { ComponentType, ReactNode } from 'react';
+
+type InfoFieldCardProps = {
+  icon?: ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  label: ReactNode;
+  value: ReactNode;
+};
 
 export const InfoFieldCard = ({
   icon: Icon,
   label,
   value,
-}) => {
+}: InfoFieldCardProps) => {
   return (
     <div className="rounded-[var(--radius-card,0.5rem)] border px-4 py-3" style={{ borderColor: 'var(--border-default, #d1d5db)' }}>
       <div className="flex items-start gap-3">

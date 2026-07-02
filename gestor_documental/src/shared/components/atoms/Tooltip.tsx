@@ -1,5 +1,14 @@
-import { useId, useState } from 'react';
+import { useId, useState, type ReactNode } from 'react';
 import { Info } from 'lucide-react';
+
+type TooltipProps = {
+  children?: ReactNode;
+  content?: ReactNode;
+  className?: string;
+  buttonClassName?: string;
+  panelClassName?: string;
+  ariaLabel?: string;
+};
 
 export const Tooltip = ({
   children,
@@ -8,7 +17,7 @@ export const Tooltip = ({
   buttonClassName = '',
   panelClassName = '',
   ariaLabel = 'Mostrar informacion',
-}) => {
+}: TooltipProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const tooltipId = useId();
 

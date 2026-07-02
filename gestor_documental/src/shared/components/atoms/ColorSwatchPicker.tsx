@@ -1,9 +1,27 @@
+import type { ChangeEvent, ReactNode } from 'react';
+
+export type ColorSwatchOption = {
+  value: string | number;
+  label: string;
+  hex?: string;
+};
+
+type ColorSwatchPickerProps = {
+  label?: ReactNode;
+  value?: string | number;
+  onChange?: (event: ChangeEvent<HTMLInputElement> | { target: { value: string } }) => void;
+  options?: ColorSwatchOption[];
+  disabled?: boolean;
+  required?: boolean;
+  error?: string;
+  helperText?: string;
+  className?: string;
+};
 
 /**
  * ColorSwatchPicker
  * Componente para seleccionar un color a través de swatches visuales.
  */
-
 export const ColorSwatchPicker = ({
   label,
   value,
@@ -14,7 +32,7 @@ export const ColorSwatchPicker = ({
   error,
   helperText,
   className = '',
-}) => {
+}: ColorSwatchPickerProps) => {
   const selectedOption = options.find((option) => String(option.value) === String(value));
 
   return (

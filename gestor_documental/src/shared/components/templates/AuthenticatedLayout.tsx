@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { AppNavbar } from '@shared/components/layout/AppNavbar';
-import { Sidebar } from '@shared/components/layout/Sidebar';
-import { ToastHost } from '@shared/components/Toast';
+import { AppNavbar } from '@shared/components/organisms/AppNavbar';
+import { Sidebar } from '@shared/components/organisms/Sidebar';
+import { ToastHost } from '@shared/components/organisms/Toast';
 import { setupAppTheme } from '@shared/utils/appTheme';
 
 type AuthenticatedLayoutProps = {

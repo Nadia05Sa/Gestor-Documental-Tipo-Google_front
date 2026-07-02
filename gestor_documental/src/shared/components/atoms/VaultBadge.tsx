@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 
 const TONE_STYLES = {
   primary: {
@@ -22,8 +23,16 @@ const TONE_STYLES = {
   },
 };
 
-export function VaultBadge({ children, tone = 'primary', className = '' }) {
-  const toneStyle = TONE_STYLES[tone] || TONE_STYLES.primary;
+type VaultBadgeTone = keyof typeof TONE_STYLES;
+
+type VaultBadgeProps = {
+  children: ReactNode;
+  tone?: VaultBadgeTone;
+  className?: string;
+};
+
+export function VaultBadge({ children, tone = 'primary', className = '' }: VaultBadgeProps) {
+  const toneStyle = TONE_STYLES[tone] ?? TONE_STYLES.primary;
 
   return (
     <span

@@ -1,14 +1,28 @@
-import { useEffect } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
-import { VaultButton } from './inputs/ActionButton';
-import { renderIcon } from './vault-utils';
+import { VaultButton } from '../atoms/ActionButton';
+import { renderIcon, type IconInput } from '../vault-utils';
+
+type VaultSidePanelSize = keyof typeof SIZE_CLASSES;
 
 const SIZE_CLASSES = {
   sm: 'max-w-sm',
   md: 'max-w-md',
   lg: 'max-w-lg',
   xl: 'max-w-xl',
+} as const;
+
+type VaultSidePanelProps = {
+  open: boolean;
+  onClose?: () => void;
+  title: string;
+  subtitle?: string;
+  icon?: IconInput;
+  children: ReactNode;
+  footer?: ReactNode;
+  size?: VaultSidePanelSize;
+  className?: string;
 };
 
 export function VaultSidePanel({
@@ -21,12 +35,11 @@ export function VaultSidePanel({
   footer,
   size = 'md',
   className = '',
-}) {
+}: VaultSidePanelProps) {
   useEffect(() => {
     if (!open) return undefined;
 
-    const handleEscape = (event) => {
-      if (event.key === 'Escape') {
+    const handleEscape = (event: KeyboardEvent) => {      if (event.key === 'Escape') {
         onClose?.();
       }
     };

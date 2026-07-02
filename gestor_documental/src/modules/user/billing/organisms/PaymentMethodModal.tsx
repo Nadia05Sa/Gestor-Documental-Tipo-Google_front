@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { ActionButton } from '@shared/components/inputs/ActionButton';
-import Checkbox from '@shared/components/inputs/Checkbox';
-import { InputText } from '@shared/components/inputs/InputText';
-import { VaultModal } from '@shared/components/VaultModal';
+import { ActionButton } from '@shared/components/atoms/ActionButton';
+import Checkbox from '@shared/components/atoms/Checkbox';
+import { InputText } from '@shared/components/atoms/InputText';
+import { VaultModal } from '@shared/components/molecules/VaultModal';
 import { validatePaymentMethod } from '../validations/paymentSchema';
 import type { PaymentMethodErrors } from '../validations/paymentSchema';
 import type { PaymentMethodInput } from '../types/billing.types';

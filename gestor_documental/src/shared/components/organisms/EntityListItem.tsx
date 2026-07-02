@@ -1,11 +1,37 @@
 import { Fragment } from 'react';
-import { Eye, Pencil, Trash2 } from 'lucide-react';
-import { ActionButton } from '@shared/components/inputs/ActionButton';
-import { Switch } from '@shared/components/inputs/Switch';
+import { Eye, Pencil, Trash2, type LucideIcon } from 'lucide-react';
+import type { ComponentType } from 'react';
+import { ActionButton } from '@shared/components/atoms/ActionButton';
+import { Switch } from '@shared/components/atoms/Switch';
 
-/**
- * EntityListItem
- */
+type EntityListLoadingAction = 'view' | 'edit' | 'delete' | 'toggle' | null;
+
+export type EntityListItemProps = {
+  icon?: ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  title: string;
+  subtitle?: string;
+  metaItems?: Array<string | null | undefined>;
+  isActive?: boolean;
+  activeText?: string;
+  inactiveText?: string;
+  onToggleStatus?: (checked: boolean) => void;
+  onView?: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  onContentClick?: () => void;
+  showBottomBorder?: boolean;
+  loadingAction?: EntityListLoadingAction;
+  actionsDisabled?: boolean;
+};
+
+type IconActionButtonProps = {
+  onAction?: () => void;
+  isLoading?: boolean;
+  icon?: LucideIcon;
+  disabled?: boolean;
+};
+
+/** Fila de entidad administrable con estado, acciones y metadatos. */
 export const EntityListItem = ({
   icon: Icon,
   title,
@@ -22,7 +48,7 @@ export const EntityListItem = ({
   showBottomBorder = false,
   loadingAction = null,
   actionsDisabled = false,
-}) => {
+}: EntityListItemProps) => {
   const visibleMetaItems = metaItems.filter(Boolean);
   const isLoadingView = loadingAction === 'view';
   const isLoadingEdit = loadingAction === 'edit';
@@ -38,7 +64,7 @@ export const EntityListItem = ({
     isLoading,
     icon,
     disabled,
-  }) => {
+  }: IconActionButtonProps) => {
     if (!onAction) {
       return null;
     }
@@ -107,7 +133,7 @@ export const EntityListItem = ({
             {visibleMetaItems.map((item, idx) => (
               <Fragment key={`${item}-${idx}`}>
                 {idx > 0 ? <span className="shrink-0">•</span> : null}
-                <span className="truncate max-w-[10rem] sm:max-w-[14rem]" title={item}>{item}</span>
+                <span className="truncate max-w-[10rem] sm:max-w-[14rem]" title={item ?? undefined}>{item}</span>
               </Fragment>
             ))}
           </div>
@@ -115,7 +141,7 @@ export const EntityListItem = ({
       </div>
     </div>
   );
-  
+
   return (
     <div
       className="p-4 transition-colors hover:opacity-75"
@@ -139,48 +165,48 @@ export const EntityListItem = ({
           </div>
         )}
 
-          <div className="w-full sm:w-auto flex items-center justify-between sm:justify-end gap-2 md:gap-3">
-            <div className="flex items-center gap-2 shrink-0">
-                <span className="text-sm hidden md:inline" style={{ color: 'var(--text-secondary, #6b7280)' }}>
-                    {isActive ? activeText : inactiveText}
-                </span>
-                {isLoadingToggle ? (
-                  <div
-                    className="h-6 w-11 rounded-full border flex items-center justify-center"
-                    style={{ borderColor: 'var(--border-default, #d1d5db)' }}
-                  >
-                    <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" style={{ color: 'var(--accent, #2563eb)' }}>
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>
-                  </div>
-                ) : (
-                  <Switch checked={Boolean(isActive)} onCheckedChange={onToggleStatus} disabled={actionsDisabled} />
-                )}
-            </div>
-
-            {(onView || onEdit || onDelete) && (
-              <div className="flex items-center gap-1 shrink-0">
-                {renderIconActionButton({
-                  onAction: onView,
-                  isLoading: isLoadingView,
-                  icon: Eye,
-                  disabled: viewDisabled,
-                })}
-                {renderIconActionButton({
-                  onAction: onEdit,
-                  isLoading: isLoadingEdit,
-                  icon: Pencil,
-                  disabled: editDisabled,
-                })}
-                {renderIconActionButton({
-                  onAction: onDelete,
-                  isLoading: isLoadingDelete,
-                  icon: Trash2,
-                  disabled: deleteDisabled,
-                })}
+        <div className="w-full sm:w-auto flex items-center justify-between sm:justify-end gap-2 md:gap-3">
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-sm hidden md:inline" style={{ color: 'var(--text-secondary, #6b7280)' }}>
+              {isActive ? activeText : inactiveText}
+            </span>
+            {isLoadingToggle ? (
+              <div
+                className="h-6 w-11 rounded-full border flex items-center justify-center"
+                style={{ borderColor: 'var(--border-default, #d1d5db)' }}
+              >
+                <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" style={{ color: 'var(--accent, #2563eb)' }}>
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
               </div>
+            ) : (
+              <Switch checked={Boolean(isActive)} onCheckedChange={onToggleStatus} disabled={actionsDisabled} />
             )}
+          </div>
+
+          {(onView || onEdit || onDelete) && (
+            <div className="flex items-center gap-1 shrink-0">
+              {renderIconActionButton({
+                onAction: onView,
+                isLoading: isLoadingView,
+                icon: Eye,
+                disabled: viewDisabled,
+              })}
+              {renderIconActionButton({
+                onAction: onEdit,
+                isLoading: isLoadingEdit,
+                icon: Pencil,
+                disabled: editDisabled,
+              })}
+              {renderIconActionButton({
+                onAction: onDelete,
+                isLoading: isLoadingDelete,
+                icon: Trash2,
+                disabled: deleteDisabled,
+              })}
+            </div>
+          )}
         </div>
       </div>
     </div>

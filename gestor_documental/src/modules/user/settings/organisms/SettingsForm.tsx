@@ -1,9 +1,9 @@
 import { useEffect, useState, type ComponentType, type ReactNode } from 'react';
 import { Clock, Globe, Mail, Moon, User } from 'lucide-react';
-import { InputText } from '@shared/components/inputs/InputText';
-import { Select } from '@shared/components/inputs/Select';
-import { AuthGradientButton } from '@shared/components/auth/AuthGradientButton';
-import { VaultCard } from '@shared/components/VaultCard';
+import { InputText } from '@shared/components/atoms/InputText';
+import { Select } from '@shared/components/atoms/Select';
+import { AuthGradientButton } from '@shared/components/molecules/AuthGradientButton';
+import { VaultCard } from '@shared/components/atoms/VaultCard';
 import { validateProfile } from '../validations/settingsSchema';
 import type { ProfileErrors } from '../validations/settingsSchema';
 import {

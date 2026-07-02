@@ -1,6 +1,8 @@
+import type { ReactNode } from 'react';
+
 type DetailInfoRowProps = {
   label: string;
-  value: string;
+  value: ReactNode;
 };
 
 /** Fila label/valor para paneles laterales de detalle (Drive, Papelera, etc.). */

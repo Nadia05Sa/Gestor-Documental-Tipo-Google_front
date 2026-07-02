@@ -1,5 +1,5 @@
 import { driveApi } from '../../../modules/user/drive/api/driveApi';
-import { formatGigabytes } from '@shared/components/drive/driveItemUtils';
+import { formatGigabytes } from '@shared/domain/drive/utils/driveItemUtils';
 
 const DEFAULT_PLAN_BYTES = 100 * 1024 ** 3;
 

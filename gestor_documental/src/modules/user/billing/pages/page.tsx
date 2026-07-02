@@ -1,6 +1,6 @@
-import { VaultViewPageLayout } from '@shared/components/layout/VaultViewPageLayout';
+import { VaultViewPageLayout } from '@shared/components/templates/VaultViewPageLayout';
 import { useBilling } from '../hooks/useBilling';
-import { BillingView } from '../components/BillingView';
+import { BillingView } from '../organisms/BillingView';
 
 export const BillingPage = () => {
   const billing = useBilling();

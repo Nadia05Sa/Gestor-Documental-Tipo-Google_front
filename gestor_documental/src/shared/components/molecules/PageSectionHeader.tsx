@@ -1,4 +1,19 @@
-import { ActionButton } from '@shared/components/inputs/ActionButton';
+import type { ComponentType } from 'react';
+import { ActionButton } from '@shared/components/atoms/ActionButton';
+
+type PageSectionHeaderProps = {
+  title: string;
+  contextLabel?: string;
+  secondaryContextLabel?: string;
+  contextNotice?: string;
+  actionIcon?: ComponentType<{ className?: string }>;
+  actionLabel?: string;
+  onAction?: () => void;
+  actionLoading?: boolean;
+  actionLoadingLabel?: string;
+  actionDisabled?: boolean;
+  actionVariant?: 'primary' | 'secondary' | 'danger' | 'outline';
+};
 
 // Componente de encabezado para secciones o pantallas, con soporte para título, contexto adicional y acción principal.
 /**
@@ -16,7 +31,7 @@ const PageSectionHeader = ({
   actionLoadingLabel = 'Cargando...',
   actionDisabled = false,
   actionVariant = 'primary',
-}) => {
+}: PageSectionHeaderProps) => {
   return (
     <div className="flex items-center justify-between gap-4 flex-wrap">
       <div>

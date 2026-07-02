@@ -1,5 +1,41 @@
 import { Plus, Trash2 } from 'lucide-react';
-import { Select } from '@shared/components/inputs/Select';
+import { Select } from '@shared/components/atoms/Select';
+import type { SelectOption } from '@shared/components/atoms/Select';
+
+type CascadingSelector = {
+  key: string;
+  label: string;
+  options?: SelectOption[] | string[];
+  value?: string | number;
+  onChange?: (value: string) => void;
+  placeholder?: string;
+  disabled?: boolean;
+};
+
+type CascadingListItem = {
+  id: string | number;
+  primaryText?: string;
+  secondaryText?: string;
+};
+
+type CascadingSelectableListFieldProps = {
+  label: string;
+  description?: string;
+  selectors?: CascadingSelector[];
+  addLabel?: string;
+  onAdd?: () => void;
+  addDisabled?: boolean;
+  disabled?: boolean;
+  loading?: boolean;
+  loadingText?: string;
+  notice?: string;
+  error?: string;
+  items?: CascadingListItem[];
+  emptyText?: string;
+  onRemove?: (item: CascadingListItem) => void;
+  removeLabel?: string;
+  colorVariant?: 'user' | 'default';
+};
 
 /**
  * CascadingSelectableListField
@@ -21,7 +57,7 @@ export const CascadingSelectableListField = ({
   onRemove,
   removeLabel = 'Quitar elemento',
   colorVariant = 'user',
-}) => {
+}: CascadingSelectableListFieldProps) => {
   const actionAccent = colorVariant === 'default'
     ? 'var(--system-accent, var(--accent, #2563eb))'
     : 'var(--accent, #2563eb)';

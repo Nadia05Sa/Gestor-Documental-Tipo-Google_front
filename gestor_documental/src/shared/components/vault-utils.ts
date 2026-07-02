@@ -12,6 +12,7 @@ import {
   Upload,
   Users,
 } from 'lucide-react';
+import type { ComponentType, CSSProperties } from 'react';
 import type { LucideIcon, LucideProps } from 'lucide-react';
 
 export const iconMap: Record<string, LucideIcon> = {
@@ -27,16 +28,18 @@ export const iconMap: Record<string, LucideIcon> = {
   shield: Shield,
 };
 
-export type IconInput = string | LucideIcon | null | undefined;
+export type IconInput = string | LucideIcon | ComponentType<{ className?: string; size?: number; style?: CSSProperties }> | null | undefined;
 export type DaysLeftTone = 'neutral' | 'danger' | 'warning' | 'success';
 
-export function resolveIcon(icon: IconInput): LucideIcon | null {
+type ResolvedIcon = LucideIcon | ComponentType<{ className?: string; size?: number; style?: CSSProperties }>;
+
+export function resolveIcon(icon: IconInput): ResolvedIcon | null {
   if (!icon) return null;
   if (typeof icon === 'string') return iconMap[icon] || File;
   return icon;
 }
 
-export function renderIcon(icon: IconInput, props?: LucideProps): ReactElement | null {
+export function renderIcon(icon: IconInput, props?: LucideProps & { className?: string; size?: number; style?: CSSProperties }): ReactElement | null {
   const Icon = resolveIcon(icon);
   return Icon ? createElement(Icon, props) : null;
 }

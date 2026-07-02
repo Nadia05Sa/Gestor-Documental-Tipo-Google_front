@@ -1,5 +1,10 @@
+type SwitchProps = {
+  checked: boolean;
+  onCheckedChange?: (checked: boolean) => void;
+  disabled?: boolean;
+};
 
-export function Switch({ checked, onCheckedChange, disabled = false }) {
+export function Switch({ checked, onCheckedChange, disabled = false }: SwitchProps) {
   return (
     <button
       type="button"

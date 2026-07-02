@@ -1,9 +1,80 @@
 import { useMemo, useState } from 'react';
 import { Info, Plus, Trash2, X } from 'lucide-react';
-import { Select } from '@shared/components/inputs/Select';
-import Input from '@shared/components/inputs/InputText';
+import { Select } from '@shared/components/atoms/Select';
+import Input from '@shared/components/atoms/InputText';
 
-const normalizeSelectableEntry = (entry) => {
+type SelectableEntry = {
+  value: string;
+  label: string;
+  secondaryValue: string;
+};
+
+type RawSelectableEntry =
+  | {
+      value?: string | number;
+      id?: string | number;
+      label?: string;
+      name?: string;
+      period_number?: string | number;
+      secondaryValue?: string | number;
+    }
+  | string
+  | number
+  | null
+  | undefined;
+
+type SelectableListOption = {
+  value: string | number;
+  label?: string;
+};
+
+type SummaryListContentProps = {
+  loading: boolean;
+  loadingText: string;
+  entries: SelectableEntry[];
+  emptyText: string;
+  onRemove?: (index: number) => void;
+  disabled: boolean;
+};
+
+type SelectableListFieldProps = {
+  label: string;
+  error?: string;
+  selectedValues?: RawSelectableEntry[];
+  options?: SelectableListOption[];
+  selectedOption?: string | number;
+  selectedSecondaryOption?: string;
+  onSelectedOptionChange?: (value: string) => void;
+  onSelectedSecondaryOptionChange?: (value: string) => void;
+  onAdd?: (value: string | number, label: string, secondaryValue: string) => void;
+  onUpdate?: (index: number, value: string, label: string, secondaryValue: string) => void;
+  onRemove?: (index: number) => void;
+  placeholder?: string;
+  addLabel?: string;
+  infoMessage?: string;
+  disabled?: boolean;
+  colorVariant?: 'user' | 'default' | string;
+  enableSecondaryField?: boolean;
+  primaryLabel?: string;
+  secondaryLabel?: string;
+  secondaryPlaceholder?: string;
+  secondaryType?: string;
+  secondaryMin?: string | number;
+  secondaryMax?: string | number;
+  displayMode?: 'editable' | 'summary';
+  loading?: boolean;
+  loadingText?: string;
+  emptyText?: string;
+  allowHidePendingSelector?: boolean;
+  summaryPanelClassName?: string;
+  summaryPanelPosition?: 'above' | 'below';
+  headerClassName?: string;
+  labelClassName?: string;
+  addButtonClassName?: string;
+  showAddIcon?: boolean;
+};
+
+const normalizeSelectableEntry = (entry: RawSelectableEntry): SelectableEntry | null => {
   if (entry && typeof entry === 'object') {
     const rawValue = entry.value ?? entry.id ?? '';
     const value = String(rawValue || '').trim();
@@ -30,7 +101,7 @@ const renderSummaryListContent = ({
   emptyText,
   onRemove,
   disabled,
-}) => {
+}: SummaryListContentProps) => {
   if (loading) {
     return <p className="text-sm text-[var(--text-secondary)]">{loadingText}</p>;
   }
@@ -103,12 +174,12 @@ export const SelectableListField = ({
   labelClassName = 'block text-sm font-medium text-[var(--text-primary)]',
   addButtonClassName = 'inline-flex items-center gap-1.5 text-sm font-semibold transition-opacity disabled:opacity-40 disabled:cursor-not-allowed',
   showAddIcon = true,
-}) => {
+}: SelectableListFieldProps) => {
   const [isPendingRowVisible, setIsPendingRowVisible] = useState(true);
   const [showTooltip, setShowTooltip] = useState(false);
 
   const normalizedSelectedEntries = useMemo(
-    () => selectedValues.map(normalizeSelectableEntry).filter(Boolean),
+    () => selectedValues.map(normalizeSelectableEntry).filter((entry): entry is SelectableEntry => entry !== null),
     [selectedValues],
   );
 
@@ -174,7 +245,7 @@ export const SelectableListField = ({
       return;
     }
 
-    if (!canConfirmAdd) return;
+    if (!canConfirmAdd || selectedOption == null) return;
     onAdd?.(selectedOption, selectedLabel, selectedSecondaryOption);
   };
 

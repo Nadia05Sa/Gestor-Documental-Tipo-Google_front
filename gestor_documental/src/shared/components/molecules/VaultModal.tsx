@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
-import { VaultButton } from './inputs/ActionButton';
+import { VaultButton } from '../atoms/ActionButton';
 
 type VaultModalSize = 'sm' | 'md' | 'lg';
 

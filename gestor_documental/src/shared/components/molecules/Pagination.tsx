@@ -1,4 +1,14 @@
 
+type PaginationProps = {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  itemsPerPage: number;
+  onPageChange: (page: number) => void;
+  hasPreviousPage?: boolean;
+  hasNextPage?: boolean;
+};
+
 /**
  * Pagination
  */
@@ -8,9 +18,11 @@ export function Pagination({
   totalItems,
   itemsPerPage,
   onPageChange,
-  hasPreviousPage = currentPage > 1,
-  hasNextPage = currentPage < totalPages,
-}) {
+  hasPreviousPage,
+  hasNextPage,
+}: PaginationProps) {
+  const canGoPrevious = hasPreviousPage ?? currentPage > 1;
+  const canGoNext = hasNextPage ?? currentPage < totalPages;
   const renderPageNumbers = () => {
     const pages = [];
 
@@ -114,7 +126,7 @@ export function Pagination({
         <button
           type="button"
           onClick={() => onPageChange(currentPage - 1)}
-          disabled={!hasPreviousPage}
+          disabled={!canGoPrevious}
           className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           style={{
             color: 'var(--text-primary, #111827)',
@@ -145,7 +157,7 @@ export function Pagination({
               <button
                 key={page}
                 type="button"
-                onClick={() => onPageChange(page)}
+                onClick={() => onPageChange(page as number)}
                 className="w-10 h-10 text-sm font-medium rounded-lg transition-colors"
                 style={
                   isCurrentPage
@@ -190,7 +202,7 @@ export function Pagination({
               <button
                 key={page}
                 type="button"
-                onClick={() => onPageChange(page)}
+                onClick={() => onPageChange(page as number)}
                 className="w-8 h-8 text-xs font-medium rounded-lg transition-colors"
                 style={
                   isCurrentPage
@@ -215,7 +227,7 @@ export function Pagination({
         <button
           type="button"
           onClick={() => onPageChange(currentPage + 1)}
-          disabled={!hasNextPage}
+          disabled={!canGoNext}
           className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           style={{
             color: 'var(--text-primary, #111827)',

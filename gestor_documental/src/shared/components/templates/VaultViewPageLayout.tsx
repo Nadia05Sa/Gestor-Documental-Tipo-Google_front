@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import { PageSectionHeader } from '@shared/components/layout/PageSectionHeader';
-import { ViewModeToggle } from '@shared/components/drive/ViewModeToggle';
-import type { ViewMode } from '../../../modules/user/drive/types/drive.types';
+import { PageSectionHeader } from '@shared/components/molecules/PageSectionHeader';
+import { ViewModeToggle } from '@shared/domain/drive/molecules/ViewModeToggle';
+import type { ViewMode } from '@shared/domain/drive/types/drive.types';
 
 type VaultViewPageLayoutProps = {
   title: string;

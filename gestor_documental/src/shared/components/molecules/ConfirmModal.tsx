@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { AlertTriangle } from 'lucide-react';
-import { ActionButton } from './inputs/ActionButton';
+import { ActionButton } from '../atoms/ActionButton';
 import { VaultModal } from './VaultModal';
 
 type ConfirmModalProps = {

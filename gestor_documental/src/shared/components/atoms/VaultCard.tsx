@@ -1,3 +1,18 @@
+import type { ElementType, HTMLAttributes, ReactNode } from 'react';
+
+type VaultCardProps = {
+  as?: ElementType;
+  children: ReactNode;
+  className?: string;
+  padding?: string;
+  interactive?: boolean;
+  selected?: boolean;
+  onClick?: HTMLAttributes<HTMLElement>['onClick'];
+  role?: string;
+  tabIndex?: number;
+  id?: string;
+  title?: string;
+};
 
 export function VaultCard({
   as: Component = 'article',
@@ -11,7 +26,7 @@ export function VaultCard({
   tabIndex,
   id,
   title,
-}) {
+}: VaultCardProps) {
   return (
     <Component
       className={`rounded-[var(--radius-card)] border bg-[var(--bg-elevated)] shadow-[var(--shadow-card)] ${padding} ${

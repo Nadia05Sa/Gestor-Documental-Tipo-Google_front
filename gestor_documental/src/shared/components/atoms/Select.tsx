@@ -1,3 +1,4 @@
+import type { MouseEvent } from 'react';
 import { useMemo, useState } from 'react';
 import type { ChangeEvent, CSSProperties, FocusEvent } from 'react';
 import { ChevronDown, Info, X } from 'lucide-react';
@@ -7,6 +8,8 @@ type SelectOption = {
   label: string;
   disabled?: boolean;
 };
+
+export type { SelectOption };
 
 type SelectOptions = {
   id?: string;
@@ -22,7 +25,7 @@ type SelectOptions = {
   required?: boolean;
   disabled?: boolean;
   className?: string;
-  colorVariant?: 'user' | 'default';
+  colorVariant?: 'user' | 'default' | string;
   infoMessage?: string;
   clearable?: boolean;
   showPlaceholderOption?: boolean;
@@ -74,11 +77,11 @@ export function Select({
     return placeholder;
   }, [normalizedOptions, value, placeholder, disabled]);
 
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
     onChange?.(event);
   };
 
-  const handleClear = (event) => {
+  const handleClear = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
     onChange?.({ target: { value: '' } });

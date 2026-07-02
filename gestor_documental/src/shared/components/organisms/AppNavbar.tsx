@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Bell, LogOut, Menu, Search, Settings, SlidersHorizontal } from 'lucide-react';
 import { useAuth } from '@context/AuthContext';
 import { useDriveSearch } from '@context/DriveSearchContext';
-import { InfinityVaultLogo } from '@shared/components/auth/InfinityVaultLogo';
+import { InfinityVaultLogo } from '@shared/components/atoms/InfinityVaultLogo';
 
 const getInitials = (name?: string, surname?: string, email?: string) => {
   const first = name?.trim()?.[0];

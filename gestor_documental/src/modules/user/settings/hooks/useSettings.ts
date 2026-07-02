@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@context/AuthContext';
-import { toast } from '@shared/components/Toast';
+import { toast } from '@shared/components/organisms/Toast';
 import { settingsApi } from '../api/settingsApi';
 import type { UserSettings } from '../types/settings.types';
 

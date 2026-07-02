@@ -1,14 +1,47 @@
-import { SurfacePanel } from '@shared/components/layout/SurfacePanel';
-import { LoadingStatePanel } from '@shared/components/layout/LoadingStatePanel';
-import { EmptyStatePanel } from './EmptyStatePanel';
-import { Pagination } from './Pagination';
+import { Fragment, type ReactNode } from 'react';
+import { SurfacePanel } from '@shared/components/molecules/SurfacePanel';
+import { LoadingStatePanel } from '@shared/components/molecules/LoadingStatePanel';
+import { EmptyStatePanel } from '../molecules/EmptyStatePanel';
+import { Pagination } from '../molecules/Pagination';
+import type { ComponentType } from 'react';
+
+type EmptyStateConfig = {
+  icon?: ComponentType<{ className?: string }>;
+  title?: string;
+  description?: string;
+  actionIcon?: ComponentType<{ className?: string }>;
+  actionLabel?: string;
+  onAction?: () => void;
+};
+
+type PaginationConfig = {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  itemsPerPage: number;
+  onPageChange: (page: number) => void;
+  hasPreviousPage?: boolean;
+  hasNextPage?: boolean;
+};
+
+type EntityListStateRendererProps<T> = {
+  loading: boolean;
+  loadingMessage?: string;
+  items?: T[];
+  getItemKey?: (item: T, index: number) => string | number;
+  renderItem: (item: T, index: number) => ReactNode;
+  emptyState?: EmptyStateConfig;
+  pagination?: PaginationConfig;
+  containerClassName?: string;
+  listPanelPadding?: string;
+};
 
 /**
  * EntityListStateRenderer
  *
  * Renderiza de forma reusable los estados de lista: loading, empty y data + paginacion.
  */
-export const EntityListStateRenderer = ({
+export const EntityListStateRenderer = <T,>({
   loading,
   loadingMessage = 'Cargando...',
   items = [],
@@ -18,7 +51,7 @@ export const EntityListStateRenderer = ({
   pagination,
   containerClassName = 'space-y-4',
   listPanelPadding = 'p-0',
-}) => {
+}: EntityListStateRendererProps<T>) => {
   if (loading) {
     return <LoadingStatePanel message={loadingMessage} />;
   }
@@ -41,7 +74,7 @@ export const EntityListStateRenderer = ({
       <SurfacePanel padding={listPanelPadding}>
         {items.map((item, index) => {
           const key = getItemKey ? getItemKey(item, index) : index;
-          return <React.Fragment key={key}>{renderItem(item, index)}</React.Fragment>;
+          return <Fragment key={key}>{renderItem(item, index)}</Fragment>;
         })}
       </SurfacePanel>
 
