@@ -1,20 +1,14 @@
-import { useState } from 'react';
 import { Users } from 'lucide-react';
+import { canEditDriveItem } from '@shared/domain/drive/utils/driveItemUtils';
 import { useShared } from '../hooks/useShared';
 import { DriveVaultCollectionShell } from '@shared/domain/drive/organisms/DriveVaultCollectionShell';
-import { DriveForm } from '../../drive/organisms/DriveForm';
-import { ShareModal } from '../../drive/organisms/ShareModal';
+import { DriveItemActionModals } from '../../drive/organisms/DriveItemActionModals';
+import { useDriveItemActionModals } from '../../drive/hooks/useDriveItemActionModals';
 import { DriveVaultList } from '@shared/domain/drive/organisms/DriveVaultList';
-import { VersionHistoryModal } from '@shared/domain/drive/organisms/VersionHistoryModal';
-import type { DriveItem } from '@shared/domain/drive/types/drive.types';
-
-const canEditItem = (item: DriveItem) => item.permissionLevel === 'EDITOR';
 
 export const SharedPage = () => {
   const shared = useShared();
-  const [renameItem, setRenameItem] = useState<DriveItem | null>(null);
-  const [shareItem, setShareItem] = useState<DriveItem | null>(null);
-  const [versionItem, setVersionItem] = useState<DriveItem | null>(null);
+  const modals = useDriveItemActionModals();
 
   return (
     <>
@@ -42,39 +36,27 @@ export const SharedPage = () => {
             onToggleStar={shared.toggleStar}
             onMoveToTrash={shared.moveToTrash}
             onMove={onMove}
-            onShare={setShareItem}
-            onRename={setRenameItem}
-            onVersionHistory={setVersionItem}
-            canShare={canEditItem}
-            canRename={canEditItem}
+            onShare={modals.setShareItem}
+            onRename={modals.setRenameItem}
+            onVersionHistory={modals.setVersionItem}
+            canShare={canEditDriveItem}
+            canRename={canEditDriveItem}
           />
         )}
       </DriveVaultCollectionShell>
 
-      <DriveForm
-        open={Boolean(renameItem)}
-        title="Renombrar"
-        label="Nuevo nombre"
-        confirmLabel="Guardar"
-        initialValue={renameItem?.name ?? ''}
-        onClose={() => setRenameItem(null)}
-        onSubmit={(name) => {
-          if (renameItem) shared.rename(renameItem.id, name);
-        }}
-      />
-
-      <ShareModal
-        item={shareItem}
-        onClose={() => setShareItem(null)}
-        onSave={shared.saveShareSettings}
+      <DriveItemActionModals
+        renameItem={modals.renameItem}
+        onCloseRename={() => modals.setRenameItem(null)}
+        onRename={shared.rename}
+        shareItem={modals.shareItem}
+        onCloseShare={() => modals.setShareItem(null)}
+        onSaveShare={shared.saveShareSettings}
         getShareLink={shared.getShareLink}
-      />
-
-      <VersionHistoryModal
-        item={versionItem}
-        onClose={() => setVersionItem(null)}
+        versionItem={modals.versionItem}
+        onCloseVersion={() => modals.setVersionItem(null)}
         getVersions={shared.getVersionHistory}
-        onRestore={shared.restoreVersion}
+        onRestoreVersion={shared.restoreVersion}
       />
     </>
   );

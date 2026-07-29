@@ -10,6 +10,7 @@ import {
   Presentation,
 } from 'lucide-react';
 import type { ComponentType, CSSProperties } from 'react';
+import type { DriveItem } from '../types/drive.types';
 
 type IconComponent = ComponentType<{ className?: string; size?: number; style?: CSSProperties }>;
 
@@ -246,6 +247,13 @@ export const getRecentGroup = (iso?: string): RecentGroup => {
   if (diffDays <= 7) return 'Esta semana';
   return 'Antes';
 };
+
+/**
+ * Indica si el usuario actual puede compartir/renombrar un ítem: siempre para
+ * los suyos, solo con permiso EDITOR para los que otra persona compartió.
+ */
+export const canEditDriveItem = (item: DriveItem): boolean =>
+  !item.isShared || item.permissionLevel === 'EDITOR';
 
 /**
  * Días restantes antes de eliminación permanente desde la papelera.

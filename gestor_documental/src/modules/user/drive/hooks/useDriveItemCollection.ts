@@ -1,13 +1,21 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@shared/components/organisms/Toast';
-import type { DriveItem } from '../types/drive.types';
+import type { DriveItem, DriveItemVersion, PermissionLevel, ShareAccess } from '../types/drive.types';
 
 export type DriveItemCollectionApi = {
   list: () => DriveItem[];
   toggleStar: (id: string) => void;
   touchRecent: (id: string) => void;
   moveToTrash: (id: string) => void;
+  rename: (id: string, name: string) => void;
+  updateShareSettings: (
+    id: string,
+    settings: { isShared: boolean; shareAccess: ShareAccess; permissionLevel: PermissionLevel },
+  ) => void;
+  getShareLink: (id: string) => string;
+  listVersionHistory: (id: string) => DriveItemVersion[];
+  restoreVersion: (id: string) => void;
 };
 
 type OpenFolderBehavior = 'navigate-drive' | 'preview';
@@ -63,6 +71,33 @@ export const useDriveItemCollection = ({
     toast.success('Movido a la papelera');
   }, [api, previewItem?.id, refresh]);
 
+  const rename = useCallback((id: string, name: string) => {
+    api.rename(id, name);
+    refresh();
+    toast.success('Elemento renombrado');
+  }, [api, refresh]);
+
+  const saveShareSettings = useCallback(
+    (
+      itemId: string,
+      settings: { isShared: boolean; shareAccess: ShareAccess; permissionLevel: PermissionLevel },
+    ) => {
+      api.updateShareSettings(itemId, settings);
+      refresh();
+      toast.success(settings.isShared ? 'Elemento compartido' : 'Compartir desactivado');
+    },
+    [api, refresh],
+  );
+
+  const restoreVersion = useCallback(
+    (item: DriveItem, versionEntry: DriveItemVersion) => {
+      api.restoreVersion(item.id);
+      refresh();
+      toast.success(`"${item.name}" restaurado a ${versionEntry.versionLabel.toLowerCase()}`);
+    },
+    [api, refresh],
+  );
+
   const detailHandlers = useMemo(() => ({
     onToggleStar: closePreviewOnToggleStar
       ? toggleStar
@@ -84,5 +119,10 @@ export const useDriveItemCollection = ({
     moveToTrash,
     refresh,
     detailHandlers,
+    rename,
+    saveShareSettings,
+    getShareLink: api.getShareLink,
+    getVersionHistory: api.listVersionHistory,
+    restoreVersion,
   };
 };
