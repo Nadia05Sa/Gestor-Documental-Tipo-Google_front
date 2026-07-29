@@ -21,11 +21,17 @@ export type DriveItemMenuHandlers = {
   onToggleStar?: (item: DriveItem) => void;
   onVersionHistory?: (item: DriveItem) => void;
   onDelete?: (item: DriveItem) => void;
+  /** Si se define, gatea `onShare` (p. ej. según nivel de permiso del ítem). */
+  canShare?: (item: DriveItem) => boolean;
+  /** Si se define, gatea `onRename` (p. ej. según nivel de permiso del ítem). */
+  canRename?: (item: DriveItem) => boolean;
 };
 
 const soon = (feature: string) => (_item: DriveItem) => {
   toast.info(`${feature} disponible próximamente.`);
 };
+
+const PERMISSION_DENIED_REASON = 'Solo quien tiene permiso de edición puede hacer esto.';
 
 /** Menú contextual estándar Figma para tablas de archivos. */
 export const buildStandardDriveRowActions = (
@@ -41,33 +47,58 @@ export const buildStandardDriveRowActions = (
     onToggleStar = soon('Destacar'),
     onVersionHistory = soon('Historial de versiones'),
     onDelete = soon('Eliminar'),
+    canShare,
+    canRename,
   } = handlers;
 
-  return [
+  const shareAllowed = canShare ? canShare(item) : true;
+  const renameAllowed = canRename ? canRename(item) : true;
+
+  const actions: DriveRowAction[] = [
     { key: 'preview', label: 'Vista previa', icon: Eye, onClick: () => onPreview(item) },
     { key: 'download', label: 'Descargar', icon: Download, onClick: () => onDownload(item) },
-    { key: 'share', label: 'Compartir', icon: Share2, onClick: () => onShare(item) },
+    {
+      key: 'share',
+      label: 'Compartir',
+      icon: Share2,
+      onClick: () => onShare(item),
+      disabled: !shareAllowed,
+      disabledReason: shareAllowed ? undefined : PERMISSION_DENIED_REASON,
+    },
     { key: 'move', label: 'Mover a...', icon: FolderInput, onClick: () => onMove(item) },
-    { key: 'rename', label: 'Renombrar', icon: Pencil, onClick: () => onRename(item) },
+    {
+      key: 'rename',
+      label: 'Renombrar',
+      icon: Pencil,
+      onClick: () => onRename(item),
+      disabled: !renameAllowed,
+      disabledReason: renameAllowed ? undefined : PERMISSION_DENIED_REASON,
+    },
     {
       key: 'star',
       label: item.isStarred ? 'Quitar destacado' : 'Destacar',
       icon: Star,
       onClick: () => onToggleStar(item),
     },
-    {
+  ];
+
+  if (item.kind !== 'folder') {
+    actions.push({
       key: 'history',
       label: 'Historial de versiones',
       icon: History,
       onClick: () => onVersionHistory(item),
-    },
-    {
-      key: 'delete',
-      label: 'Eliminar',
-      icon: Trash2,
-      tone: 'danger',
-      dividerBefore: true,
-      onClick: () => onDelete(item),
-    },
-  ];
+    });
+  }
+
+  actions.push({
+    key: 'delete',
+    label: 'Eliminar',
+    icon: Trash2,
+    tone: 'danger',
+    dividerBefore: true,
+    onClick: () => onDelete(item),
+  });
+
+  return actions;
 };

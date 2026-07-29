@@ -42,6 +42,8 @@ export const ShareModal = ({ item, onClose, onSave, getShareLink }: ShareModalPr
 
   if (!item) return null;
 
+  const ownerName = item.isShared ? item.sharedBy ?? 'Otro usuario' : 'Tú';
+
   const handleCopyLink = async () => {
     const link = getShareLink(item.id);
     try {
@@ -83,7 +85,7 @@ export const ShareModal = ({ item, onClose, onSave, getShareLink }: ShareModalPr
                 <User className="h-4 w-4" />
               </span>
               <div>
-                <p className="text-sm font-medium text-[var(--text-primary)]">Tú</p>
+                <p className="text-sm font-medium text-[var(--text-primary)]">{ownerName}</p>
                 <p className="text-xs text-[var(--text-secondary)]">Propietario</p>
               </div>
             </div>

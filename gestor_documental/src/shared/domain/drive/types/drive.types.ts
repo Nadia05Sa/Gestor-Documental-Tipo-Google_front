@@ -40,6 +40,16 @@ export type Breadcrumb = {
   name: string;
 };
 
+/** Entrada del historial de versiones de un archivo. */
+export type DriveItemVersion = {
+  id: string;
+  versionLabel: string;
+  updatedAt: string;
+  modifiedBy: string;
+  size: number;
+  isCurrent: boolean;
+};
+
 export type CreateFolderInput = {
   name: string;
   parentId: string | null;

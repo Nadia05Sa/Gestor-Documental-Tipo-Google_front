@@ -24,10 +24,17 @@ modo lista. Datos desde el store mock del Drive.
 
 ```text
 modules/user/shared/
-├── api/sharedApi.ts           # reutiliza driveApi (listShared / …)
-├── hooks/useShared.ts         # wrapper de useDriveItemCollection
-└── pages/page.tsx             # DriveVaultViewPage + DriveVaultList
+├── api/sharedApi.ts           # reutiliza driveApi (listShared / rename / share / …)
+├── hooks/useShared.ts         # wrapper de useDriveItemCollection + rename/share/versiones
+└── pages/page.tsx             # DriveVaultCollectionShell + DriveVaultList + modales
 ```
+
+El menú contextual (`⋮`) de cada fila soporta las 8 acciones: Vista previa,
+Descargar, Compartir, Mover a…, Renombrar, Destacar, Historial de versiones y
+Eliminar. "Compartir" y "Renombrar" se deshabilitan (con tooltip) si el
+`permissionLevel` del ítem no es `EDITOR`. "Historial de versiones" solo se
+muestra para archivos (no carpetas) y abre `VersionHistoryModal` con versión
+actual + anteriores simuladas y opción de restaurar.
 
 ---
 
@@ -38,7 +45,8 @@ modules/user/shared/
 - Listar los ítems compartidos con el usuario (vía ACL `item_permissions`).
 - Mostrar quién compartió cada ítem (`sharedBy`).
 - Abrir/previsualizar respetando `permission_level` (VIEWER, COMMENTER, EDITOR).
-- Destacar, mover y enviar a papelera vía menú contextual.
+- Destacar, mover, renombrar, compartir, ver historial de versiones y enviar a
+  papelera vía menú contextual, gateando Compartir/Renombrar a `EDITOR`.
 
 > Distinto de **Unidades compartidas** (`/shared-drives`, propuesta sin ruta):
 > esta pantalla es la lista de ítems individuales compartidos contigo.

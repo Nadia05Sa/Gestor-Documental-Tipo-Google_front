@@ -9,6 +9,8 @@ export type DriveRowAction = {
   onClick: () => void;
   tone?: 'default' | 'danger';
   dividerBefore?: boolean;
+  disabled?: boolean;
+  disabledReason?: string;
 };
 
 type DriveRowActionsMenuProps = {
@@ -100,6 +102,7 @@ export const DriveRowActionsMenu = ({ actions }: DriveRowActionsMenuProps) => {
           {actions.map((action) => {
             const Icon = action.icon;
             const isDanger = action.tone === 'danger';
+            const isDisabled = Boolean(action.disabled);
             return (
               <div key={action.key}>
                 {action.dividerBefore ? (
@@ -108,11 +111,16 @@ export const DriveRowActionsMenu = ({ actions }: DriveRowActionsMenuProps) => {
                 <button
                   type="button"
                   role="menuitem"
-                  className={`flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm font-medium transition-colors hover:bg-[var(--bg-surface)] ${
-                    isDanger ? 'text-[var(--error)]' : 'text-[var(--text-primary)]'
-                  }`}
+                  disabled={isDisabled}
+                  title={isDisabled ? action.disabledReason : undefined}
+                  className={`flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm font-medium transition-colors ${
+                    isDisabled
+                      ? 'cursor-not-allowed opacity-40'
+                      : 'hover:bg-[var(--bg-surface)]'
+                  } ${isDanger ? 'text-[var(--error)]' : 'text-[var(--text-primary)]'}`}
                   onClick={(event) => {
                     event.stopPropagation();
+                    if (isDisabled) return;
                     setOpen(false);
                     action.onClick();
                   }}

@@ -4,6 +4,7 @@ import { EmptyStatePanel } from '@shared/components/molecules/EmptyStatePanel';
 import { DriveItemsGrid } from './DriveItemsGrid';
 import { DriveItemsTable } from './DriveItemsTable';
 import { buildStandardDriveRowActions } from '../utils/driveRowActions';
+import type { DriveRowAction } from './DriveRowActionsMenu';
 import type { DriveItem, ViewMode } from '../types/drive.types';
 
 type DriveVaultListEmptyState = {
@@ -19,11 +20,55 @@ type DriveVaultListProps = {
   onToggleStar: (item: DriveItem) => void;
   onMoveToTrash: (item: DriveItem) => void;
   onMove?: (item: DriveItem) => void;
+  onShare?: (item: DriveItem) => void;
+  onRename?: (item: DriveItem) => void;
+  onVersionHistory?: (item: DriveItem) => void;
+  canShare?: (item: DriveItem) => boolean;
+  canRename?: (item: DriveItem) => boolean;
   emptyState?: DriveVaultListEmptyState;
   tableVariant?: 'default' | 'shared';
   showSharedIcon?: boolean;
   getFooterRight?: (item: DriveItem) => string;
 };
+
+type RowActionsSource = Pick<
+  DriveVaultListProps,
+  | 'onOpenItem'
+  | 'onToggleStar'
+  | 'onMoveToTrash'
+  | 'onMove'
+  | 'onShare'
+  | 'onRename'
+  | 'onVersionHistory'
+  | 'canShare'
+  | 'canRename'
+>;
+
+const makeGetRowActions =
+  ({
+    onOpenItem,
+    onToggleStar,
+    onMoveToTrash,
+    onMove,
+    onShare,
+    onRename,
+    onVersionHistory,
+    canShare,
+    canRename,
+  }: RowActionsSource) =>
+  (item: DriveItem): DriveRowAction[] =>
+    buildStandardDriveRowActions(item, {
+      onPreview: onOpenItem,
+      onDownload: (file) => toast.info(`Descargando ${file.name}...`),
+      onToggleStar,
+      onMove,
+      onShare,
+      onRename,
+      onVersionHistory,
+      canShare,
+      canRename,
+      onDelete: onMoveToTrash,
+    });
 
 /** Lista unificada para vistas de archivos (Destacados, Compartidos, etc.). */
 export const DriveVaultList = ({
@@ -33,6 +78,11 @@ export const DriveVaultList = ({
   onToggleStar,
   onMoveToTrash,
   onMove,
+  onShare,
+  onRename,
+  onVersionHistory,
+  canShare,
+  canRename,
   emptyState,
   tableVariant = 'default',
   showSharedIcon = false,
@@ -48,14 +98,17 @@ export const DriveVaultList = ({
     );
   }
 
-  const getRowActions = (item: DriveItem) =>
-    buildStandardDriveRowActions(item, {
-      onPreview: onOpenItem,
-      onDownload: (file) => toast.info(`Descargando ${file.name}...`),
-      onToggleStar,
-      onMove,
-      onDelete: onMoveToTrash,
-    });
+  const getRowActions = makeGetRowActions({
+    onOpenItem,
+    onToggleStar,
+    onMoveToTrash,
+    onMove,
+    onShare,
+    onRename,
+    onVersionHistory,
+    canShare,
+    canRename,
+  });
 
   if (viewMode === 'list') {
     return (
@@ -91,18 +144,26 @@ export const DriveVaultSectionList = ({
   onToggleStar,
   onMoveToTrash,
   onMove,
+  onShare,
+  onRename,
+  onVersionHistory,
+  canShare,
+  canRename,
   tableVariant = 'default',
   showSharedIcon = false,
   getFooterRight,
 }: DriveVaultSectionListProps) => {
-  const getRowActions = (item: DriveItem) =>
-    buildStandardDriveRowActions(item, {
-      onPreview: onOpenItem,
-      onDownload: (file) => toast.info(`Descargando ${file.name}...`),
-      onToggleStar,
-      onMove,
-      onDelete: onMoveToTrash,
-    });
+  const getRowActions = makeGetRowActions({
+    onOpenItem,
+    onToggleStar,
+    onMoveToTrash,
+    onMove,
+    onShare,
+    onRename,
+    onVersionHistory,
+    canShare,
+    canRename,
+  });
 
   return (
     <div className="space-y-8">

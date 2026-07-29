@@ -2,6 +2,7 @@ import type {
   Breadcrumb,
   CreateFolderInput,
   DriveItem,
+  DriveItemVersion,
   PermissionLevel,
   ShareAccess,
   UploadFileInput,
@@ -313,6 +314,42 @@ export const driveApi = {
     if (!item) return '';
     if (item.shareLink) return item.shareLink;
     return `https://vault.app/s/${id.slice(-8)}`;
+  },
+
+  listVersionHistory(id: string): DriveItemVersion[] {
+    const item = this.getItem(id);
+    if (!item) return [];
+
+    const modifiedBy = item.isShared ? item.sharedBy ?? 'Colaborador' : 'Tú';
+    const current: DriveItemVersion = {
+      id: `${item.id}_v_current`,
+      versionLabel: 'Versión actual',
+      updatedAt: item.updatedAt,
+      modifiedBy,
+      size: item.size,
+      isCurrent: true,
+    };
+
+    if (item.kind === 'folder') return [current];
+
+    const dayMs = 24 * 60 * 60 * 1000;
+    const older = [1, 2].map((stepsAgo) => ({
+      id: `${item.id}_v_${stepsAgo}`,
+      versionLabel: `Versión anterior ${stepsAgo}`,
+      updatedAt: new Date(new Date(item.updatedAt).getTime() - stepsAgo * 3 * dayMs).toISOString(),
+      modifiedBy,
+      size: Math.max(1024, Math.round(item.size * (1 - stepsAgo * 0.12))),
+      isCurrent: false,
+    }));
+
+    return [current, ...older];
+  },
+
+  restoreVersion(id: string): void {
+    const items = ensureSeed();
+    writeRaw(
+      items.map((item) => (item.id === id ? { ...item, updatedAt: nowIso() } : item)),
+    );
   },
 
   getItemLocationLabel(item: DriveItem): string {
