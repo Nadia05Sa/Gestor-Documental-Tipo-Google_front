@@ -33,6 +33,8 @@ export type DriveItem = {
   deletedAt?: string;
   deletedBy?: string;
   originalLocation?: string;
+  /** Data URL con el contenido real de la imagen (solo para archivos subidos por el usuario). */
+  previewDataUrl?: string;
 };
 
 export type Breadcrumb = {
@@ -60,6 +62,7 @@ export type UploadFileInput = {
   parentId: string | null;
   size: number;
   extension?: string;
+  previewDataUrl?: string;
 };
 
 export type AdvancedSearchFilters = {

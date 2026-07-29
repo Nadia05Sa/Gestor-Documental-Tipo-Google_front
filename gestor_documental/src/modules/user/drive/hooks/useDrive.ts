@@ -108,8 +108,8 @@ export const useDrive = () => {
   );
 
   const uploadFile = useCallback(
-    (name: string, size: number) => {
-      driveApi.uploadFile({ name, parentId: currentParentId, size });
+    (name: string, size: number, previewDataUrl?: string) => {
+      driveApi.uploadFile({ name, parentId: currentParentId, size, previewDataUrl });
       refresh();
       toast.success('Archivo subido');
     },

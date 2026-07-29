@@ -76,6 +76,17 @@ const buildLegacyDriveActions = (
 const DefaultDrivePreview = ({ item }: { item: DriveItem }) => {
   const Icon = getDriveItemIcon(item.kind, item.extension);
 
+  if (item.previewDataUrl) {
+    return (
+      <div
+        className="mb-6 flex h-44 items-center justify-center overflow-hidden rounded-2xl border border-[var(--border-subtle)]"
+        style={{ background: 'var(--bg-surface)' }}
+      >
+        <img src={item.previewDataUrl} alt={item.name} className="h-full w-full object-contain" />
+      </div>
+    );
+  }
+
   return (
     <div
       className="mb-6 flex h-44 items-center justify-center rounded-2xl border border-[var(--border-subtle)]"

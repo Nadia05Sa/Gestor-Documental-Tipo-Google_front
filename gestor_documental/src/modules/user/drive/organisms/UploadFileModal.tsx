@@ -7,13 +7,29 @@ import { formatBytes } from '@shared/domain/drive/utils/driveItemUtils';
 type SelectedFile = {
   name: string;
   size: number;
+  file: File;
 };
 
 type UploadFileModalProps = {
   open: boolean;
   onClose: () => void;
-  onUpload: (name: string, size: number) => void;
+  onUpload: (name: string, size: number, previewDataUrl?: string) => void;
 };
+
+/** Por encima de este tamaño no se guarda la vista previa real (evita saturar localStorage). */
+const MAX_PREVIEW_BYTES = 5 * 1024 * 1024;
+
+const readImagePreview = (file: File): Promise<string | undefined> =>
+  new Promise((resolve) => {
+    if (!file.type.startsWith('image/') || file.size > MAX_PREVIEW_BYTES) {
+      resolve(undefined);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : undefined);
+    reader.onerror = () => resolve(undefined);
+    reader.readAsDataURL(file);
+  });
 
 export const UploadFileModal = ({ open, onClose, onUpload }: UploadFileModalProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -23,9 +39,10 @@ export const UploadFileModal = ({ open, onClose, onUpload }: UploadFileModalProp
     if (open) setSelected(null);
   }, [open]);
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!selected) return;
-    onUpload(selected.name, selected.size);
+    const previewDataUrl = await readImagePreview(selected.file);
+    onUpload(selected.name, selected.size, previewDataUrl);
     onClose();
   };
 
@@ -70,7 +87,7 @@ export const UploadFileModal = ({ open, onClose, onUpload }: UploadFileModalProp
         className="hidden"
         onChange={(event) => {
           const file = event.target.files?.[0];
-          if (file) setSelected({ name: file.name, size: file.size });
+          if (file) setSelected({ name: file.name, size: file.size, file });
         }}
       />
     </VaultModal>

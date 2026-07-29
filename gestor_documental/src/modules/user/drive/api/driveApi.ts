@@ -40,7 +40,18 @@ const readRaw = (): DriveItem[] => {
 };
 
 const writeRaw = (items: DriveItem[]) => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  } catch {
+    // Cuota de almacenamiento excedida (p. ej. muchas vistas previas guardadas):
+    // reintenta sin las vistas previas para no perder los datos del ítem.
+    const withoutPreviews = items.map((item) => {
+      const copy = { ...item };
+      delete copy.previewDataUrl;
+      return copy;
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(withoutPreviews));
+  }
 };
 
 const buildSeed = (): DriveItem[] => {
@@ -202,7 +213,7 @@ export const driveApi = {
     return folder;
   },
 
-  uploadFile({ name, parentId, size, extension }: UploadFileInput): DriveItem {
+  uploadFile({ name, parentId, size, extension, previewDataUrl }: UploadFileInput): DriveItem {
     const items = ensureSeed();
     const cleanName = name.trim();
     const resolvedExtension = extension ?? cleanName.split('.').pop()?.toLowerCase();
@@ -219,6 +230,7 @@ export const driveApi = {
       createdAt: nowIso(),
       updatedAt: nowIso(),
       visitedAt: nowIso(),
+      previewDataUrl,
     };
     writeRaw([...items, file]);
     return file;

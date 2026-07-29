@@ -36,7 +36,7 @@ type DrivePageModalsProps = {
   advancedFilters: AdvancedSearchFilters;
   onCreateFolder: (name: string) => void;
   onRename: (id: string, name: string) => void;
-  onUploadFile: (name: string, size: number) => void;
+  onUploadFile: (name: string, size: number, previewDataUrl?: string) => void;
   onApplyAdvancedFilters: (filters: AdvancedSearchFilters) => void;
   onRefresh: () => void;
   onToggleStar: (item: DriveItem) => void;
